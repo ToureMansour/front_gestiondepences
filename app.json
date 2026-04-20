@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Gestion Dépenses",
-    "slug": "gestion-depenses",
+    "name": "DepenSys",
+    "slug": "DepenSys",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,8 +15,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app needs access to camera to take photos of expense receipts",
-        "NSPhotoLibraryUsageDescription": "This app needs access to photo library to select expense receipt images"
+        "NSCameraUsageDescription": "This app uses the camera to take photos for expense receipts",
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to select images for expense receipts"
       }
     },
     "android": {
@@ -34,9 +34,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-image-picker"
-    ]
+    }
   }
 }

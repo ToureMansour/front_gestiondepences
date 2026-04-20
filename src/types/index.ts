@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
-  role: 'admin' | 'employee';
+  role: 'employee' | 'admin';
   created_at: string;
   updated_at: string;
 }
@@ -10,16 +10,14 @@ export interface User {
 export interface Expense {
   id: number;
   title: string;
-  amount: number;
   description: string;
-  category: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'PAID' | 'CANCELLED';
-  expense_date: string;
-  proof_image?: string;
+  amount: number;
+  status: 'pending' | 'approved' | 'rejected';
+  receipt_image?: string;
   user_id: number;
-  user?: User;
   created_at: string;
   updated_at: string;
+  user?: User;
 }
 
 export interface LoginRequest {
@@ -32,22 +30,6 @@ export interface RegisterRequest {
   email: string;
   password: string;
   password_confirmation: string;
-  role?: 'admin' | 'employee';
-}
-
-export interface CreateExpenseRequest {
-  title: string;
-  amount: number;
-  description: string;
-  category: string;
-  expense_date: string;
-  proof_image?: File;
-}
-
-export interface ApiResponse<T> {
-  data: T;
-  message?: string;
-  success: boolean;
 }
 
 export interface AuthResponse {
@@ -55,11 +37,9 @@ export interface AuthResponse {
   token: string;
 }
 
-export interface Stats {
-  total_expenses: number;
-  pending_expenses: number;
-  approved_expenses: number;
-  rejected_expenses: number;
-  paid_expenses: number;
-  total_amount: number;
+export interface CreateExpenseRequest {
+  title: string;
+  description: string;
+  amount: number;
+  receipt_image?: string;
 }

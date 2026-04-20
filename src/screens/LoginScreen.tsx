@@ -6,17 +6,23 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useAuth } from '../context/AuthContext';
+import { LoginRequest } from '../types';
 
-const LoginScreen = ({ navigation }: any) => {
+type LoginScreenNavigationProp = StackNavigationProp<any, 'Login'>;
+
+const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
+  const navigation = useNavigation<LoginScreenNavigationProp>();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -26,67 +32,71 @@ const LoginScreen = ({ navigation }: any) => {
 
     setIsLoading(true);
     try {
-      await login(email, password);
+      await login({ email, password });
     } catch (error: any) {
       Alert.alert(
         'Erreur de connexion',
-        error.response?.data?.message || 'Une erreur est survenue'
+        error.response?.data?.message || 'Identifiants incorrects'
       );
     } finally {
       setIsLoading(false);
     }
   };
 
+  const navigateToRegister = () => {
+    navigation.navigate('Register');
+  };
+
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>Gestion Dépenses</Text>
-        <Text style={styles.subtitle}>Connectez-vous à votre compte</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Connexion</Text>
+          
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="exemple@email.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          </View>
 
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Mot de passe"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Mot de passe</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Mot de passe"
+              secureTextEntry
+            />
+          </View>
 
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
             onPress={handleLogin}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Se connecter</Text>
-            )}
+            <Text style={styles.buttonText}>
+              {isLoading ? 'Connexion...' : 'Se connecter'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.linkButton} onPress={navigateToRegister}>
+            <Text style={styles.linkText}>
+              Pas encore de compte ? S'inscrire
+            </Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.registerLink}
-          onPress={() => navigation.navigate('Register')}
-        >
-          <Text style={styles.registerText}>
-            Pas de compte ? <Text style={styles.registerTextBold}>S'inscrire</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -96,70 +106,67 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  content: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    padding: 20,
+  },
+  formContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
-    color: '#007AFF',
+    marginBottom: 30,
+    color: '#333',
   },
-  subtitle: {
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
     fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
-    color: '#666',
-  },
-  form: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    marginBottom: 8,
+    color: '#333',
+    fontWeight: '500',
   },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
+    padding: 12,
     fontSize: 16,
+    backgroundColor: '#f9f9f9',
   },
   button: {
     backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 10,
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
   },
   buttonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  registerLink: {
+  linkButton: {
     marginTop: 20,
     alignItems: 'center',
   },
-  registerText: {
-    color: '#666',
-    fontSize: 14,
-  },
-  registerTextBold: {
+  linkText: {
     color: '#007AFF',
-    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
 

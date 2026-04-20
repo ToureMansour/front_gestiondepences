@@ -6,27 +6,33 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useAuth } from '../context/AuthContext';
+import { RegisterRequest } from '../types';
 
-const RegisterScreen = ({ navigation }: any) => {
+type RegisterScreenNavigationProp = StackNavigationProp<any, 'Register'>;
+
+const RegisterScreen: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
+  const navigation = useNavigation<RegisterScreenNavigationProp>();
 
   const handleRegister = async () => {
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !passwordConfirmation) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs');
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (password !== passwordConfirmation) {
       Alert.alert('Erreur', 'Les mots de passe ne correspondent pas');
       return;
     }
@@ -38,83 +44,98 @@ const RegisterScreen = ({ navigation }: any) => {
 
     setIsLoading(true);
     try {
-      await register(name, email, password, 'employee');
+      await register({
+        name,
+        email,
+        password,
+        password_confirmation: passwordConfirmation,
+      });
     } catch (error: any) {
       Alert.alert(
         'Erreur d\'inscription',
-        error.response?.data?.message || 'Une erreur est survenue'
+        error.response?.data?.message || 'L\'inscription a échoué'
       );
     } finally {
       setIsLoading(false);
     }
   };
 
+  const navigateToLogin = () => {
+    navigation.navigate('Login');
+  };
+
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
+    <KeyboardAvoidingView
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <View style={styles.content}>
-        <Text style={styles.title}>Créer un compte</Text>
-        <Text style={styles.subtitle}>Rejoignez-nous aujourd'hui</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.formContainer}>
+          <Text style={styles.title}>Inscription</Text>
+          
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Nom</Text>
+            <TextInput
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="Votre nom"
+              autoCapitalize="words"
+            />
+          </View>
 
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Nom complet"
-            value={name}
-            onChangeText={setName}
-            autoCapitalize="words"
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="exemple@email.com"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoCorrect={false}
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Mot de passe</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Mot de passe (min 6 caractères)"
+              secureTextEntry
+            />
+          </View>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Mot de passe"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Confirmer le mot de passe"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Confirmer le mot de passe</Text>
+            <TextInput
+              style={styles.input}
+              value={passwordConfirmation}
+              onChangeText={setPasswordConfirmation}
+              placeholder="Confirmer le mot de passe"
+              secureTextEntry
+            />
+          </View>
 
           <TouchableOpacity
             style={[styles.button, isLoading && styles.buttonDisabled]}
             onPress={handleRegister}
             disabled={isLoading}
           >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>S'inscrire</Text>
-            )}
+            <Text style={styles.buttonText}>
+              {isLoading ? 'Inscription...' : 'S\'inscrire'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.linkButton} onPress={navigateToLogin}>
+            <Text style={styles.linkText}>
+              Déjà un compte ? Se connecter
+            </Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity
-          style={styles.loginLink}
-          onPress={() => navigation.navigate('Login')}
-        >
-          <Text style={styles.loginText}>
-            Déjà un compte ? <Text style={styles.loginTextBold}>Se connecter</Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 };
@@ -124,70 +145,67 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  content: {
-    flex: 1,
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    padding: 20,
+  },
+  formContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 10,
-    color: '#007AFF',
+    marginBottom: 30,
+    color: '#333',
   },
-  subtitle: {
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
     fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
-    color: '#666',
-  },
-  form: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    marginBottom: 8,
+    color: '#333',
+    fontWeight: '500',
   },
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
+    padding: 12,
     fontSize: 16,
+    backgroundColor: '#f9f9f9',
   },
   button: {
     backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 10,
   },
   buttonDisabled: {
     backgroundColor: '#ccc',
   },
   buttonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
-  loginLink: {
+  linkButton: {
     marginTop: 20,
     alignItems: 'center',
   },
-  loginText: {
-    color: '#666',
-    fontSize: 14,
-  },
-  loginTextBold: {
+  linkText: {
     color: '#007AFF',
-    fontWeight: 'bold',
+    fontSize: 14,
   },
 });
 

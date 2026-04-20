@@ -1,14 +1,15 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Ionicons } from '@expo/vector-icons';
+import Icon from '@expo/vector-icons/MaterialIcons';
+
 import { useAuth } from '../context/AuthContext';
 import DashboardScreen from '../screens/DashboardScreen';
-import MyExpensesScreen from '../screens/MyExpensesScreen';
 import CreateExpenseScreen from '../screens/CreateExpenseScreen';
+import MyExpensesScreen from '../screens/MyExpensesScreen';
+import ExpenseDetailScreen from '../screens/ExpenseDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AllExpensesScreen from '../screens/AllExpensesScreen';
-import ExpenseDetailScreen from '../screens/ExpenseDetailScreen';
 import AdminExpenseDetailScreen from '../screens/AdminExpenseDetailScreen';
 
 const Tab = createBottomTabNavigator();
@@ -19,31 +20,47 @@ const EmployeeTabs = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap;
+          let iconName: keyof typeof Icon.glyphMap;
 
           if (route.name === 'Dashboard') {
-            iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'MyExpenses') {
-            iconName = focused ? 'receipt' : 'receipt-outline';
+            iconName = 'dashboard';
           } else if (route.name === 'CreateExpense') {
-            iconName = focused ? 'add-circle' : 'add-circle-outline';
+            iconName = 'add-circle';
+          } else if (route.name === 'MyExpenses') {
+            iconName = 'list';
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
+            iconName = 'person';
           } else {
-            iconName = 'help-outline';
+            iconName = 'help';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="MyExpenses" component={MyExpensesScreen} />
-      <Tab.Screen name="CreateExpense" component={CreateExpenseScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen 
+        name="Dashboard" 
+        component={DashboardScreen}
+        options={{ title: 'Tableau de bord' }}
+      />
+      <Tab.Screen 
+        name="CreateExpense" 
+        component={CreateExpenseScreen}
+        options={{ title: 'Nouvelle dépense' }}
+      />
+      <Tab.Screen 
+        name="MyExpenses" 
+        component={MyExpensesScreen}
+        options={{ title: 'Mes dépenses' }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ProfileScreen}
+        options={{ title: 'Profil' }}
+      />
     </Tab.Navigator>
   );
 };
@@ -53,28 +70,40 @@ const AdminTabs = () => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName: keyof typeof Ionicons.glyphMap;
+          let iconName: keyof typeof Icon.glyphMap;
 
           if (route.name === 'Dashboard') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = 'dashboard';
           } else if (route.name === 'AllExpenses') {
-            iconName = focused ? 'list' : 'list-outline';
+            iconName = 'list-alt';
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
+            iconName = 'person';
           } else {
-            iconName = 'help-outline';
+            iconName = 'help';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: '#007AFF',
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Dashboard" component={DashboardScreen} />
-      <Tab.Screen name="AllExpenses" component={AllExpensesScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen 
+        name="Dashboard" 
+        component={DashboardScreen}
+        options={{ title: 'Tableau de bord' }}
+      />
+      <Tab.Screen 
+        name="AllExpenses" 
+        component={AllExpensesScreen}
+        options={{ title: 'Toutes les dépenses' }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ProfileScreen}
+        options={{ title: 'Profil' }}
+      />
     </Tab.Navigator>
   );
 };
@@ -83,34 +112,20 @@ const AppStack = () => {
   const { user } = useAuth();
 
   return (
-    <Stack.Navigator>
-      {user?.role === 'admin' ? (
-        <>
-          <Stack.Screen 
-            name="AdminTabs" 
-            component={AdminTabs} 
-            options={{ headerShown: false }} 
-          />
-          <Stack.Screen 
-            name="AdminExpenseDetail" 
-            component={AdminExpenseDetailScreen}
-            options={{ title: 'Détails Dépense' }}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen 
-            name="EmployeeTabs" 
-            component={EmployeeTabs} 
-            options={{ headerShown: false }} 
-          />
-          <Stack.Screen 
-            name="ExpenseDetail" 
-            component={ExpenseDetailScreen}
-            options={{ title: 'Détails Dépense' }}
-          />
-        </>
-      )}
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MainTabs">
+        {() => user?.role === 'admin' ? <AdminTabs /> : <EmployeeTabs />}
+      </Stack.Screen>
+      <Stack.Screen 
+        name="ExpenseDetail" 
+        component={ExpenseDetailScreen}
+        options={{ title: 'Détails de la dépense' }}
+      />
+      <Stack.Screen 
+        name="AdminExpenseDetail" 
+        component={AdminExpenseDetailScreen}
+        options={{ title: 'Détails de la dépense' }}
+      />
     </Stack.Navigator>
   );
 };

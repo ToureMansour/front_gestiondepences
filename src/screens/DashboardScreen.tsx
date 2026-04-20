@@ -1,170 +1,156 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+import Icon from '@expo/vector-icons/MaterialIcons';
 import { useAuth } from '../context/AuthContext';
-import apiService from '../services/api';
-import { Stats, Expense } from '../types';
+import api from '../services/api';
+import { Expense, User } from '../types';
 
-const DashboardScreen = ({ navigation }: any) => {
-  const { user } = useAuth();
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [recentExpenses, setRecentExpenses] = useState<Expense[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
+const DashboardScreen: React.FC = () => {
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [stats, setStats] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
+    setIsLoading(true);
     try {
-      const [statsData, expensesData] = await Promise.all([
-        apiService.getStats(),
-        apiService.getExpenses(),
-      ]);
-      setStats(statsData);
-      setRecentExpenses(expensesData.slice(0, 5));
+      const expensesData = user?.role === 'admin' 
+        ? await api.getAllExpenses()
+        : await api.getExpenses();
+      
+      setExpenses(expensesData.slice(0, 5)); // Afficher les 5 dernières dépenses
+      
+      // Calculer les statistiques
+      const total = expensesData.reduce((sum, expense) => sum + expense.amount, 0);
+      const pending = expensesData.filter(e => e.status === 'pending').length;
+      const approved = expensesData.filter(e => e.status === 'approved').length;
+      const rejected = expensesData.filter(e => e.status === 'rejected').length;
+      
+      setStats({ total, pending, approved, rejected });
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
       setIsLoading(false);
-      setRefreshing(false);
     }
-  };
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    loadData();
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PENDING': return '#FFA500';
-      case 'APPROVED': return '#32CD32';
-      case 'REJECTED': return '#FF0000';
-      case 'PAID': return '#007AFF';
-      default: return '#666';
+      case 'approved':
+        return '#4CAF50';
+      case 'rejected':
+        return '#F44336';
+      case 'pending':
+        return '#FF9800';
+      default:
+        return '#757575';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'PENDING': return 'En attente';
-      case 'APPROVED': return 'Approuvée';
-      case 'REJECTED': return 'Refusée';
-      case 'PAID': return 'Payée';
-      default: return status;
+      case 'approved':
+        return 'Approuvée';
+      case 'rejected':
+        return 'Rejetée';
+      case 'pending':
+        return 'En attente';
+      default:
+        return status;
     }
   };
 
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
-    );
-  }
+  const formatAmount = (amount: number) => {
+    return `${amount.toFixed(2)} FCFA`;
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR');
+  };
 
   return (
     <ScrollView
       style={styles.container}
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl refreshing={isLoading} onRefresh={loadData} />
       }
     >
       <View style={styles.header}>
-        <Text style={styles.welcomeText}>
-          Bienvenue, {user?.name}!
-        </Text>
-        <Text style={styles.roleText}>
-          {user?.role === 'admin' ? 'Administrateur' : 'Employé'}
-        </Text>
+        <View>
+          <Text style={styles.welcomeText}>
+            Bienvenue, {user?.name}!
+          </Text>
+          <Text style={styles.roleText}>
+            {user?.role === 'admin' ? 'Administrateur' : 'Employé'}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={logout} style={styles.logoutButton}>
+          <Icon name="logout" size={24} color="#FF5252" />
+        </TouchableOpacity>
       </View>
 
-      {stats && (
-        <View style={styles.statsContainer}>
-          <Text style={styles.sectionTitle}>Statistiques</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>{stats.total_expenses}</Text>
-              <Text style={styles.statLabel}>Total dépenses</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>{stats.pending_expenses}</Text>
-              <Text style={styles.statLabel}>En attente</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>{stats.approved_expenses}</Text>
-              <Text style={styles.statLabel}>Approuvées</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statValue}>{stats.paid_expenses}</Text>
-              <Text style={styles.statLabel}>Payées</Text>
-            </View>
-          </View>
-          <View style={styles.totalAmountCard}>
-            <Text style={styles.totalAmountLabel}>Montant total</Text>
-            <Text style={styles.totalAmountValue}>
-              {stats.total_amount.toFixed(2)} FCFA
-            </Text>
-          </View>
+      <View style={styles.statsContainer}>
+        <View style={styles.statCard}>
+          <Icon name="account-balance-wallet" size={32} color="#007AFF" />
+          <Text style={styles.statValue}>{formatAmount(stats.total)}</Text>
+          <Text style={styles.statLabel}>Total</Text>
         </View>
-      )}
+
+        <View style={styles.statCard}>
+          <Icon name="hourglass-empty" size={32} color="#FF9800" />
+          <Text style={styles.statValue}>{stats.pending}</Text>
+          <Text style={styles.statLabel}>En attente</Text>
+        </View>
+
+        <View style={styles.statCard}>
+          <Icon name="check-circle" size={32} color="#4CAF50" />
+          <Text style={styles.statValue}>{stats.approved}</Text>
+          <Text style={styles.statLabel}>Approuvées</Text>
+        </View>
+
+        <View style={styles.statCard}>
+          <Icon name="cancel" size={32} color="#F44336" />
+          <Text style={styles.statValue}>{stats.rejected}</Text>
+          <Text style={styles.statLabel}>Rejetées</Text>
+        </View>
+      </View>
 
       <View style={styles.recentExpensesContainer}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Dépenses récentes</Text>
-          <TouchableOpacity
-            onPress={() => navigation.navigate(user?.role === 'admin' ? 'AllExpenses' : 'MyExpenses')}
-          >
-            <Text style={styles.seeAllText}>Voir tout</Text>
-          </TouchableOpacity>
-        </View>
-        
-        {recentExpenses.length === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyStateText}>Aucune dépense récente</Text>
-          </View>
-        ) : (
-          recentExpenses.map((expense) => (
-            <TouchableOpacity
-              key={expense.id}
-              style={styles.expenseCard}
-              onPress={() => navigation.navigate(
-                user?.role === 'admin' ? 'AdminExpenseDetail' : 'ExpenseDetail',
-                { expenseId: expense.id }
-              )}
-            >
-              <View style={styles.expenseHeader}>
-                <Text style={styles.expenseTitle}>{expense.title}</Text>
-                <Text style={[styles.expenseStatus, { color: getStatusColor(expense.status) }]}>
-                  {getStatusText(expense.status)}
-                </Text>
-              </View>
-              <Text style={styles.expenseAmount}>{expense.amount.toFixed(2)} FCFA</Text>
+        <Text style={styles.sectionTitle}>Dépenses récentes</Text>
+        {expenses.map((expense) => (
+          <View key={expense.id} style={styles.expenseCard}>
+            <View style={styles.expenseInfo}>
+              <Text style={styles.expenseTitle}>{expense.title}</Text>
               <Text style={styles.expenseDate}>
-                {new Date(expense.expense_date).toLocaleDateString('fr-FR')}
+                {formatDate(expense.created_at)}
+                {expense.user && ` - ${expense.user.name}`}
               </Text>
-            </TouchableOpacity>
-          ))
-        )}
+            </View>
+            <View style={styles.expenseAmount}>
+              <Text style={styles.amount}>{formatAmount(expense.amount)}</Text>
+              <Text style={[styles.status, { color: getStatusColor(expense.status) }]}>
+                {getStatusText(expense.status)}
+              </Text>
+            </View>
+          </View>
+        ))}
       </View>
-
-      {user?.role === 'employee' && (
-        <TouchableOpacity
-          style={styles.createExpenseButton}
-          onPress={() => navigation.navigate('CreateExpense')}
-        >
-          <Text style={styles.createExpenseButtonText}>Créer une dépense</Text>
-        </TouchableOpacity>
-      )}
     </ScrollView>
   );
 };
@@ -174,16 +160,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: '#e0e0e0',
   },
   welcomeText: {
     fontSize: 24,
@@ -195,8 +179,41 @@ const styles = StyleSheet.create({
     color: '#666',
     marginTop: 4,
   },
+  logoutButton: {
+    padding: 8,
+  },
   statsContainer: {
-    padding: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 15,
+    justifyContent: 'space-between',
+  },
+  statCard: {
+    width: '48%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginTop: 8,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+  },
+  recentExpensesContainer: {
+    padding: 15,
   },
   sectionTitle: {
     fontSize: 18,
@@ -204,122 +221,45 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 15,
   },
-  statsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  statCard: {
-    width: '48%',
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  statValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#007AFF',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: '#666',
-    marginTop: 4,
-  },
-  totalAmountCard: {
-    backgroundColor: '#007AFF',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  totalAmountLabel: {
-    fontSize: 16,
-    color: '#fff',
-    marginBottom: 5,
-  },
-  totalAmountValue: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  recentExpensesContainer: {
-    padding: 20,
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  seeAllText: {
-    color: '#007AFF',
-    fontSize: 14,
-  },
-  emptyState: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  emptyStateText: {
-    color: '#666',
-    fontSize: 16,
-  },
   expenseCard: {
-    backgroundColor: '#fff',
-    padding: 15,
+    backgroundColor: 'white',
     borderRadius: 10,
+    padding: 15,
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  expenseHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  expenseInfo: {
+    flex: 1,
   },
   expenseTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
-    flex: 1,
-  },
-  expenseStatus: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  expenseAmount: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#007AFF',
-    marginBottom: 4,
   },
   expenseDate: {
     fontSize: 12,
     color: '#666',
+    marginTop: 4,
   },
-  createExpenseButton: {
-    backgroundColor: '#007AFF',
-    margin: 20,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
+  expenseAmount: {
+    alignItems: 'flex-end',
   },
-  createExpenseButtonText: {
-    color: '#fff',
+  amount: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#333',
+  },
+  status: {
+    fontSize: 12,
+    fontWeight: '500',
+    marginTop: 4,
   },
 });
 

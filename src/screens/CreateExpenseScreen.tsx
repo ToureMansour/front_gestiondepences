@@ -6,85 +6,80 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  ActivityIndicator,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import apiService from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import Icon from '@expo/vector-icons/MaterialIcons';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import api from '../services/api';
+import { CreateExpenseRequest } from '../types';
 
-const CreateExpenseScreen = ({ navigation }: any) => {
-  const { user } = useAuth();
+type CreateExpenseScreenNavigationProp = StackNavigationProp<any, 'CreateExpense'>;
+
+const CreateExpenseScreen: React.FC = () => {
   const [title, setTitle] = useState('');
-  const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [expenseDate, setExpenseDate] = useState(new Date().toISOString().split('T')[0]);
-  const [proofImage, setProofImage] = useState<any>(null);
+  const [amount, setAmount] = useState('');
+  const [receiptImage, setReceiptImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const categories = [
-    'Transport',
-    'Repas',
-    'Hébergement',
-    'Fournitures',
-    'Communication',
-    'Autre',
-  ];
+  const [isUploading, setIsUploading] = useState(false);
+  const navigation = useNavigation<CreateExpenseScreenNavigationProp>();
 
   const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.8,
-    });
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (permissionResult.granted === false) {
+        Alert.alert('Permission refusée', 'Vous devez autoriser l\'accès à la galerie pour sélectionner une image.');
+        return;
+      }
 
-    if (!result.canceled && result.assets[0]) {
-      setProofImage(result.assets[0]);
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setReceiptImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert('Erreur', 'Impossible de sélectionner l\'image');
     }
   };
 
   const takePhoto = async () => {
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.8,
-    });
+    try {
+      const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      
+      if (permissionResult.granted === false) {
+        Alert.alert('Permission refusée', 'Vous devez autoriser l\'accès à la caméra pour prendre une photo.');
+        return;
+      }
 
-    if (!result.canceled && result.assets[0]) {
-      setProofImage(result.assets[0]);
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setReceiptImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Error taking photo:', error);
+      Alert.alert('Erreur', 'Impossible de prendre la photo');
     }
   };
 
-  const showImagePickerOptions = () => {
-    Alert.alert(
-      'Ajouter une image',
-      'Choisissez une option',
-      [
-        {
-          text: 'Prendre une photo',
-          onPress: takePhoto,
-        },
-        {
-          text: 'Choisir depuis la galerie',
-          onPress: pickImage,
-        },
-        {
-          text: 'Annuler',
-          style: 'cancel',
-        },
-      ]
-    );
-  };
-
   const handleSubmit = async () => {
-    if (!title || !amount || !description || !category) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+    if (!title || !description || !amount) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
       return;
     }
 
@@ -96,26 +91,44 @@ const CreateExpenseScreen = ({ navigation }: any) => {
 
     setIsLoading(true);
     try {
-      const expenseData = {
+      let imageUrl: string | undefined;
+
+      if (receiptImage) {
+        setIsUploading(true);
+        try {
+          imageUrl = await api.uploadImage(receiptImage);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          Alert.alert('Avertissement', 'La photo n\'a pas pu être téléchargée, mais la dépense sera enregistrée sans image.');
+        } finally {
+          setIsUploading(false);
+        }
+      }
+
+      const expenseData: CreateExpenseRequest = {
         title,
-        amount: amountValue,
         description,
-        category,
-        expense_date: expenseDate,
-        proof_image: proofImage,
+        amount: amountValue,
+        receipt_image: imageUrl,
       };
 
-      await apiService.createExpense(expenseData);
-      Alert.alert('Succès', 'Dépense créée avec succès', [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('MyExpenses'),
-        },
-      ]);
+      await api.createExpense(expenseData);
+      
+      Alert.alert(
+        'Succès',
+        'Dépense créée avec succès',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.goBack(),
+          },
+        ]
+      );
     } catch (error: any) {
+      console.error('Error creating expense:', error);
       Alert.alert(
         'Erreur',
-        error.response?.data?.message || 'Une erreur est survenue lors de la création de la dépense'
+        error.response?.data?.message || 'Impossible de créer la dépense'
       );
     } finally {
       setIsLoading(false);
@@ -123,117 +136,94 @@ const CreateExpenseScreen = ({ navigation }: any) => {
   };
 
   return (
-    <KeyboardAvoidingView 
-      style={styles.container} 
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Créer une dépense</Text>
+    <ScrollView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Nouvelle dépense</Text>
 
-          <View style={styles.form}>
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Titre *</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Titre de la dépense"
-                value={title}
-                onChangeText={setTitle}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Montant (FCFA) *</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="0.00"
-                value={amount}
-                onChangeText={setAmount}
-                keyboardType="numeric"
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Catégorie *</Text>
-              <View style={styles.categoryContainer}>
-                {categories.map((cat) => (
-                  <TouchableOpacity
-                    key={cat}
-                    style={[
-                      styles.categoryButton,
-                      category === cat && styles.categoryButtonSelected,
-                    ]}
-                    onPress={() => setCategory(cat)}
-                  >
-                    <Text
-                      style={[
-                        styles.categoryButtonText,
-                        category === cat && styles.categoryButtonTextSelected,
-                      ]}
-                    >
-                      {cat}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Description *</Text>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                placeholder="Description de la dépense"
-                value={description}
-                onChangeText={setDescription}
-                multiline
-                numberOfLines={4}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Date</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="YYYY-MM-DD"
-                value={expenseDate}
-                onChangeText={setExpenseDate}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Justificatif (optionnel)</Text>
-              <TouchableOpacity style={styles.imageButton} onPress={showImagePickerOptions}>
-                <Text style={styles.imageButtonText}>Ajouter une image</Text>
-              </TouchableOpacity>
-              
-              {proofImage && (
-                <View style={styles.imagePreview}>
-                  <Image source={{ uri: proofImage.uri }} style={styles.previewImage} />
-                  <TouchableOpacity
-                    style={styles.removeImageButton}
-                    onPress={() => setProofImage(null)}
-                  >
-                    <Text style={styles.removeImageText}>×</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-
-            <TouchableOpacity
-              style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-              onPress={handleSubmit}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.submitButtonText}>Créer la dépense</Text>
-              )}
-            </TouchableOpacity>
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Titre *</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Titre de la dépense"
+            autoCapitalize="words"
+          />
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Description *</Text>
+          <TextInput
+            style={[styles.input, styles.textArea]}
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Description détaillée de la dépense"
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Montant (FCFA) *</Text>
+          <TextInput
+            style={styles.input}
+            value={amount}
+            onChangeText={setAmount}
+            placeholder="0.00"
+            keyboardType="numeric"
+          />
+        </View>
+
+        <View style={styles.imageContainer}>
+          <Text style={styles.label}>Reçu (optionnel)</Text>
+          
+          {receiptImage ? (
+            <View style={styles.imagePreviewContainer}>
+              <Image source={{ uri: receiptImage }} style={styles.imagePreview} />
+              <TouchableOpacity
+                style={styles.removeImageButton}
+                onPress={() => setReceiptImage(null)}
+              >
+                <Icon name="close" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.imageButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.imageButton, styles.galleryButton]}
+                onPress={pickImage}
+              >
+                <Icon name="photo-library" size={24} color="white" />
+                <Text style={styles.imageButtonText}>Galerie</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.imageButton, styles.cameraButton]}
+                onPress={takePhoto}
+              >
+                <Icon name="camera-alt" size={24} color="white" />
+                <Text style={styles.imageButtonText}>Appareil photo</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+
+        <TouchableOpacity
+          style={[styles.submitButton, isLoading && styles.buttonDisabled]}
+          onPress={handleSubmit}
+          disabled={isLoading}
+        >
+          {isLoading || isUploading ? (
+            <ActivityIndicator color="white" size="small" />
+          ) : (
+            <Text style={styles.submitButtonText}>
+              {isUploading ? 'Téléchargement...' : 'Créer la dépense'}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -242,10 +232,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  scrollView: {
-    flex: 1,
-  },
-  content: {
+  formContainer: {
     padding: 20,
   },
   title: {
@@ -253,25 +240,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 20,
+    textAlign: 'center',
   },
-  form: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  inputGroup: {
+  inputContainer: {
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
     marginBottom: 8,
+    color: '#333',
+    fontWeight: '500',
   },
   input: {
     borderWidth: 1,
@@ -279,72 +257,58 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
+    backgroundColor: 'white',
   },
   textArea: {
     height: 100,
-    textAlignVertical: 'top',
   },
-  categoryContainer: {
+  imageContainer: {
+    marginBottom: 20,
+  },
+  imageButtonsContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  categoryButton: {
-    backgroundColor: '#f0f0f0',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  categoryButtonSelected: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
-  },
-  categoryButtonText: {
-    fontSize: 14,
-    color: '#333',
-  },
-  categoryButtonTextSelected: {
-    color: '#fff',
+    justifyContent: 'space-between',
   },
   imageButton: {
-    backgroundColor: '#f0f0f0',
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 15,
     borderRadius: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderStyle: 'dashed',
+    marginHorizontal: 5,
+  },
+  galleryButton: {
+    backgroundColor: '#007AFF',
+  },
+  cameraButton: {
+    backgroundColor: '#4CAF50',
   },
   imageButtonText: {
-    color: '#666',
-    fontSize: 16,
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  imagePreviewContainer: {
+    position: 'relative',
+    alignSelf: 'center',
   },
   imagePreview: {
-    position: 'relative',
-    marginTop: 10,
-  },
-  previewImage: {
-    width: '100%',
-    height: 200,
+    width: 200,
+    height: 150,
     borderRadius: 8,
   },
   removeImageButton: {
     position: 'absolute',
     top: -10,
     right: -10,
-    backgroundColor: '#FF0000',
+    backgroundColor: '#FF5252',
+    borderRadius: 12,
     width: 24,
     height: 24,
-    borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  removeImageText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
   submitButton: {
     backgroundColor: '#007AFF',
@@ -353,11 +317,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
-  submitButtonDisabled: {
+  buttonDisabled: {
     backgroundColor: '#ccc',
   },
   submitButtonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },

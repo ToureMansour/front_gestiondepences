@@ -1,46 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
-  ActivityIndicator,
   ScrollView,
-  TextInput,
+  Alert,
 } from 'react-native';
+import Icon from '@expo/vector-icons/MaterialIcons';
 import { useAuth } from '../context/AuthContext';
-import apiService from '../services/api';
 
-const ProfileScreen = ({ navigation }: any) => {
+const ProfileScreen: React.FC = () => {
   const { user, logout } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-  });
-
-  const handleUpdate = async () => {
-    if (!formData.name || !formData.email) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      await apiService.updateProfile(formData);
-      Alert.alert('Succès', 'Profil mis à jour avec succès');
-      setIsEditing(false);
-    } catch (error: any) {
-      Alert.alert(
-        'Erreur',
-        error.response?.data?.message || 'Impossible de mettre à jour le profil'
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -48,141 +19,126 @@ const ProfileScreen = ({ navigation }: any) => {
       'Êtes-vous sûr de vouloir vous déconnecter ?',
       [
         {
-          text: 'Non',
+          text: 'Annuler',
           style: 'cancel',
         },
         {
-          text: 'Oui',
-          onPress: async () => {
-            await logout();
-          },
+          text: 'Se déconnecter',
+          style: 'destructive',
+          onPress: logout,
         },
       ]
     );
   };
 
-  const cancelEdit = () => {
-    setFormData({
-      name: user?.name || '',
-      email: user?.email || '',
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
     });
-    setIsEditing(false);
   };
+
+  const ProfileItem = ({ icon, title, value, onPress }: {
+    icon: keyof typeof Icon.glyphMap;
+    title: string;
+    value?: string;
+    onPress?: () => void;
+  }) => (
+    <TouchableOpacity
+      style={styles.profileItem}
+      onPress={onPress}
+      disabled={!onPress}
+    >
+      <View style={styles.profileItemLeft}>
+        <Icon name={icon} size={24} color="#666" />
+        <Text style={styles.profileItemTitle}>{title}</Text>
+      </View>
+      <View style={styles.profileItemRight}>
+        {value && <Text style={styles.profileItemValue}>{value}</Text>}
+        {onPress && <Icon name="chevron-right" size={20} color="#ccc" />}
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Profil</Text>
-          <Text style={styles.role}>
+      <View style={styles.header}>
+        <View style={styles.avatarContainer}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>
+              {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles.userName}>{user?.name}</Text>
+        <Text style={styles.userEmail}>{user?.email}</Text>
+        <View style={styles.roleBadge}>
+          <Text style={styles.roleText}>
             {user?.role === 'admin' ? 'Administrateur' : 'Employé'}
           </Text>
         </View>
+      </View>
 
-        <View style={styles.profileCard}>
-          <View style={styles.avatarContainer}>
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>
-                {user?.name?.charAt(0).toUpperCase()}
-              </Text>
-            </View>
-          </View>
-
-          {isEditing ? (
-            <View style={styles.form}>
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Nom</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.name}
-                  onChangeText={(text) => setFormData({ ...formData, name: text })}
-                />
-              </View>
-
-              <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email</Text>
-                <TextInput
-                  style={styles.input}
-                  value={formData.email}
-                  onChangeText={(text) => setFormData({ ...formData, email: text })}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-
-              <View style={styles.actionButtons}>
-                <TouchableOpacity
-                  style={[styles.button, styles.cancelButton]}
-                  onPress={cancelEdit}
-                  disabled={isLoading}
-                >
-                  <Text style={styles.cancelButtonText}>Annuler</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={[styles.button, styles.saveButton, isLoading && styles.buttonDisabled]}
-                  onPress={handleUpdate}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.saveButtonText}>Enregistrer</Text>
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.info}>
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Nom</Text>
-                <Text style={styles.infoValue}>{user?.name}</Text>
-              </View>
-
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Email</Text>
-                <Text style={styles.infoValue}>{user?.email}</Text>
-              </View>
-
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Rôle</Text>
-                <Text style={styles.infoValue}>
-                  {user?.role === 'admin' ? 'Administrateur' : 'Employé'}
-                </Text>
-              </View>
-
-              <View style={styles.infoRow}>
-                <Text style={styles.infoLabel}>Date de création</Text>
-                <Text style={styles.infoValue}>
-                  {user?.created_at 
-                    ? new Date(user.created_at).toLocaleDateString('fr-FR')
-                    : 'N/A'
-                  }
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => setIsEditing(true)}
-              >
-                <Text style={styles.editButtonText}>Modifier le profil</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </View>
-
-        <View style={styles.settingsCard}>
-          <Text style={styles.cardTitle}>Paramètres</Text>
+      <View style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Informations personnelles</Text>
           
-          <TouchableOpacity style={styles.settingItem} onPress={handleLogout}>
-            <Text style={styles.settingText}>Se déconnecter</Text>
-            <Text style={styles.settingArrow}>></Text>
-          </TouchableOpacity>
+          <ProfileItem
+            icon="person"
+            title="Nom complet"
+            value={user?.name}
+          />
+          
+          <ProfileItem
+            icon="email"
+            title="Email"
+            value={user?.email}
+          />
+          
+          <ProfileItem
+            icon="calendar-today"
+            title="Date d'inscription"
+            value={user?.created_at ? formatDate(user.created_at) : ''}
+          />
         </View>
 
-        <View style={styles.footer}>
-          <Text style={styles.version}>Version 1.0.0</Text>
-          <Text style={styles.copyright}>© 2024 Gestion Dépenses</Text>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Application</Text>
+          
+          <ProfileItem
+            icon="info"
+            title="Version de l'application"
+            value="1.0.0"
+          />
+          
+          <ProfileItem
+            icon="help"
+            title="Aide et support"
+            onPress={() => {
+              Alert.alert('Aide', 'Contactez le support à support@exemple.com');
+            }}
+          />
+          
+          <ProfileItem
+            icon="privacy-tip"
+            title="Politique de confidentialité"
+            onPress={() => {
+              Alert.alert('Confidentialité', 'Politique de confidentialité en cours de rédaction');
+            }}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Actions</Text>
+          
+          <TouchableOpacity
+            style={[styles.actionButton, styles.logoutButton]}
+            onPress={handleLogout}
+          >
+            <Icon name="logout" size={24} color="#FF5252" />
+            <Text style={styles.logoutButtonText}>Se déconnecter</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -194,177 +150,114 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  content: {
-    padding: 20,
-  },
   header: {
+    backgroundColor: '#007AFF',
+    padding: 30,
     alignItems: 'center',
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
-  role: {
-    fontSize: 16,
-    color: '#666',
-  },
-  profileCard: {
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   avatarContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
   },
   avatar: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#007AFF',
-    justifyContent: 'center',
+    backgroundColor: 'white',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   avatarText: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#007AFF',
   },
-  form: {
-    marginTop: 20,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
+  userName: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 10,
-  },
-  button: {
-    flex: 1,
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  cancelButton: {
-    backgroundColor: '#f0f0f0',
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  cancelButtonText: {
-    color: '#333',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  saveButton: {
-    backgroundColor: '#007AFF',
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  buttonDisabled: {
-    backgroundColor: '#ccc',
-  },
-  info: {
-    marginTop: 20,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 15,
-  },
-  infoLabel: {
-    fontSize: 16,
-    color: '#666',
-  },
-  infoValue: {
-    fontSize: 16,
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  editButton: {
-    backgroundColor: '#007AFF',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  settingsCard: {
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
-  settingItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
-  settingText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  settingArrow: {
-    fontSize: 18,
-    color: '#666',
-  },
-  footer: {
-    alignItems: 'center',
-    marginTop: 30,
-  },
-  version: {
-    fontSize: 14,
-    color: '#666',
+    color: 'white',
     marginBottom: 5,
   },
-  copyright: {
+  userEmail: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginBottom: 15,
+  },
+  roleBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    borderRadius: 15,
+  },
+  roleText: {
+    color: 'white',
     fontSize: 12,
-    color: '#999',
+    fontWeight: 'bold',
+  },
+  content: {
+    padding: 20,
+  },
+  section: {
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 15,
+  },
+  profileItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  profileItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  profileItemTitle: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft: 15,
+  },
+  profileItemRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileItemValue: {
+    fontSize: 14,
+    color: '#666',
+    marginRight: 10,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  logoutButton: {
+    backgroundColor: '#FFEBEE',
+    borderWidth: 1,
+    borderColor: '#FFCDD2',
+  },
+  logoutButtonText: {
+    color: '#FF5252',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 10,
   },
 });
 

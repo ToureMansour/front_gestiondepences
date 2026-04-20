@@ -1,27 +1,22 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { 
-  User, 
-  Expense, 
-  LoginRequest, 
-  RegisterRequest, 
-  CreateExpenseRequest, 
-  AuthResponse,
-  Stats,
-  ApiResponse 
-} from '../types';
-
-const API_BASE_URL = 'http://localhost:8000/api';
+import { Platform } from 'react-native';
+import { LoginRequest, RegisterRequest, AuthResponse, Expense, CreateExpenseRequest, User } from '../types';
 
 class ApiService {
   private api: AxiosInstance;
 
   constructor() {
+    const baseURL = Platform.OS === 'web' 
+      ? 'http://127.0.0.1:8001/api' 
+      : 'http://192.168.100.3:8001/api';
+
     this.api = axios.create({
-      baseURL: API_BASE_URL,
+      baseURL,
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
       },
     });
 
@@ -29,26 +24,19 @@ class ApiService {
   }
 
   private setupInterceptors() {
-    this.api.interceptors.request.use(
-      async (config) => {
-        const token = await AsyncStorage.getItem('auth_token');
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
+    this.api.interceptors.request.use(async (config) => {
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
-    );
+      return config;
+    });
 
     this.api.interceptors.response.use(
-      (response: AxiosResponse) => {
-        return response;
-      },
+      (response) => response,
       async (error) => {
         if (error.response?.status === 401) {
-          await AsyncStorage.removeItem('auth_token');
+          await AsyncStorage.removeItem('token');
           await AsyncStorage.removeItem('user');
         }
         return Promise.reject(error);
@@ -56,6 +44,7 @@ class ApiService {
     );
   }
 
+  // Authentification
   async login(credentials: LoginRequest): Promise<AuthResponse> {
     const response = await this.api.post('/login', credentials);
     return response.data;
@@ -66,20 +55,12 @@ class ApiService {
     return response.data;
   }
 
-  async logout(): Promise<void> {
-    await this.api.post('/logout');
-  }
-
-  async getProfile(): Promise<User> {
-    const response = await this.api.get('/profile');
+  async getCurrentUser(): Promise<User> {
+    const response = await this.api.get('/user');
     return response.data;
   }
 
-  async updateProfile(userData: Partial<User>): Promise<User> {
-    const response = await this.api.put('/profile', userData);
-    return response.data;
-  }
-
+  // Gestion des dépenses
   async getExpenses(): Promise<Expense[]> {
     const response = await this.api.get('/expenses');
     return response.data;
@@ -91,27 +72,7 @@ class ApiService {
   }
 
   async createExpense(expenseData: CreateExpenseRequest): Promise<Expense> {
-    const formData = new FormData();
-    
-    formData.append('title', expenseData.title);
-    formData.append('amount', expenseData.amount.toString());
-    formData.append('description', expenseData.description);
-    formData.append('category', expenseData.category);
-    formData.append('expense_date', expenseData.expense_date);
-    
-    if (expenseData.proof_image) {
-      formData.append('proof', {
-        uri: expenseData.proof_image.uri,
-        type: 'image/jpeg',
-        name: expenseData.proof_image.name || 'proof.jpg',
-      } as any);
-    }
-
-    const response = await this.api.post('/expenses', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await this.api.post('/expenses', expenseData);
     return response.data;
   }
 
@@ -124,33 +85,31 @@ class ApiService {
     await this.api.delete(`/expenses/${id}`);
   }
 
-  async approveExpense(id: number): Promise<Expense> {
-    const response = await this.api.post(`/expenses/${id}/approve`);
+  async uploadImage(uri: string): Promise<string> {
+    const formData = new FormData();
+    formData.append('image', {
+      uri,
+      type: 'image/jpeg',
+      name: 'receipt.jpg',
+    } as any);
+
+    const response = await this.api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data.url;
+  }
+
+  // Admin uniquement
+  async getAllExpenses(): Promise<Expense[]> {
+    const response = await this.api.get('/admin/expenses');
     return response.data;
   }
 
-  async rejectExpense(id: number): Promise<Expense> {
-    const response = await this.api.post(`/expenses/${id}/reject`);
-    return response.data;
-  }
-
-  async markExpenseAsPaid(id: number): Promise<Expense> {
-    const response = await this.api.post(`/expenses/${id}/pay`);
-    return response.data;
-  }
-
-  async getStats(): Promise<Stats> {
-    const response = await this.api.get('/stats');
-    return response.data;
-  }
-
-  async getUsers(): Promise<User[]> {
-    const response = await this.api.get('/users');
-    return response.data;
-  }
-
-  async getUser(id: number): Promise<User> {
-    const response = await this.api.get(`/users/${id}`);
+  async updateExpenseStatus(id: number, status: 'approved' | 'rejected'): Promise<Expense> {
+    const response = await this.api.patch(`/admin/expenses/${id}/status`, { status });
     return response.data;
   }
 }

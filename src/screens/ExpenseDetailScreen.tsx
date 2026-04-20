@@ -1,62 +1,174 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  ActivityIndicator,
+  TouchableOpacity,
   Image,
   Alert,
-  TouchableOpacity,
+  ActivityIndicator,
+  Modal,
+  TextInput,
 } from 'react-native';
-import apiService from '../services/api';
-import { Expense } from '../types';
+import Icon from '@expo/vector-icons/MaterialIcons';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import api from '../services/api';
+import { Expense, CreateExpenseRequest } from '../types';
+import * as ImagePicker from 'expo-image-picker';
 
-const ExpenseDetailScreen = ({ route, navigation }: any) => {
-  const { expenseId } = route.params;
-  const [expense, setExpense] = useState<Expense | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+type ExpenseDetailScreenRouteProp = RouteProp<any, 'ExpenseDetail'>;
+type ExpenseDetailScreenNavigationProp = StackNavigationProp<any, 'ExpenseDetail'>;
 
-  useEffect(() => {
-    loadExpenseDetail();
-  }, [expenseId]);
+const ExpenseDetailScreen: React.FC = () => {
+  const route = useRoute<ExpenseDetailScreenRouteProp>();
+  const navigation = useNavigation<ExpenseDetailScreenNavigationProp>();
+  const { expense: initialExpense } = route.params || {};
+  
+  const [expense, setExpense] = useState<Expense>(initialExpense);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [editedExpense, setEditedExpense] = useState<CreateExpenseRequest>({
+    title: initialExpense.title,
+    description: initialExpense.description,
+    amount: initialExpense.amount,
+    receipt_image: initialExpense.receipt_image,
+  });
 
-  const loadExpenseDetail = async () => {
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return '#4CAF50';
+      case 'rejected':
+        return '#F44336';
+      case 'pending':
+        return '#FF9800';
+      default:
+        return '#757575';
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case 'approved':
+        return 'Approuvée';
+      case 'rejected':
+        return 'Rejetée';
+      case 'pending':
+        return 'En attente';
+      default:
+        return status;
+    }
+  };
+
+  const formatAmount = (amount: number) => {
+    return `${amount.toFixed(2)} FCFA`;
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const pickNewImage = async () => {
     try {
-      const expenseData = await apiService.getExpense(expenseId);
-      setExpense(expenseData);
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (permissionResult.granted === false) {
+        Alert.alert('Permission refusée', 'Vous devez autoriser l\'accès à la galerie pour sélectionner une image.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        setIsLoading(true);
+        try {
+          const imageUrl = await api.uploadImage(result.assets[0].uri);
+          setEditedExpense({ ...editedExpense, receipt_image: imageUrl });
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          Alert.alert('Erreur', 'Impossible de télécharger la nouvelle image');
+        } finally {
+          setIsLoading(false);
+        }
+      }
     } catch (error) {
-      console.error('Error loading expense detail:', error);
-      Alert.alert('Erreur', 'Impossible de charger les détails de la dépense');
-      navigation.goBack();
+      console.error('Error picking image:', error);
+      Alert.alert('Erreur', 'Impossible de sélectionner l\'image');
+    }
+  };
+
+  const handleSave = async () => {
+    if (!editedExpense.title || !editedExpense.description || !editedExpense.amount) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const updatedExpense = await api.updateExpense(expense.id, editedExpense);
+      setExpense(updatedExpense);
+      setIsEditing(false);
+      Alert.alert('Succès', 'Dépense mise à jour avec succès');
+    } catch (error: any) {
+      console.error('Error updating expense:', error);
+      Alert.alert(
+        'Erreur',
+        error.response?.data?.message || 'Impossible de mettre à jour la dépense'
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleCancel = async () => {
-    if (expense?.status !== 'PENDING') {
-      Alert.alert('Erreur', 'Seules les dépenses en attente peuvent être annulées');
-      return;
-    }
-
+  const handleDelete = () => {
     Alert.alert(
-      'Annuler la dépense',
-      'Êtes-vous sûr de vouloir annuler cette dépense ?',
+      'Confirmation',
+      'Êtes-vous sûr de vouloir supprimer cette dépense ?',
       [
         {
-          text: 'Non',
+          text: 'Annuler',
           style: 'cancel',
         },
         {
-          text: 'Oui',
+          text: 'Supprimer',
+          style: 'destructive',
           onPress: async () => {
+            setIsLoading(true);
             try {
-              await apiService.deleteExpense(expenseId);
-              Alert.alert('Succès', 'Dépense annulée avec succès');
-              navigation.goBack();
-            } catch (error) {
-              Alert.alert('Erreur', 'Impossible d\'annuler la dépense');
+              await api.deleteExpense(expense.id);
+              Alert.alert(
+                'Succès',
+                'Dépense supprimée avec succès',
+                [
+                  {
+                    text: 'OK',
+                    onPress: () => navigation.goBack(),
+                  },
+                ]
+              );
+            } catch (error: any) {
+              console.error('Error deleting expense:', error);
+              Alert.alert(
+                'Erreur',
+                error.response?.data?.message || 'Impossible de supprimer la dépense'
+              );
+            } finally {
+              setIsLoading(false);
             }
           },
         },
@@ -64,123 +176,192 @@ const ExpenseDetailScreen = ({ route, navigation }: any) => {
     );
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'PENDING': return '#FFA500';
-      case 'APPROVED': return '#32CD32';
-      case 'REJECTED': return '#FF0000';
-      case 'PAID': return '#007AFF';
-      case 'CANCELLED': return '#666';
-      default: return '#666';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'PENDING': return 'En attente';
-      case 'APPROVED': return 'Approuvée';
-      case 'REJECTED': return 'Refusée';
-      case 'PAID': return 'Payée';
-      case 'CANCELLED': return 'Annulée';
-      default: return status;
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-      </View>
-    );
-  }
-
-  if (!expense) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Dépense non trouvée</Text>
-      </View>
-    );
-  }
+  const canEdit = expense.status === 'pending';
 
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back" size={24} color="#333" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Détails de la dépense</Text>
+        {canEdit && (
+          <TouchableOpacity onPress={() => setIsEditing(!isEditing)}>
+            <Icon name="edit" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={styles.statusContainer}>
+        <View style={[styles.statusBadge, { backgroundColor: getStatusColor(expense.status) }]}>
+          <Text style={styles.statusText}>{getStatusText(expense.status)}</Text>
+        </View>
+      </View>
+
       <View style={styles.content}>
-        <View style={styles.header}>
-          <Text style={styles.title}>{expense.title}</Text>
-          <View style={[styles.statusBadge, { backgroundColor: getStatusColor(expense.status) }]}>
-            <Text style={styles.statusText}>{getStatusText(expense.status)}</Text>
-          </View>
-        </View>
+        {isEditing ? (
+          <View style={styles.editContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Titre</Text>
+              <TextInput
+                style={styles.input}
+                value={editedExpense.title}
+                onChangeText={(text) => setEditedExpense({ ...editedExpense, title: text })}
+              />
+            </View>
 
-        <View style={styles.amountSection}>
-          <Text style={styles.amountLabel}>Montant</Text>
-          <Text style={styles.amount}>{expense.amount.toFixed(2)} FCFA</Text>
-        </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Description</Text>
+              <TextInput
+                style={[styles.input, styles.textArea]}
+                value={editedExpense.description}
+                onChangeText={(text) => setEditedExpense({ ...editedExpense, description: text })}
+                multiline
+                numberOfLines={4}
+              />
+            </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Informations</Text>
-          
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Catégorie</Text>
-            <Text style={styles.infoValue}>{expense.category}</Text>
-          </View>
-          
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Date de dépense</Text>
-            <Text style={styles.infoValue}>
-              {new Date(expense.expense_date).toLocaleDateString('fr-FR')}
-            </Text>
-          </View>
-          
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Date de création</Text>
-            <Text style={styles.infoValue}>
-              {new Date(expense.created_at).toLocaleDateString('fr-FR')}
-            </Text>
-          </View>
-        </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Montant (FCFA)</Text>
+              <TextInput
+                style={styles.input}
+                value={editedExpense.amount.toString()}
+                onChangeText={(text) => setEditedExpense({ ...editedExpense, amount: parseFloat(text) || 0 })}
+                keyboardType="numeric"
+              />
+            </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Description</Text>
-          <Text style={styles.description}>{expense.description}</Text>
-        </View>
+            <View style={styles.editButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.cancelButton]}
+                onPress={() => {
+                  setIsEditing(false);
+                  setEditedExpense({
+                    title: expense.title,
+                    description: expense.description,
+                    amount: expense.amount,
+                    receipt_image: expense.receipt_image,
+                  });
+                }}
+              >
+                <Text style={styles.cancelButtonText}>Annuler</Text>
+              </TouchableOpacity>
 
-        {expense.proof_image && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Justificatif</Text>
-            <Image 
-              source={{ uri: expense.proof_image }} 
-              style={styles.proofImage}
-              resizeMode="contain"
-            />
+              <TouchableOpacity
+                style={[styles.button, styles.saveButton]}
+                onPress={handleSave}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+                ) : (
+                  <Text style={styles.saveButtonText}>Enregistrer</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        ) : (
+          <View style={styles.detailsContainer}>
+            <View style={styles.detailRow}>
+              <Text style={styles.label}>Titre</Text>
+              <Text style={styles.value}>{expense.title}</Text>
+            </View>
+
+            <View style={styles.detailRow}>
+              <Text style={styles.label}>Description</Text>
+              <Text style={styles.value}>{expense.description}</Text>
+            </View>
+
+            <View style={styles.detailRow}>
+              <Text style={styles.label}>Montant</Text>
+              <Text style={[styles.value, styles.amount]}>{formatAmount(expense.amount)}</Text>
+            </View>
+
+            <View style={styles.detailRow}>
+              <Text style={styles.label}>Date de création</Text>
+              <Text style={styles.value}>{formatDate(expense.created_at)}</Text>
+            </View>
+
+            {expense.updated_at !== expense.created_at && (
+              <View style={styles.detailRow}>
+                <Text style={styles.label}>Dernière modification</Text>
+                <Text style={styles.value}>{formatDate(expense.updated_at)}</Text>
+              </View>
+            )}
           </View>
         )}
 
-        {expense.user && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Informations employé</Text>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Nom</Text>
-              <Text style={styles.infoValue}>{expense.user.name}</Text>
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.infoLabel}>Email</Text>
-              <Text style={styles.infoValue}>{expense.user.email}</Text>
-            </View>
-          </View>
-        )}
-
-        {expense.status === 'PENDING' && (
-          <View style={styles.actionsContainer}>
+        {expense.receipt_image && (
+          <View style={styles.imageContainer}>
+            <Text style={styles.label}>Reçu</Text>
             <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={handleCancel}
+              style={styles.imageWrapper}
+              onPress={() => setShowImageModal(true)}
             >
-              <Text style={styles.cancelButtonText}>Annuler la dépense</Text>
+              <Image source={{ uri: expense.receipt_image }} style={styles.receiptImage} />
+              <View style={styles.imageOverlay}>
+                <Icon name="zoom-in" size={24} color="white" />
+              </View>
+            </TouchableOpacity>
+
+            {isEditing && (
+              <TouchableOpacity
+                style={styles.changeImageButton}
+                onPress={pickNewImage}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <ActivityIndicator color="white" size="small" />
+                ) : (
+                  <Text style={styles.changeImageText}>Changer l'image</Text>
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
+
+        {canEdit && !isEditing && (
+          <View style={styles.actionButtonsContainer}>
+            <TouchableOpacity
+              style={[styles.actionButton, styles.deleteButton]}
+              onPress={handleDelete}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <ActivityIndicator color="white" size="small" />
+              ) : (
+                <Text style={styles.deleteButtonText}>Supprimer</Text>
+              )}
             </TouchableOpacity>
           </View>
         )}
       </View>
+
+      <Modal
+        visible={showImageModal}
+        transparent={true}
+        onRequestClose={() => setShowImageModal(false)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalBackground}
+            activeOpacity={1}
+            onPress={() => setShowImageModal(false)}
+          >
+            <Image
+              source={{ uri: expense.receipt_image }}
+              style={styles.modalImage}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.closeModalButton}
+            onPress={() => setShowImageModal(false)}
+          >
+            <Icon name="close" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -190,129 +371,188 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  statusContainer: {
+    padding: 20,
     alignItems: 'center',
   },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  statusBadge: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
-  errorText: {
-    fontSize: 16,
-    color: '#666',
+  statusText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   content: {
     padding: 20,
   },
-  header: {
-    backgroundColor: '#fff',
-    padding: 20,
+  editContainer: {
+    backgroundColor: 'white',
     borderRadius: 10,
-    marginBottom: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    flex: 1,
-    marginRight: 10,
-  },
-  statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 15,
-  },
-  statusText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  amountSection: {
-    backgroundColor: '#007AFF',
     padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
+  },
+  inputContainer: {
     marginBottom: 20,
   },
-  amountLabel: {
-    color: '#fff',
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  amount: {
-    color: '#fff',
-    fontSize: 32,
-    fontWeight: 'bold',
-  },
-  section: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  infoLabel: {
-    fontSize: 14,
-    color: '#666',
-    flex: 1,
-  },
-  infoValue: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: 'bold',
-    flex: 2,
-    textAlign: 'right',
-  },
-  description: {
+  label: {
     fontSize: 16,
+    marginBottom: 8,
     color: '#333',
-    lineHeight: 24,
+    fontWeight: '500',
   },
-  proofImage: {
-    width: '100%',
-    height: 200,
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
     borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: '#f9f9f9',
   },
-  actionsContainer: {
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  editButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
-  cancelButton: {
-    backgroundColor: '#FF0000',
+  button: {
+    flex: 1,
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 8,
     alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  cancelButton: {
+    backgroundColor: '#f5f5f5',
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   cancelButtonText: {
-    color: '#fff',
+    color: '#333',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  saveButton: {
+    backgroundColor: '#007AFF',
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  detailsContainer: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  detailRow: {
+    marginBottom: 20,
+  },
+  value: {
+    fontSize: 16,
+    color: '#333',
+    marginTop: 4,
+  },
+  amount: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#007AFF',
+  },
+  imageContainer: {
+    marginTop: 20,
+  },
+  imageWrapper: {
+    position: 'relative',
+    alignSelf: 'center',
+  },
+  receiptImage: {
+    width: 200,
+    height: 150,
+    borderRadius: 8,
+  },
+  imageOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  changeImageButton: {
+    backgroundColor: '#007AFF',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  changeImageText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  actionButtonsContainer: {
+    marginTop: 20,
+  },
+  actionButton: {
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  deleteButton: {
+    backgroundColor: '#F44336',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalBackground: {
+    flex: 1,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalImage: {
+    width: '90%',
+    height: '80%',
+  },
+  closeModalButton: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
