@@ -1,0 +1,39 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.pending {
+  background: #FEF3C7;
+  color: #92400E;
+}
+
+.approved {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.rejected {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.active {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.inactive {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.default {
+  background: #E0F2FE;
+  color: #075985;
+}
