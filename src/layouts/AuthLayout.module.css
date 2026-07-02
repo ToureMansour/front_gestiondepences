@@ -129,6 +129,22 @@
   letter-spacing: -0.5px;
 }
 
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 32px;
+  transition: color 0.2s;
+}
+
+.homeLink:hover {
+  color: #2DD4BF;
+}
+
 .tagline {
   font-size: 15px;
   color: rgba(255,255,255,0.6);
@@ -195,7 +211,7 @@
 
   .left {
     flex: none;
-    padding: 40px 24px 0;
+    padding: 20px 24px 0;
     min-height: auto;
     background: none;
   }
@@ -210,6 +226,15 @@
     justify-content: center;
   }
 
+  .brandLink .brandIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .brandLink .brandName {
+    font-size: 17px;
+  }
+
   .tagline {
     display: none;
   }
@@ -218,9 +243,13 @@
     display: none;
   }
 
+  .homeLink {
+    display: none;
+  }
+
   .right {
     flex: 1;
-    padding: 32px 24px 48px;
+    padding: 28px 24px 48px;
     background: transparent;
     align-items: flex-start;
   }
@@ -241,11 +270,11 @@
 
 @media (max-width: 480px) {
   .left {
-    padding: 28px 16px 0;
+    padding: 16px 16px 0;
   }
 
   .right {
-    padding: 24px 16px 40px;
+    padding: 20px 16px 40px;
   }
 
   .authTitle {

@@ -152,7 +152,7 @@
 .heroBg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, #0F172A 0%, #134E4A 35%, #0F766E 65%, #0D9488 100%);
+  background: linear-gradient(160deg, #0F172A 0%, #134E4A 30%, #0F766E 60%, #0D9488 100%);
   z-index: 0;
 }
 
@@ -160,9 +160,9 @@
   position: absolute;
   inset: 0;
   background-image:
-    radial-gradient(circle at 20% 30%, rgba(45,212,191,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 20% 30%, rgba(45,212,191,0.12) 0%, transparent 50%),
     radial-gradient(circle at 80% 70%, rgba(15,118,110,0.15) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(204,251,241,0.05) 0%, transparent 50%);
+    radial-gradient(circle at 50% 50%, rgba(204,251,241,0.06) 0%, transparent 50%);
   z-index: 0;
 }
 
@@ -334,22 +334,27 @@
   animation: float 4s ease-in-out infinite;
 }
 
+.heroMobileMockup {
+  display: none;
+}
+
 .mockup {
   width: 100%;
-  max-width: 420px;
-  background: rgba(255,255,255,0.05);
+  max-width: 440px;
+  background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 16px;
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
   overflow: hidden;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
 }
 
 .mockupHeader {
   display: flex;
+  align-items: center;
   gap: 6px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
 
@@ -357,57 +362,119 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
 }
 
 .mockupHeader span:first-child { background: #EF4444; }
 .mockupHeader span:nth-child(2) { background: #F59E0B; }
 .mockupHeader span:nth-child(3) { background: #10B981; }
 
-.mockupBody {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.mockupRow {
+.mockupHeaderTitle {
+  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  font-weight: 600;
 }
 
-.mockupBar {
-  height: 10px;
-  background: rgba(255,255,255,0.08);
-  border-radius: 5px;
-  flex: 1;
+.mockupBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.mockupPill {
-  width: 50px;
-  height: 22px;
-  background: #0F766E;
-  border-radius: 6px;
-  flex-shrink: 0;
+.mockupStatRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0 6px;
+}
+
+.mockupStat {
+  text-align: center;
+}
+
+.mockupStatValue {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.mockupStatLabel {
+  font-size: 10px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mockupStatDivider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255,255,255,0.06);
 }
 
 .mockupDivider {
   height: 1px;
   background: rgba(255,255,255,0.06);
-  margin: 6px 0;
+  margin: 4px 0;
 }
 
-.mockupGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+.mockupRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.mockupRowDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mockupRowContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.mockupRowTitle {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 1px;
+}
+
+.mockupRowMeta {
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+}
+
+.mockupRowAmount {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+
+.mockupChart {
+  display: flex;
+  align-items: flex-end;
   gap: 8px;
+  padding: 8px 4px 0;
+  height: 48px;
 }
 
-.mockupGrid div {
-  height: 50px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 6px;
+.mockupChartBar {
+  flex: 1;
+  background: linear-gradient(to top, rgba(45,212,191,0.2), rgba(45,212,191,0.4));
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s;
+  min-height: 8px;
 }
 
 .mockupGlow {
@@ -461,17 +528,17 @@
 
 .featuresGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
   max-width: 1100px;
   margin: 0 auto;
 }
 
 .featureCard {
-  padding: 36px 28px;
   background: #fff;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
+  overflow: hidden;
   transition: all 0.5s;
   opacity: 0;
   transform: translateY(20px);
@@ -483,20 +550,40 @@
 }
 
 .featureCard:hover {
-  transform: translateY(-8px);
+  transform: translateY(-6px);
   box-shadow: 0 24px 48px -12px rgba(0,0,0,0.12);
   border-color: #0F766E;
 }
 
-.featureIcon {
-  width: 48px;
-  height: 48px;
+.featureIllusWrap {
+  background: linear-gradient(135deg, #F0FDFA 0%, #F8FAFC 100%);
+  padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-bottom: 1px solid #E2E8F0;
+  min-height: 140px;
+}
+
+.featureIllus {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+}
+
+.featureContent {
+  padding: 24px 24px 28px;
+}
+
+.featureIcon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   transition: transform 0.3s;
 }
 
@@ -533,12 +620,43 @@
   z-index: 0;
 }
 
+.howTag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #CCFBF1;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.howTitle {
+  font-size: 40px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.howDesc {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
 .stepsGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
   max-width: 960px;
-  margin: 0 auto;
+  margin: 60px auto 0;
   position: relative;
   z-index: 1;
 }
@@ -772,22 +890,37 @@
   .heroActions { justify-content: center; }
   .heroBadges { justify-content: center; }
   .heroVisual { display: none; }
+  .heroMobileMockup {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    margin-top: 40px;
+    animation: float 4s ease-in-out infinite;
+  }
+  .heroMobileMockup .mockup {
+    max-width: 360px;
+  }
   .heroTitle { font-size: 44px; }
 }
 
 @media (max-width: 768px) {
   .navInner { padding: 0 20px; }
   .navLinks .navLink { display: none; }
-  .hero { padding: 120px 20px 60px; }
+  .hero { padding: 120px 20px 60px; flex-direction: column; }
   .heroTitle { font-size: 34px; }
   .heroActions { flex-direction: column; }
   .heroBadges { flex-direction: column; align-items: center; gap: 8px; }
+  .heroMobileMockup .mockup { max-width: 320px; }
   .features { padding: 60px 20px; }
   .featuresGrid { grid-template-columns: 1fr; }
   .sectionTitle { font-size: 30px; }
   .sectionHead { margin-bottom: 40px; }
+  .howTag { font-size: 11px; }
+  .howTitle { font-size: 30px; }
+  .howDesc { font-size: 14px; }
   .how { padding: 60px 20px; }
-  .stepsGrid { grid-template-columns: 1fr; gap: 20px; }
+  .stepsGrid { grid-template-columns: 1fr; gap: 20px; margin-top: 40px; }
   .stats { padding: 60px 20px; }
   .statsGrid { grid-template-columns: repeat(2, 1fr); }
   .cta { padding: 60px 20px; }
