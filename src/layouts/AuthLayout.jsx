@@ -77,54 +77,22 @@ function AuthLayout({ children, title }) {
             </span>
           </Link>
 
+          <p style={{
+            fontSize: '15px',
+            color: 'rgba(255,255,255,0.65)',
+            margin: '-32px 0 32px',
+            textAlign: 'center',
+            lineHeight: '1.5',
+          }}>
+            La solution intelligente pour gerer<br />
+            les notes de frais de votre entreprise
+          </p>
+
           <div className="auth-illustration">
             <WalletIllustration />
           </div>
 
-          <div className="auth-testimonial" style={{
-            marginTop: '40px',
-            padding: '20px 24px',
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.1)',
-            borderRadius: '14px',
-            backdropFilter: 'blur(8px)',
-          }}>
-            <p style={{
-              fontSize: '14px',
-              lineHeight: '1.7',
-              color: 'rgba(255,255,255,0.7)',
-              fontStyle: 'italic',
-              margin: 0,
-            }}>
-              "Depensys a revolutionne notre gestion de notes de frais. 
-              Un gain de temps considerable pour toute l equipe comptable."
-            </p>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              marginTop: '14px',
-            }}>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #0F766E, #2DD4BF)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontSize: '12px',
-                fontWeight: 700,
-              }}>
-                S
-              </div>
-              <div>
-                <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#fff' }}>Sophie Martin</p>
-                <p style={{ margin: 0, fontSize: '11px', color: 'rgba(255,255,255,0.5)' }}>CFO, TechCorp</p>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -178,27 +146,47 @@ function AuthLayout({ children, title }) {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        @media (max-width: 900px) {
-          .auth-split { flex-direction: column !important; }
+        @media (max-width: 1000px) {
+          .auth-split { 
+            flex-direction: column !important; 
+            background: linear-gradient(160deg, #0F172A 0%, #134E4A 35%, #0F766E 65%, #0D9488 100%) !important;
+            min-height: 100vh !important;
+            justify-content: flex-start !important;
+          }
           .auth-left { 
             flex: none !important; 
-            padding: 32px 24px 24px !important;
+            padding: 40px 24px 0 !important;
             min-height: auto !important;
+            background: none !important;
           }
           .auth-left-content { 
             max-width: 100% !important;
-            display: flex !important;
-            align-items: center !important;
-            gap: 16px !important;
+            text-align: center !important;
           }
+          .auth-left-content > p { display: none !important; }
           .auth-left-content > a { margin-bottom: 0 !important; }
           .auth-illustration { display: none !important; }
-          .auth-testimonial { display: none !important; }
-          .auth-right { padding: 40px 24px !important; }
+          .auth-right { 
+            flex: 1 !important;
+            padding: 32px 24px 48px !important;
+            background: transparent !important;
+            align-items: flex-start !important;
+          }
+          .auth-right > div {
+            background: #fff !important;
+            border-radius: 16px !important;
+            padding: 32px !important;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.15) !important;
+            max-width: 100% !important;
+          }
+          .auth-title { font-size: 24px !important; }
+          .auth-right p { margin-bottom: 24px !important; }
         }
         @media (max-width: 480px) {
-          .auth-right { padding: 24px 16px !important; }
-          .auth-title { font-size: 24px !important; }
+          .auth-left { padding: 28px 16px 0 !important; }
+          .auth-right { padding: 20px 16px 40px !important; }
+          .auth-right > div { padding: 24px !important; }
+          .auth-title { font-size: 22px !important; }
         }
       `}</style>
     </div>
