@@ -6,7 +6,7 @@ const authService = {
   register: (data) => apiClient.post(ENDPOINTS.AUTH.REGISTER, data),
   logout: () => apiClient.post(ENDPOINTS.AUTH.LOGOUT),
   getProfile: () => apiClient.get(ENDPOINTS.AUTH.PROFILE),
-  updateProfile: (data) => apiClient.post(ENDPOINTS.AUTH.UPDATE_PROFILE, data),
+  updateProfile: (data) => apiClient.put(ENDPOINTS.AUTH.UPDATE_PROFILE, data),
 };
 
 export default authService;

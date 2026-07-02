@@ -5,7 +5,7 @@ import styles from './Sidebar.module.css';
 
 const NAV_ITEMS = [
   {
-    to: '/',
+    to: '/dashboard',
     label: 'Tableau de bord',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -75,7 +75,7 @@ function Sidebar({ isOpen, onClose }) {
             <NavLink
               key={item.to}
               to={item.to}
-              end={item.to === '/'}
+              end={item.to === '/dashboard'}
               className={({ isActive }) =>
                 `${styles.navItem} ${isActive ? styles.navItemActive : ''}`
               }

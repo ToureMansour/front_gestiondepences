@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from '../pages/LandingPage';
 import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import ExpensesPage from '../pages/ExpensesPage';
@@ -14,6 +15,7 @@ function AppRouter() {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             element={
@@ -22,7 +24,7 @@ function AppRouter() {
               </ProtectedRoute>
             }
           >
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/expenses" element={<ExpensesPage />} />
             <Route
               path="/users"

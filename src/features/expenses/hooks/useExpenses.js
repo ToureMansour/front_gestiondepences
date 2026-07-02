@@ -2,6 +2,24 @@ import { useState, useEffect, useCallback } from 'react';
 import expenseService from '../services/expenseService';
 import { handleApiError } from '../../../services/errorHandler';
 
+function extractPaginatedData(response) {
+  const body = response.data;
+  const result = body.data || body;
+  return {
+    items: result.data || result,
+    pagination: {
+      page: result.current_page || 1,
+      totalPages: result.last_page || 1,
+      total: result.total || 0,
+    },
+  };
+}
+
+function extractItem(response) {
+  const body = response.data;
+  return body.data || body;
+}
+
 export function useExpenses(params = {}) {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,15 +31,9 @@ export function useExpenses(params = {}) {
     setError(null);
     try {
       const response = await expenseService.getAll({ page, per_page: perPage, ...params });
-      const data = response.data;
-      setExpenses(data.data || data);
-      if (data.meta) {
-        setPagination({
-          page: data.meta.current_page,
-          totalPages: data.meta.last_page,
-          total: data.meta.total,
-        });
-      }
+      const { items, pagination: pag } = extractPaginatedData(response);
+      setExpenses(items);
+      setPagination(pag);
     } catch (err) {
       setError(handleApiError(err));
     } finally {
@@ -34,7 +46,8 @@ export function useExpenses(params = {}) {
   const createExpense = async (data) => {
     try {
       const response = await expenseService.create(data);
-      setExpenses((prev) => [response.data.data || response.data, ...prev]);
+      const item = extractItem(response);
+      setExpenses((prev) => [item, ...prev]);
       return { success: true };
     } catch (err) {
       return { success: false, error: handleApiError(err) };
@@ -44,7 +57,7 @@ export function useExpenses(params = {}) {
   const updateExpense = async (ref, data) => {
     try {
       const response = await expenseService.update(ref, data);
-      const updated = response.data.data || response.data;
+      const updated = extractItem(response);
       setExpenses((prev) => prev.map((e) => (e.reference === ref ? updated : e)));
       return { success: true, data: updated };
     } catch (err) {
@@ -84,16 +97,10 @@ export function useAdminExpenses(params = {}) {
     setLoading(true);
     setError(null);
     try {
-      const response = await expenseService.getAdminAll({ page, per_page: perPage, ...params });
-      const data = response.data;
-      setExpenses(data.data || data);
-      if (data.meta) {
-        setPagination({
-          page: data.meta.current_page,
-          totalPages: data.meta.last_page,
-          total: data.meta.total,
-        });
-      }
+      const response = await expenseService.getAll({ page, per_page: perPage, ...params });
+      const { items, pagination: pag } = extractPaginatedData(response);
+      setExpenses(items);
+      setPagination(pag);
     } catch (err) {
       setError(handleApiError(err));
     } finally {
@@ -106,7 +113,7 @@ export function useAdminExpenses(params = {}) {
   const approveExpense = async (ref) => {
     try {
       const response = await expenseService.approve(ref);
-      const updated = response.data.data || response.data;
+      const updated = extractItem(response);
       setExpenses((prev) => prev.map((e) => (e.reference === ref ? updated : e)));
       return { success: true };
     } catch (err) {
@@ -117,7 +124,7 @@ export function useAdminExpenses(params = {}) {
   const rejectExpense = async (ref) => {
     try {
       const response = await expenseService.reject(ref);
-      const updated = response.data.data || response.data;
+      const updated = extractItem(response);
       setExpenses((prev) => prev.map((e) => (e.reference === ref ? updated : e)));
       return { success: true };
     } catch (err) {

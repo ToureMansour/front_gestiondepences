@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { handleApiError } from '../../../services/errorHandler';
 import apiClient from '../../../services/apiClient';
-import useAuthStore from '../../../store/authStore';
 
 export function useDashboard() {
-  const { user } = useAuthStore();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,20 +11,15 @@ export function useDashboard() {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        const endpoint = user?.role === 'admin' ? '/admin/expenses' : '/expenses';
-        const response = await apiClient.get(endpoint);
-        const data = response.data.data || response.data;
-        const total = Array.isArray(data) ? data.length : (data?.total || 0);
-        const approved = Array.isArray(data)
-          ? data.filter((e) => e.status === 'approved').length
-          : 0;
-        const pending = Array.isArray(data)
-          ? data.filter((e) => e.status === 'pending').length
-          : 0;
-        const totalAmount = Array.isArray(data)
-          ? data.reduce((sum, e) => sum + parseFloat(e.amount || 0), 0)
-          : 0;
-        setStats({ total, approved, pending, totalAmount });
+        const response = await apiClient.get('/stats');
+        const body = response.data;
+        const data = body.data || body;
+        setStats({
+          total: data.total_expenses || 0,
+          approved: data.approved_count || 0,
+          pending: data.pending_count || 0,
+          totalAmount: parseFloat(data.total_amount || 0),
+        });
       } catch (err) {
         setError(handleApiError(err));
         setStats({ total: 0, approved: 0, pending: 0, totalAmount: 0 });
@@ -35,7 +28,7 @@ export function useDashboard() {
       }
     };
     fetchStats();
-  }, [user]);
+  }, []);
 
   return { stats, loading, error };
 }

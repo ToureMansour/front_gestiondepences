@@ -18,7 +18,7 @@ export function useAuth() {
       const responseData = response.data.data || response.data;
       const { user, token } = responseData;
       setAuth(user, token);
-      navigate('/');
+      navigate('/dashboard');
       return true;
     } catch (err) {
       const appError = handleApiError(err);
@@ -37,7 +37,7 @@ export function useAuth() {
       const regData = response.data.data || response.data;
       const { user, token } = regData;
       setAuth(user, token);
-      navigate('/');
+      navigate('/dashboard');
       return true;
     } catch (err) {
       const appError = handleApiError(err);

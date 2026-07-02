@@ -11,20 +11,11 @@ function LoginPage() {
   const { login, loading, error } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/');
+    if (isAuthenticated) navigate('/dashboard');
   }, [isAuthenticated, navigate]);
 
   return (
-    <AuthLayout>
-      <h2 style={{
-        fontSize: '20px',
-        fontWeight: 700,
-        color: '#1E293B',
-        margin: '0 0 24px',
-        textAlign: 'center',
-      }}>
-        Connexion
-      </h2>
+    <AuthLayout title="Connexion">
       <LoginForm onSubmit={login} loading={loading} error={error} />
     </AuthLayout>
   );
