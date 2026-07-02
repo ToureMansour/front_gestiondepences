@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 function AuthLayout({ children, title }) {
   return (
-    <div style={{
+    <div className="auth-split" style={{
       minHeight: '100vh',
       display: 'flex',
       background: '#fff',
     }}>
       {/* ── Left panel: brand + illustration ── */}
-      <div style={{
+      <div className="auth-left" style={{
         flex: '1.3',
         display: 'flex',
         flexDirection: 'column',
@@ -55,7 +55,7 @@ function AuthLayout({ children, title }) {
         }} />
 
         {/* Content */}
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '480px', width: '100%' }}>
+        <div className="auth-left-content" style={{ position: 'relative', zIndex: 1, maxWidth: '480px', width: '100%' }}>
           <Link to="/" style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -77,9 +77,11 @@ function AuthLayout({ children, title }) {
             </span>
           </Link>
 
-          <WalletIllustration />
+          <div className="auth-illustration">
+            <WalletIllustration />
+          </div>
 
-          <div style={{
+          <div className="auth-testimonial" style={{
             marginTop: '40px',
             padding: '20px 24px',
             background: 'rgba(255,255,255,0.06)',
@@ -127,7 +129,7 @@ function AuthLayout({ children, title }) {
       </div>
 
       {/* ── Right panel: form ── */}
-      <div style={{
+      <div className="auth-right" style={{
         flex: '1',
         display: 'flex',
         flexDirection: 'column',
@@ -141,7 +143,7 @@ function AuthLayout({ children, title }) {
           maxWidth: '400px',
           animation: 'slideUp 0.6s ease',
         }}>
-          <h2 style={{
+          <h2 className="auth-title" style={{
             fontSize: '28px',
             fontWeight: 700,
             color: '#0F172A',
@@ -175,6 +177,28 @@ function AuthLayout({ children, title }) {
         @keyframes slideUp {
           from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 900px) {
+          .auth-split { flex-direction: column !important; }
+          .auth-left { 
+            flex: none !important; 
+            padding: 32px 24px 24px !important;
+            min-height: auto !important;
+          }
+          .auth-left-content { 
+            max-width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+          }
+          .auth-left-content > a { margin-bottom: 0 !important; }
+          .auth-illustration { display: none !important; }
+          .auth-testimonial { display: none !important; }
+          .auth-right { padding: 40px 24px !important; }
+        }
+        @media (max-width: 480px) {
+          .auth-right { padding: 24px 16px !important; }
+          .auth-title { font-size: 24px !important; }
         }
       `}</style>
     </div>
