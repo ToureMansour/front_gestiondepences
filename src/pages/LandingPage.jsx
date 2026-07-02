@@ -490,6 +490,7 @@ function LandingPage() {
 
       {/* ── HERO ── */}
       <section className={styles.hero}>
+        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <div className={styles.heroText}>
             <div className={styles.heroTagline}>
@@ -516,9 +517,7 @@ function LandingPage() {
               ))}
             </div>
           </div>
-          <div className={styles.heroVisual}><img src="/images/hero-image.png" alt="Depensys" className={styles.heroImage} /></div>
         </div>
-        <div className={styles.heroMobileMockup}><img src="/images/hero-image.png" alt="Depensys" className={styles.heroImage} /></div>
       </section>
 
       {/* ── TRUSTED BY ── */}
