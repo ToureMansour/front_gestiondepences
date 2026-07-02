@@ -316,6 +316,23 @@ function NavDropdown({ label, items, isOpen, onMouseEnter, onMouseLeave }) {
   );
 }
 
+/* ── Section Divider ── */
+
+function SectionDivider({ type, fill }) {
+  const paths = {
+    wave: 'M0,40 C240,100 480,0 720,40 C960,80 1200,20 1440,60 L1440,100 L0,100 Z',
+    curve: 'M0,20 C360,100 1080,100 1440,20 L1440,100 L0,100 Z',
+    organic: 'M0,30 C180,100 360,0 540,50 C720,100 900,10 1080,60 C1260,100 1350,20 1440,40 L1440,100 L0,100 Z',
+  };
+  return (
+    <div className={styles.divider}>
+      <svg viewBox="0 0 1440 100" preserveAspectRatio="none" className={styles.dividerSvg}>
+        <path d={paths[type]} fill={fill} />
+      </svg>
+    </div>
+  );
+}
+
 /* ── Page ── */
 
 function LandingPage() {
@@ -447,6 +464,8 @@ function LandingPage() {
         </div>
       </section>
 
+      <SectionDivider type="wave" fill="#0F172A" />
+
       {/* ── HOW IT WORKS ── */}
       <section id="how" className={styles.how}>
         <div className={styles.howBg} />
@@ -465,6 +484,8 @@ function LandingPage() {
           ))}
         </div>
       </section>
+
+      <SectionDivider type="curve" fill="#F8FAFC" />
 
       {/* ── TESTIMONIALS ── */}
       <section id="testimonials" className={styles.testimonials}>
@@ -517,6 +538,8 @@ function LandingPage() {
           ))}
         </div>
       </section>
+
+      <SectionDivider type="wave" fill="#FFFFFF" />
 
       {/* ── SECURITY ── */}
       <section className={styles.security}>
@@ -573,6 +596,8 @@ function LandingPage() {
           ))}
         </div>
       </section>
+
+      <SectionDivider type="organic" fill="#134E4A" />
 
       {/* ── CTA ── */}
       <section className={styles.cta}>
