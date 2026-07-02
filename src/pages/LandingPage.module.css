@@ -166,7 +166,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
   position: relative; min-height: 100vh;
   display: flex; align-items: center;
   padding: 140px 40px 80px; overflow: hidden;
-  background: url('/images/hero-image.png') center/cover no-repeat;
+  background: url('/images/hero-image.png') center 20%/cover no-repeat;
 }
 
 .heroOverlay {
