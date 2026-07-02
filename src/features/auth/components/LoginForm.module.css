@@ -28,15 +28,16 @@
 
 .input {
   width: 100%;
-  padding: 18px 16px 6px;
-  border: 1.5px solid #E2E8F0;
-  border-radius: 10px;
+  padding: 18px 0 6px 0;
+  border: none;
+  border-bottom: 1.5px solid #E2E8F0;
+  border-radius: 0;
   font-size: 15px;
   font-family: 'Inter', -apple-system, sans-serif;
   color: #1E293B;
-  background: #fff;
+  background: transparent;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s;
   box-sizing: border-box;
   height: 54px;
   appearance: none;
@@ -48,7 +49,7 @@
 
 .input:focus {
   border-color: #0F766E;
-  box-shadow: 0 0 0 3px rgba(15,118,110,0.1);
+  border-bottom-width: 2px;
 }
 
 .inputError {
@@ -62,15 +63,14 @@
 
 .label {
   position: absolute;
-  left: 14px;
+  left: 0;
   top: 17px;
   font-size: 15px;
   font-weight: 400;
   color: #94A3B8;
   pointer-events: none;
   transition: all 0.2s ease;
-  background: #fff;
-  padding: 0 4px;
+  background: transparent;
   line-height: 1;
 }
 
@@ -296,8 +296,8 @@
 
 @media (max-width: 1000px) {
   .input {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.15);
+    background: transparent;
+    border-bottom-color: rgba(255,255,255,0.15);
     color: #fff;
   }
 
@@ -306,16 +306,14 @@
   }
 
   .input:hover {
-    border-color: rgba(255,255,255,0.3);
+    border-bottom-color: rgba(255,255,255,0.3);
   }
 
   .input:focus {
-    border-color: #2DD4BF;
-    box-shadow: 0 0 0 3px rgba(45,212,191,0.15);
+    border-bottom-color: #2DD4BF;
   }
 
   .label {
-    background: transparent;
     color: rgba(255,255,255,0.5);
   }
 
