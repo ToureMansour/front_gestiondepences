@@ -291,3 +291,98 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
+
+@media (max-width: 1000px) {
+  .input {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+
+  .input::placeholder {
+    color: rgba(255,255,255,0.4);
+  }
+
+  .input:hover {
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  .input:focus {
+    border-color: #2DD4BF;
+    box-shadow: 0 0 0 3px rgba(45,212,191,0.15);
+  }
+
+  .label {
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .labelFloating {
+    color: #2DD4BF;
+  }
+
+  .passwordToggle {
+    color: rgba(255,255,255,0.4);
+  }
+
+  .passwordToggle:hover {
+    color: rgba(255,255,255,0.7);
+  }
+
+  .forgotBtn {
+    color: #2DD4BF;
+  }
+
+  .forgotBtn:hover {
+    color: #CCFBF1;
+  }
+
+  .apiError {
+    background: rgba(254,242,242,0.15);
+    border-color: rgba(254,202,202,0.3);
+  }
+
+  .apiErrorText {
+    color: #FECACA;
+  }
+
+  .submitBtn {
+    background: #fff;
+    color: #0F766E;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+
+  .submitBtn:disabled {
+    background: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.5);
+    box-shadow: none;
+  }
+
+  .dividerLine {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .dividerText {
+    color: rgba(255,255,255,0.4);
+  }
+
+  .socialBtn {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.8);
+  }
+
+  .socialBtn:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .demoHint {
+    color: rgba(255,255,255,0.4);
+  }
+
+  .demoHint strong {
+    color: rgba(255,255,255,0.6);
+  }
+}

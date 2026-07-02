@@ -226,19 +226,16 @@
   }
 
   .rightInner {
-    background: #fff;
-    border-radius: 16px;
-    padding: 32px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
     max-width: 100%;
   }
 
   .authTitle {
     font-size: 24px;
+    color: #fff;
   }
 
-  .rightSubtitle {
-    margin-bottom: 24px;
+  .authSubtitle {
+    color: rgba(255,255,255,0.6);
   }
 }
 
@@ -248,11 +245,7 @@
   }
 
   .right {
-    padding: 20px 16px 40px;
-  }
-
-  .rightInner {
-    padding: 24px;
+    padding: 24px 16px 40px;
   }
 
   .authTitle {
