@@ -286,6 +286,76 @@ const FAQS = [
   { q: 'Y a-t-il une version gratuite ?', a: 'Oui, nous proposons un essai gratuit de 14 jours sans engagement ni carte bancaire.' },
 ];
 
+/* ── Flags ── */
+
+function FlagFR() {
+  return (
+    <svg viewBox="0 0 24 18" width="18" height="14" style={{ borderRadius: 2, flexShrink: 0 }}>
+      <rect width="8" height="18" fill="#002395" />
+      <rect x="8" width="8" height="18" fill="#fff" />
+      <rect x="16" width="8" height="18" fill="#ED2939" />
+    </svg>
+  );
+}
+function FlagEN() {
+  return (
+    <svg viewBox="0 0 24 18" width="18" height="14" style={{ borderRadius: 2, flexShrink: 0 }}>
+      <rect width="24" height="18" fill="#012169" />
+      <path d="M0,0 L24,18 M24,0 L0,18" stroke="#fff" strokeWidth="3.5" />
+      <path d="M0,0 L24,18 M24,0 L0,18" stroke="#C8102E" strokeWidth="1.5" />
+      <rect y="7" width="24" height="4" fill="#fff" />
+      <rect y="8" width="24" height="2" fill="#C8102E" />
+      <rect x="10" y="0" width="4" height="18" fill="#fff" />
+      <rect x="11" y="0" width="2" height="18" fill="#C8102E" />
+    </svg>
+  );
+}
+
+/* ── Translations ── */
+
+const LANG = {
+  fr: {
+    nav: { features: 'Fonctionnalites', how: 'Comment ca marche', reviews: 'Avis', faq: 'FAQ', login: 'Connexion' },
+    hero: {
+      tagline: 'Solution complete de gestion des depenses',
+      title: 'Simplifiez vos',
+      titleGradient: 'notes de frais',
+      desc: 'Centralisez, suivez et controlez toutes les depenses de votre equipe en un clin d oeil. Fini le papier, bonjour la tranquillite.',
+      cta: 'Commencer', more: 'En savoir plus',
+      badges: ['Sans engagement', 'Essai gratuit 14 jours', 'Support prioritaire'],
+    },
+    trusted: { label: 'Ils nous font confiance' },
+    features: { tag: 'Fonctionnalites', title: 'Tout ce qu il vous faut', desc: 'Un outil complet pense pour les equipes modernes.' },
+    how: { tag: 'Comment ca marche', title: '3 etapes simples', desc: 'De la soumission au paiement, tout est fluide.' },
+    testimonials: { tag: 'Ils parlent de nous', title: 'Ce que nos clients disent', desc: 'Des retours d experience concrets.' },
+    stats: { tag: 'Pourquoi Depensys', title: 'Des chiffres qui parlent', desc: 'Adopte par des entreprises de toutes tailles.' },
+    security: { tag: 'Securite', title: 'Vos donnees en toute confiance', desc: 'Des standards de securite eleves pour votre tranquilite.' },
+    faq: { tag: 'FAQ', title: 'Questions frequentes', desc: 'Tout ce que vous devez savoir.' },
+    cta: { title: 'Pret a transformer votre gestion ?', desc: 'Rejoignez les entreprises qui font confiance a Depensys. Essai gratuit 14 jours.', btn: 'Acceder a l application' },
+    footer: { desc: 'La solution intelligente pour gerer les notes de frais de votre entreprise.', product: 'Produit', company: 'Entreprise', contact: 'Contact' },
+  },
+  en: {
+    nav: { features: 'Features', how: 'How it works', reviews: 'Reviews', faq: 'FAQ', login: 'Login' },
+    hero: {
+      tagline: 'Complete expense management solution',
+      title: 'Simplify your',
+      titleGradient: 'expense reports',
+      desc: 'Centralize, track and control all your team expenses in a blink. No more paper, hello peace of mind.',
+      cta: 'Get started', more: 'Learn more',
+      badges: ['No commitment', '14-day free trial', 'Priority support'],
+    },
+    trusted: { label: 'Trusted by' },
+    features: { tag: 'Features', title: 'Everything you need', desc: 'A complete tool designed for modern teams.' },
+    how: { tag: 'How it works', title: '3 simple steps', desc: 'From submission to payment, everything is smooth.' },
+    testimonials: { tag: 'Testimonials', title: 'What our clients say', desc: 'Real feedback from real users.' },
+    stats: { tag: 'Why Depensys', title: 'Numbers that speak', desc: 'Adopted by companies of all sizes.' },
+    security: { tag: 'Security', title: 'Your data, safe and sound', desc: 'High security standards for your peace of mind.' },
+    faq: { tag: 'FAQ', title: 'Frequently asked questions', desc: 'Everything you need to know.' },
+    cta: { title: 'Ready to transform your management?', desc: 'Join the companies that trust Depensys. 14-day free trial.', btn: 'Access the app' },
+    footer: { desc: 'The smart solution for managing your company expense reports.', product: 'Product', company: 'Company', contact: 'Contact' },
+  },
+};
+
 /* ── Nav Dropdown ── */
 
 function NavDropdown({ label, items, isOpen, onMouseEnter, onMouseLeave }) {
@@ -318,7 +388,7 @@ function NavDropdown({ label, items, isOpen, onMouseEnter, onMouseLeave }) {
 
 /* ── Section Divider ── */
 
-function SectionDivider({ type, fill }) {
+function SectionDivider({ type, fill, prevBg }) {
   const paths = {
     wave: 'M0,40 C240,100 480,0 720,40 C960,80 1200,20 1440,60 L1440,100 L0,100 Z',
     curve: 'M0,20 C360,100 1080,100 1440,20 L1440,100 L0,100 Z',
@@ -327,6 +397,7 @@ function SectionDivider({ type, fill }) {
   return (
     <div className={styles.divider}>
       <svg viewBox="0 0 1440 100" preserveAspectRatio="none" className={styles.dividerSvg}>
+        {prevBg && <rect width="1440" height="100" fill={prevBg} />}
         <path d={paths[type]} fill={fill} />
       </svg>
     </div>
@@ -366,6 +437,13 @@ function LandingPage() {
     shortDesc: f.desc.split('.')[0] + '.',
   }));
 
+  const t = (path) => {
+    const keys = path.split('.');
+    let val = LANG[lang];
+    for (const k of keys) { if (val) val = val[k]; }
+    return val || path;
+  };
+
   return (
     <div className={styles.page}>
       {/* ── NAV ── */}
@@ -381,21 +459,21 @@ function LandingPage() {
           </Link>
           <div className={styles.navLinks}>
             <NavDropdown
-              label="Fonctionnalites"
+              label={t('nav.features')}
               items={featuresMenu}
               isOpen={openDropdown === 'features'}
               onMouseEnter={() => setOpenDropdown('features')}
               onMouseLeave={() => setOpenDropdown(null)}
             />
-            <button onClick={() => scrollTo('how')} className={styles.navLink}>Comment ca marche</button>
-            <button onClick={() => scrollTo('testimonials')} className={styles.navLink}>Avis</button>
-            <button onClick={() => scrollTo('faq')} className={styles.navLink}>FAQ</button>
+            <button onClick={() => scrollTo('how')} className={styles.navLink}>{t('nav.how')}</button>
+            <button onClick={() => scrollTo('testimonials')} className={styles.navLink}>{t('nav.reviews')}</button>
+            <button onClick={() => scrollTo('faq')} className={styles.navLink}>{t('nav.faq')}</button>
             <div className={styles.langToggle}>
-              <button className={`${styles.langBtn} ${lang === 'fr' ? styles.langActive : ''}`} onClick={() => setLang('fr')}>FR</button>
+              <button className={`${styles.langBtn} ${lang === 'fr' ? styles.langActive : ''}`} onClick={() => setLang('fr')}><FlagFR /> FR</button>
               <span className={styles.langSep}>|</span>
-              <button className={`${styles.langBtn} ${lang === 'en' ? styles.langActive : ''}`} onClick={() => setLang('en')}>EN</button>
+              <button className={`${styles.langBtn} ${lang === 'en' ? styles.langActive : ''}`} onClick={() => setLang('en')}><FlagEN /> EN</button>
             </div>
-            <Link to="/login" className={styles.navCta}>Connexion</Link>
+            <Link to="/login" className={styles.navCta}>{t('nav.login')}</Link>
           </div>
         </div>
       </nav>
@@ -406,27 +484,26 @@ function LandingPage() {
           <div className={styles.heroText}>
             <div className={styles.heroTagline}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-              Solution complete de gestion des depenses
+              {t('hero.tagline')}
             </div>
             <h1 className={styles.heroTitle}>
-              Simplifiez vos<br />
-              <span className={styles.heroGradient}>notes de frais</span>
+              {t('hero.title')}<br />
+              <span className={styles.heroGradient}>{t('hero.titleGradient')}</span>
             </h1>
             <p className={styles.heroDesc}>
-              Centralisez, suivez et controlez toutes les depenses de votre equipe en un clin d oeil.
-              Fini le papier, bonjour la tranquillite.
+              {t('hero.desc')}
             </p>
             <div className={styles.heroActions}>
               <Link to="/login" className={styles.btnPrimary}>
-                Commencer
+                {t('hero.cta')}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
               </Link>
-              <button onClick={() => scrollTo('features')} className={styles.btnGhost}>En savoir plus</button>
+              <button onClick={() => scrollTo('features')} className={styles.btnGhost}>{t('hero.more')}</button>
             </div>
             <div className={styles.heroBadges}>
-              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Sans engagement</span>
-              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Essai gratuit 14 jours</span>
-              <span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> Support prioritaire</span>
+              {LANG[lang].hero.badges.map((b, i) => (
+                <span key={i}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> {b}</span>
+              ))}
             </div>
           </div>
           <div className={styles.heroVisual}><DashboardMockup /></div>
@@ -437,7 +514,7 @@ function LandingPage() {
       {/* ── TRUSTED BY ── */}
       <section className={styles.trusted}>
         <div className={styles.trustedInner}>
-          <p className={styles.trustedLabel}>Ils nous font confiance</p>
+          <p className={styles.trustedLabel}>{t('trusted.label')}</p>
           <div className={styles.trustedLogos}>
             {['TechCorp', 'InnovGroup', 'WebAgency', 'StartHub', 'CloudPlus', 'DataSoft'].map((name) => (
               <div key={name} className={styles.trustedLogo}>{name}</div>
@@ -449,23 +526,23 @@ function LandingPage() {
       {/* ── FEATURES ── */}
       <section id="features" className={styles.features}>
         <div className={styles.sectionHead}>
-          <span className={styles.tag}>Fonctionnalites</span>
-          <h2 className={styles.sectionTitle}>Tout ce qu il vous faut</h2>
-          <p className={styles.sectionDesc}>Un outil complet pense pour les equipes modernes.</p>
+          <span className={styles.tag}>{t('features.tag')}</span>
+          <h2 className={styles.sectionTitle}>{t('features.title')}</h2>
+          <p className={styles.sectionDesc}>{t('features.desc')}</p>
         </div>
         <div className={styles.featuresGrid}>
           {FEATURES.map((f, i) => <FeatureCard key={i} feature={f} index={i} />)}
         </div>
       </section>
 
-      <SectionDivider type="wave" fill="#0D3D3A" />
+      <SectionDivider type="wave" fill="#0D3D3A" prevBg="#FFFFFF" />
 
       {/* ── HOW IT WORKS ── */}
       <section id="how" className={styles.how}>
         <div className={styles.sectionHead} style={{ position: 'relative', zIndex: 1 }}>
-          <span className={styles.howTag}>Comment ca marche</span>
-          <h2 className={styles.howTitle}>3 etapes simples</h2>
-          <p className={styles.howDesc}>De la soumission au paiement, tout est fluide.</p>
+          <span className={styles.howTag}>{t('how.tag')}</span>
+          <h2 className={styles.howTitle}>{t('how.title')}</h2>
+          <p className={styles.howDesc}>{t('how.desc')}</p>
         </div>
         <div className={styles.stepsGrid}>
           {STEPS.map((s, i) => (
@@ -478,14 +555,14 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="curve" fill="#F8FAFC" />
+      <SectionDivider type="curve" fill="#F8FAFC" prevBg="#0D3D3A" />
 
       {/* ── TESTIMONIALS ── */}
       <section id="testimonials" className={styles.testimonials}>
         <div className={styles.sectionHead}>
-          <span className={styles.tag}>Ils parlent de nous</span>
-          <h2 className={styles.sectionTitle}>Ce que nos clients disent</h2>
-          <p className={styles.sectionDesc}>Des retours d experience concrets.</p>
+          <span className={styles.tag}>{t('testimonials.tag')}</span>
+          <h2 className={styles.sectionTitle}>{t('testimonials.title')}</h2>
+          <p className={styles.sectionDesc}>{t('testimonials.desc')}</p>
         </div>
         <div className={styles.testimonialCarousel}>
           <div className={styles.testimonialCards}>
@@ -511,17 +588,12 @@ function LandingPage() {
       {/* ── STATS ── */}
       <section id="stats" className={styles.stats}>
         <div className={styles.sectionHead} style={{ position: 'relative', zIndex: 1 }}>
-          <span className={styles.statsTag}>Pourquoi Depensys</span>
-          <h2 className={styles.statsTitle}>Des chiffres qui parlent</h2>
-          <p className={styles.statsDesc}>Adopte par des entreprises de toutes tailles.</p>
+          <span className={styles.statsTag}>{t('stats.tag')}</span>
+          <h2 className={styles.statsTitle}>{t('stats.title')}</h2>
+          <p className={styles.statsDesc}>{t('stats.desc')}</p>
         </div>
         <div className={styles.statsGrid}>
-          {[
-            { end: 100, suffix: '%', label: 'Numerise', desc: 'Fini le papier' },
-            { end: 5, suffix: 'x', label: 'Plus rapide', desc: 'Traitement accelere' },
-            { end: 99, suffix: '%', label: 'Disponible', desc: 'Uptime garanti' },
-            { end: 256, suffix: '', label: 'Bits', desc: 'Chiffrement AES' },
-          ].map((s, i) => (
+          {LANG[lang].stats.items.map((s, i) => (
             <div key={i} className={styles.statCard}>
               <span className={styles.statNum}><AnimatedCounter end={s.end} suffix={s.suffix} /></span>
               <span className={styles.statLabel}>{s.label}</span>
@@ -531,14 +603,14 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="wave" fill="#FFFFFF" />
+      <SectionDivider type="wave" fill="#FFFFFF" prevBg="#F8FAFC" />
 
       {/* ── SECURITY ── */}
       <section className={styles.security}>
         <div className={styles.sectionHead}>
-          <span className={styles.tag}>Securite</span>
-          <h2 className={styles.sectionTitle}>Vos donnees en toute confiance</h2>
-          <p className={styles.sectionDesc}>Des standards de securite eleves pour votre tranquillite.</p>
+          <span className={styles.tag}>{t('security.tag')}</span>
+          <h2 className={styles.sectionTitle}>{t('security.title')}</h2>
+          <p className={styles.sectionDesc}>{t('security.desc')}</p>
         </div>
         <div className={styles.securityGrid}>
           <div className={styles.securityCard}>
@@ -567,9 +639,9 @@ function LandingPage() {
       {/* ── FAQ ── */}
       <section id="faq" className={styles.faq}>
         <div className={styles.sectionHead} style={{ position: 'relative', zIndex: 1 }}>
-          <span className={styles.faqTag}>FAQ</span>
-          <h2 className={styles.faqTitle}>Questions frequentes</h2>
-          <p className={styles.faqDesc}>Tout ce que vous devez savoir.</p>
+          <span className={styles.faqTag}>{t('faq.tag')}</span>
+          <h2 className={styles.faqTitle}>{t('faq.title')}</h2>
+          <p className={styles.faqDesc}>{t('faq.desc')}</p>
         </div>
         <div className={styles.faqList}>
           {FAQS.map((item, i) => (
@@ -588,16 +660,16 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="organic" fill="#0F766E" />
+      <SectionDivider type="organic" fill="#0F766E" prevBg="#0D3D3A" />
 
       {/* ── CTA ── */}
       <section className={styles.cta}>
         <div className={styles.ctaGlow} />
         <div className={styles.ctaContent}>
-          <h2>Pret a transformer votre gestion ?</h2>
-          <p>Rejoignez les entreprises qui font confiance a Depensys. Essai gratuit 14 jours.</p>
+          <h2>{t('cta.title')}</h2>
+          <p>{t('cta.desc')}</p>
           <Link to="/login" className={styles.btnPrimary}>
-            Acceder a l application
+            {t('cta.btn')}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
           </Link>
         </div>
@@ -612,22 +684,22 @@ function LandingPage() {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                 Depensys
               </div>
-              <p>La solution intelligente pour gerer les notes de frais de votre entreprise.</p>
+              <p>{t('footer.desc')}</p>
             </div>
             <div className={styles.footerCol}>
-              <h5>Produit</h5>
-              <button onClick={() => scrollTo('features')}>Fonctionnalites</button>
-              <button onClick={() => scrollTo('how')}>Comment ca marche</button>
-              <button onClick={() => scrollTo('testimonials')}>Avis clients</button>
+              <h5>{t('footer.product')}</h5>
+              <button onClick={() => scrollTo('features')}>{t('nav.features')}</button>
+              <button onClick={() => scrollTo('how')}>{t('nav.how')}</button>
+              <button onClick={() => scrollTo('testimonials')}>{t('nav.reviews')}</button>
             </div>
             <div className={styles.footerCol}>
-              <h5>Entreprise</h5>
-              <button onClick={() => scrollTo('stats')}>Statistiques</button>
-              <button onClick={() => scrollTo('faq')}>FAQ</button>
-              <Link to="/login">Connexion</Link>
+              <h5>{t('footer.company')}</h5>
+              <button onClick={() => scrollTo('stats')}>{t('stats.tag')}</button>
+              <button onClick={() => scrollTo('faq')}>{t('nav.faq')}</button>
+              <Link to="/login">{t('nav.login')}</Link>
             </div>
             <div className={styles.footerCol}>
-              <h5>Contact</h5>
+              <h5>{t('footer.contact')}</h5>
               <span>contact@depensys.com</span>
               <span>+221 77 123 45 67</span>
               <span>Dakar, Senegal</span>

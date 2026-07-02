@@ -92,26 +92,33 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .navDropdownWrapper { position: relative; }
 
 .megaMenu {
-  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-  margin-top: 12px; animation: slideDown 0.2s ease; z-index: 200;
+  position: fixed; top: 60px; left: 0; right: 0;
+  display: flex; justify-content: center;
+  animation: slideDown 0.2s ease; z-index: 200;
+  pointer-events: none;
 }
 
 .megaMenuInner {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-  background: #fff; border: 1px solid #E2E8F0; border-radius: 16px;
-  box-shadow: 0 20px 60px -12px rgba(0,0,0,0.15);
-  overflow: hidden; min-width: 580px;
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 20px 60px -12px rgba(0,0,0,0.12);
+  overflow: hidden; max-width: 700px; width: 100%;
+  pointer-events: auto;
+  border: none;
 }
 
 .megaMenuItem {
   display: flex; align-items: flex-start; gap: 12px;
   padding: 20px 16px; background: none; border: none;
-  border-right: 1px solid #F1F5F9; cursor: pointer;
+  border-right: 1px solid rgba(226,232,240,0.5); cursor: pointer;
   text-align: left; transition: all 0.2s;
 }
 
 .megaMenuItem:last-child { border-right: none; }
-.megaMenuItem:hover { background: #F0FDFA; }
+.megaMenuItem:hover { background: rgba(15,118,110,0.06); }
 
 .megaMenuIcon {
   width: 40px; height: 40px; display: flex;
@@ -132,8 +139,8 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 /* ── Language Toggle ── */
 
 .langToggle {
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 8px;
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 6px;
   border: 1px solid rgba(255,255,255,0.15); border-radius: 6px;
   font-family: var(--font-body);
 }
@@ -142,7 +149,9 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .langBtn {
   background: none; border: none; font-size: 11px; font-weight: 600;
   color: rgba(255,255,255,0.4); cursor: pointer;
-  padding: 2px 4px; transition: color 0.2s; font-family: var(--font-body);
+  padding: 2px 6px; transition: color 0.2s;
+  font-family: var(--font-body);
+  display: flex; align-items: center; gap: 3px;
 }
 .navScrolled .langBtn { color: #94A3B8; }
 .langActive { color: #fff !important; }
