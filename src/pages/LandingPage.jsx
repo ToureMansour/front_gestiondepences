@@ -516,9 +516,9 @@ function LandingPage() {
               ))}
             </div>
           </div>
-          <div className={styles.heroVisual}><DashboardMockup /></div>
+          <div className={styles.heroVisual}><img src="/images/hero-image.png" alt="Depensys" className={styles.heroImage} /></div>
         </div>
-        <div className={styles.heroMobileMockup}><DashboardMockup /></div>
+        <div className={styles.heroMobileMockup}><img src="/images/hero-image.png" alt="Depensys" className={styles.heroImage} /></div>
       </section>
 
       {/* ── TRUSTED BY ── */}

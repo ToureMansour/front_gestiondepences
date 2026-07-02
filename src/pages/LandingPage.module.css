@@ -233,6 +233,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .heroBadges span { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; }
 
 .heroVisual { display: flex; justify-content: center; animation: float 4s ease-in-out infinite; }
+.heroImage { width: 100%; max-width: 500px; height: auto; display: block; border-radius: 12px; }
 .heroMobileMockup { display: none; }
 
 /* ── Mockup ── */
