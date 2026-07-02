@@ -402,11 +402,6 @@ function LandingPage() {
 
       {/* ── HERO ── */}
       <section className={styles.hero}>
-        <div className={styles.heroBg} />
-        <div className={styles.heroMesh} />
-        <div className={styles.heroBlob1} />
-        <div className={styles.heroBlob2} />
-        <div className={styles.heroGrid} />
         <div className={styles.heroContent}>
           <div className={styles.heroText}>
             <div className={styles.heroTagline}>
@@ -453,7 +448,6 @@ function LandingPage() {
 
       {/* ── FEATURES ── */}
       <section id="features" className={styles.features}>
-        <div className={styles.featuresBlob} />
         <div className={styles.sectionHead}>
           <span className={styles.tag}>Fonctionnalites</span>
           <h2 className={styles.sectionTitle}>Tout ce qu il vous faut</h2>
@@ -464,11 +458,10 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="wave" fill="#0F172A" />
+      <SectionDivider type="wave" fill="#0D3D3A" />
 
       {/* ── HOW IT WORKS ── */}
       <section id="how" className={styles.how}>
-        <div className={styles.howBg} />
         <div className={styles.sectionHead} style={{ position: 'relative', zIndex: 1 }}>
           <span className={styles.howTag}>Comment ca marche</span>
           <h2 className={styles.howTitle}>3 etapes simples</h2>
@@ -517,7 +510,6 @@ function LandingPage() {
 
       {/* ── STATS ── */}
       <section id="stats" className={styles.stats}>
-        <div className={styles.statsBg} />
         <div className={styles.sectionHead} style={{ position: 'relative', zIndex: 1 }}>
           <span className={styles.statsTag}>Pourquoi Depensys</span>
           <h2 className={styles.statsTitle}>Des chiffres qui parlent</h2>
@@ -574,7 +566,6 @@ function LandingPage() {
 
       {/* ── FAQ ── */}
       <section id="faq" className={styles.faq}>
-        <div className={styles.faqBg} />
         <div className={styles.sectionHead} style={{ position: 'relative', zIndex: 1 }}>
           <span className={styles.faqTag}>FAQ</span>
           <h2 className={styles.faqTitle}>Questions frequentes</h2>
@@ -597,11 +588,10 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="organic" fill="#134E4A" />
+      <SectionDivider type="organic" fill="#0F766E" />
 
       {/* ── CTA ── */}
       <section className={styles.cta}>
-        <div className={styles.ctaBg} />
         <div className={styles.ctaGlow} />
         <div className={styles.ctaContent}>
           <h2>Pret a transformer votre gestion ?</h2>

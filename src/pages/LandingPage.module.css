@@ -157,7 +157,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
   position: relative; min-height: 100vh;
   display: flex; align-items: center;
   padding: 140px 40px 80px; overflow: hidden;
-  background: #0F172A;
+  background: #0D3D3A;
 }
 
 .heroContent {
@@ -343,7 +343,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 
 /* ── How it works ── */
 
-.how { padding: 120px 40px; background: #0F172A; }
+.how { padding: 120px 40px; background: #0D3D3A; }
 
 .howTag {
   display: inline-block; padding: 5px 14px;
@@ -410,7 +410,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 
 /* ── Stats ── */
 
-.stats { padding: 120px 40px; background: #134E4A; }
+.stats { padding: 120px 40px; background: #0F766E; }
 
 .statsTag {
   display: inline-block; padding: 5px 14px;
@@ -468,7 +468,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 
 /* ── FAQ ── */
 
-.faq { padding: 120px 40px; background: #0F172A; }
+.faq { padding: 120px 40px; background: #0D3D3A; }
 
 .faqTag {
   display: inline-block; padding: 5px 14px;
@@ -508,7 +508,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 
 /* ── CTA ── */
 
-.cta { padding: 120px 40px; text-align: center; background: #134E4A; position: relative; overflow: hidden; }
+.cta { padding: 120px 40px; text-align: center; background: #0F766E; position: relative; overflow: hidden; }
 
 .ctaGlow {
   position: absolute; width: 500px; height: 500px; border-radius: 50%;
