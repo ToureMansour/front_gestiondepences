@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import PageHeader from '../components/shared/PageHeader';
 import { useExpenses, useAdminExpenses } from '../features/expenses/hooks/useExpenses';
 import { Table } from '../components/ui/Table';
@@ -12,15 +13,10 @@ import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate } from '../utils/formatDate';
 import useAuthStore from '../store/authStore';
 
-const STATUS_MAP = {
-  pending: 'En attente',
-  approved: 'Approuvee',
-  rejected: 'Rejetee',
-};
-
 function ExpensesPage() {
   const { user } = useAuthStore();
   const isAdmin = user?.role === 'admin';
+  const { t } = useTranslation();
   const { expenses, loading, error, approveExpense, rejectExpense } = isAdmin
     ? useAdminExpenses()
     : useExpenses();
@@ -28,30 +24,36 @@ function ExpensesPage() {
   const [detailOpen, setDetailOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
+  const STATUS_MAP = {
+    pending: t('expenses.statusPending'),
+    approved: t('expenses.statusApproved'),
+    rejected: t('expenses.statusRejected'),
+  };
+
   const columns = [
-    { key: 'reference', label: 'Reference', width: '140px' },
+    { key: 'reference', label: t('expenses.reference'), width: '140px' },
     {
       key: 'title',
-      label: 'Titre',
+      label: t('expenses.titleCol'),
       render: (row) => (
         <span style={{ fontWeight: 500 }}>{row.title}</span>
       ),
     },
     {
       key: 'amount',
-      label: 'Montant',
+      label: t('expenses.amount'),
       render: (row) => formatCurrency(row.amount),
     },
     {
       key: 'status',
-      label: 'Statut',
+      label: t('expenses.status'),
       render: (row) => (
         <Badge variant={row.status}>{STATUS_MAP[row.status] || row.status}</Badge>
       ),
     },
     {
       key: 'created_at',
-      label: 'Date',
+      label: t('expenses.date'),
       render: (row) => formatDate(row.created_at),
     },
   ];
@@ -59,12 +61,12 @@ function ExpensesPage() {
   if (isAdmin) {
     columns.splice(1, 0, {
       key: 'user',
-      label: 'Employe',
+      label: t('expenses.employee'),
       render: (row) => row.user?.name || row.user_name || '-',
     });
     columns.push({
       key: 'actions',
-      label: 'Actions',
+      label: t('expenses.actions'),
       render: (row) => (
         <div style={{ display: 'flex', gap: '6px' }}>
           {(row.status === 'pending' || !row.status) && (
@@ -76,7 +78,7 @@ function ExpensesPage() {
                 disabled={actionLoading}
                 style={{ color: '#059669' }}
               >
-                Approuver
+                {t('expenses.approve')}
               </Button>
               <Button
                 size="sm"
@@ -85,7 +87,7 @@ function ExpensesPage() {
                 disabled={actionLoading}
                 style={{ color: '#DC2626' }}
               >
-                Rejeter
+                {t('expenses.reject')}
               </Button>
             </>
           )}
@@ -122,13 +124,13 @@ function ExpensesPage() {
   return (
     <div>
       <PageHeader
-        title="Depenses"
-        description={isAdmin ? 'Gerer les depenses des employes' : 'Mes depenses'}
+        title={t('expenses.title')}
+        description={isAdmin ? t('expenses.adminDescription') : t('expenses.description')}
       />
       {expenses.length === 0 ? (
         <EmptyState
-          title="Aucune depense"
-          message="Vous n'avez pas encore de depenses."
+          title={t('expenses.emptyTitle')}
+          message={t('expenses.emptyMessage')}
         />
       ) : (
         <Table
@@ -141,32 +143,32 @@ function ExpensesPage() {
       <Modal
         isOpen={detailOpen}
         onClose={() => setDetailOpen(false)}
-        title="Detail de la depense"
+        title={t('expenses.detailTitle')}
       >
         {selectedExpense && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div>
-              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>Reference</strong>
+              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>{t('expenses.reference')}</strong>
               <span>{selectedExpense.reference}</span>
             </div>
             <div>
-              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>Titre</strong>
+              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>{t('expenses.titleCol')}</strong>
               <span>{selectedExpense.title}</span>
             </div>
             <div>
-              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>Description</strong>
-              <span>{selectedExpense.description || 'Aucune description'}</span>
+              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>{t('expenses.descriptionLabel')}</strong>
+              <span>{selectedExpense.description || t('expenses.noDescription')}</span>
             </div>
             <div>
-              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>Montant</strong>
+              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>{t('expenses.amount')}</strong>
               <span style={{ fontWeight: 600 }}>{formatCurrency(selectedExpense.amount)}</span>
             </div>
             <div>
-              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>Statut</strong>
+              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>{t('expenses.status')}</strong>
               <Badge variant={selectedExpense.status}>{STATUS_MAP[selectedExpense.status]}</Badge>
             </div>
             <div>
-              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>Date</strong>
+              <strong style={{ fontSize: '12px', color: '#64748B', display: 'block' }}>{t('expenses.date')}</strong>
               <span>{formatDate(selectedExpense.created_at)}</span>
             </div>
           </div>

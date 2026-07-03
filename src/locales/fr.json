@@ -1,0 +1,229 @@
+{
+  "nav": {
+    "features": "Fonctionnalités",
+    "how": "Comment ça marche",
+    "reviews": "Avis",
+    "faq": "FAQ",
+    "login": "Connexion",
+    "dashboard": "Tableau de bord",
+    "expenses": "Dépenses",
+    "newExpense": "Nouvelle dépense",
+    "users": "Utilisateurs",
+    "profile": "Profil"
+  },
+  "hero": {
+    "tagline": "Solution complète de gestion des dépenses",
+    "title": "Simplifiez vos",
+    "titleGradient": "notes de frais",
+    "desc": "Centralisez, suivez et contrôlez toutes les dépenses de votre équipe en un clin d'oeil. Fini le papier, bonjour la tranquillité.",
+    "cta": "Commencer",
+    "more": "En savoir plus",
+    "badges": ["Sans engagement", "Essai gratuit 14 jours", "Support prioritaire"]
+  },
+  "trusted": {
+    "label": "Ils nous font confiance"
+  },
+  "features": {
+    "tag": "Fonctionnalités",
+    "title": "Tout ce qu'il vous faut",
+    "desc": "Un outil complet pensé pour les équipes modernes.",
+    "rapidSubmission": "Soumission rapide",
+    "rapidSubmissionDesc": "Capturez vos dépenses en quelques secondes. Photo, montant, catégorie : tout est simplifié.",
+    "smoothValidation": "Validation fluide",
+    "smoothValidationDesc": "Les administrateurs approuvent ou rejettent en un geste. Processus clair et instantané.",
+    "multiRoles": "Multi-rôles",
+    "multiRolesDesc": "Employés et admins, chacun son espace avec ses permissions. Gérable en un clic.",
+    "paymentsTracked": "Paiements suivis",
+    "paymentsTrackedDesc": "Marquez les dépenses comme payées. Méthodes multiples, historique complet et exportable."
+  },
+  "how": {
+    "tag": "Comment ça marche",
+    "title": "3 étapes simples",
+    "desc": "De la soumission au paiement, tout est fluide.",
+    "step1Title": "L'employé soumet",
+    "step1Desc": "Photo du justificatif + montant. 30 secondes montre en main.",
+    "step2Title": "L'admin valide",
+    "step2Desc": "Approbation ou rejet motivé depuis le tableau de bord.",
+    "step3Title": "Paiement effectué",
+    "step3Desc": "La dépense est marquée payée. Historisée et exportable."
+  },
+  "testimonials": {
+    "tag": "Ils parlent de nous",
+    "title": "Ce que nos clients disent",
+    "desc": "Des retours d'expérience concrets.",
+    "quote1": "Depensys a transformé notre gestion des notes de frais. On est passé de 3 jours de traitement à 30 minutes.",
+    "author1": "Sophie Martin",
+    "role1": "Directrice Financière, TechCorp",
+    "quote2": "L'interface est tellement intuitive que nos employés l'ont adoptée dès le premier jour. Un gain de temps énorme.",
+    "author2": "Amadou Diallo",
+    "role2": "CEO, InnovGroup",
+    "quote3": "Le module de validation multi-niveaux nous a fait gagner en contrôle sans perdre en flexibilité. Je recommande.",
+    "author3": "Claire Dubois",
+    "role3": "Responsable Admin, WebAgency"
+  },
+  "stats": {
+    "tag": "Pourquoi Depensys",
+    "title": "Des chiffres qui parlent",
+    "desc": "Adopté par des entreprises de toutes tailles.",
+    "items": [
+      { "end": 100, "suffix": "%", "label": "Numérisé", "desc": "Fini le papier" },
+      { "end": 5, "suffix": "x", "label": "Plus rapide", "desc": "Traitement accéléré" },
+      { "end": 99, "suffix": "%", "label": "Disponible", "desc": "Uptime garanti" },
+      { "end": 256, "suffix": "", "label": "Bits", "desc": "Chiffrement AES" }
+    ]
+  },
+  "security": {
+    "tag": "Sécurité",
+    "title": "Vos données en toute confiance",
+    "desc": "Des standards de sécurité élevés pour votre tranquillité.",
+    "encryption": "Chiffrement AES-256",
+    "encryptionDesc": "Toutes les données sont chiffrées au repos et en transit.",
+    "iso": "Certifié ISO 27001",
+    "isoDesc": "Hébergé en France sur des serveurs certifiés.",
+    "support": "Support 24h/24",
+    "supportDesc": "Une équipe dédiée pour vous accompagner.",
+    "rgpd": "RGPD Conforme",
+    "rgpdDesc": "Vos données vous appartiennent. Exportez-les à tout moment."
+  },
+  "faq": {
+    "tag": "FAQ",
+    "title": "Questions fréquentes",
+    "desc": "Tout ce que vous devez savoir.",
+    "q1": "Comment sont protégées mes données ?",
+    "a1": "Toutes les données sont chiffrées en transit et au repos via AES-256. Nos serveurs sont hébergés en France et certifiés ISO 27001.",
+    "q2": "Puis-je personnaliser les catégories de dépenses ?",
+    "a2": "Oui, les administrateurs peuvent créer, modifier et réorganiser les catégories de dépenses depuis le tableau de bord.",
+    "q3": "Combien de temps prend la mise en place ?",
+    "a3": "Moins de 5 minutes. Créez votre compte, invitez vos employés et commencez à soumettre des dépenses.",
+    "q4": "Y a-t-il une version gratuite ?",
+    "a4": "Oui, nous proposons un essai gratuit de 14 jours sans engagement ni carte bancaire."
+  },
+  "cta": {
+    "title": "Prêt à transformer votre gestion ?",
+    "desc": "Rejoignez les entreprises qui font confiance à Depensys. Essai gratuit 14 jours.",
+    "btn": "Accéder à l'application"
+  },
+  "footer": {
+    "desc": "La solution intelligente pour gérer les notes de frais de votre entreprise.",
+    "product": "Produit",
+    "company": "Entreprise",
+    "contact": "Contact",
+    "rights": "Tous droits réservés."
+  },
+  "auth": {
+    "title": "Connexion",
+    "welcome": "Bienvenue",
+    "subtitle": "Connectez-vous pour accéder à votre espace",
+    "backToHome": "Retour à l'accueil",
+    "email": "Adresse email",
+    "emailRequired": "L'email est requis",
+    "emailInvalid": "Email invalide",
+    "password": "Mot de passe",
+    "passwordRequired": "Le mot de passe est requis",
+    "passwordMinLength": "Minimum 6 caractères",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "loggingIn": "Connexion en cours...",
+    "login": "Se connecter",
+    "orContinueWith": "Ou continuez avec",
+    "google": "Google",
+    "github": "Github",
+    "demoHint": "Espace démo :",
+    "tagline": "La solution intelligente pour gérer\nles notes de frais de votre entreprise"
+  },
+  "dashboard": {
+    "greeting": "Bonjour",
+    "user": "Utilisateur",
+    "description": "Voici un aperçu de vos dépenses.",
+    "totalExpenses": "Total dépenses",
+    "approved": "Approuvées",
+    "pending": "En attente",
+    "totalAmount": "Montant total"
+  },
+  "expenses": {
+    "title": "Dépenses",
+    "description": "Mes dépenses",
+    "adminDescription": "Gérer les dépenses des employés",
+    "reference": "Référence",
+    "titleCol": "Titre",
+    "amount": "Montant",
+    "status": "Statut",
+    "date": "Date",
+    "employee": "Employé",
+    "actions": "Actions",
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "statusPending": "En attente",
+    "statusApproved": "Approuvée",
+    "statusRejected": "Rejetée",
+    "emptyTitle": "Aucune dépense",
+    "emptyMessage": "Vous n'avez pas encore de dépenses.",
+    "detailTitle": "Détail de la dépense",
+    "descriptionLabel": "Description",
+    "noDescription": "Aucune description",
+    "tableEmpty": "Aucune donnée"
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "description": "Liste des utilisateurs de la plateforme",
+    "reference": "Référence",
+    "name": "Nom",
+    "email": "Email",
+    "role": "Rôle",
+    "dateRegistered": "Date inscription",
+    "admin": "Administrateur",
+    "employee": "Employé",
+    "emptyTitle": "Aucun utilisateur",
+    "emptyMessage": "Aucun utilisateur trouvé."
+  },
+  "profile": {
+    "title": "Mon profil",
+    "description": "Gérer vos informations personnelles",
+    "name": "Nom",
+    "email": "Email",
+    "saving": "Enregistrement...",
+    "save": "Enregistrer",
+    "success": "Profil mis à jour avec succès."
+  },
+  "sidebar": {
+    "appName": "Depensys",
+    "appDesc": "Gestion des dépenses",
+    "admin": "Administrateur",
+    "employee": "Employé",
+    "logout": "Déconnexion"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "message": "La page que vous cherchez n'existe pas."
+  },
+  "wallet": {
+    "cardholder": "TITULAIRE",
+    "expiration": "EXPIRATION"
+  },
+  "mockup": {
+    "trip": "Déplacement client",
+    "tripMeta": "Il y a 2h | Transport",
+    "officeSupplies": "Fournitures bureau",
+    "officeSuppliesMeta": "Il y a 5h | Achats",
+    "teamMeal": "Repas équipe",
+    "teamMealMeta": "Hier | Restauration"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "errorOccurred": "Une erreur est survenue.",
+    "errorMessage": "Quelque chose s'est mal passé. Réessayez ou contactez le support.",
+    "retry": "Réessayer",
+    "noData": "Aucune donnée",
+    "noInfo": "Aucune information à afficher.",
+    "serverConnectionError": "Impossible de contacter le serveur. Vérifiez votre connexion.",
+    "unexpectedError": "Une erreur inattendue est survenue.",
+    "invalidRequest": "Requête invalide.",
+    "sessionExpired": "Session expirée. Veuillez vous reconnecter.",
+    "accessDenied": "Accès refusé.",
+    "resourceNotFound": "Ressource introuvable.",
+    "invalidData": "Données invalides. Vérifiez les champs.",
+    "tooManyRequests": "Trop de requêtes. Veuillez réessayer plus tard.",
+    "serverError": "Erreur serveur. Veuillez réessayer."
+  }
+}

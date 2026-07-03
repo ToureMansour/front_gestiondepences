@@ -1,11 +1,16 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 function EmptyState({
   icon = 'empty',
-  title = 'Aucune donnee',
-  message = 'Aucune information a afficher.',
+  title,
+  message,
   action,
 }) {
+  const { t } = useTranslation();
+  const displayTitle = title || t('common.noData');
+  const displayMessage = message || t('common.noInfo');
+
   const renderIcon = () => {
     if (icon === 'empty') {
       return (
@@ -31,10 +36,10 @@ function EmptyState({
         {renderIcon()}
       </div>
       <h3 style={{ margin: '0 0 8px', fontSize: '16px', fontWeight: 600, color: '#475569' }}>
-        {title}
+        {displayTitle}
       </h3>
       <p style={{ margin: '0 0 16px', fontSize: '14px', color: '#94A3B8', maxWidth: '360px' }}>
-        {message}
+        {displayMessage}
       </p>
       {action && action}
     </div>
@@ -46,6 +51,10 @@ EmptyState.propTypes = {
   title: PropTypes.string,
   message: PropTypes.string,
   action: PropTypes.node,
+};
+
+EmptyState.defaultProps = {
+  icon: 'empty',
 };
 
 export default EmptyState;

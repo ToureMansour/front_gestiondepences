@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useDashboard } from '../features/dashboard/hooks/useDashboard';
 import StatsCard from '../features/dashboard/components/StatsCard';
 import PageHeader from '../components/shared/PageHeader';
@@ -9,6 +10,7 @@ import useAuthStore from '../store/authStore';
 function DashboardPage() {
   const { user } = useAuthStore();
   const { stats, loading, error } = useDashboard();
+  const { t } = useTranslation();
 
   if (loading) return <Spinner fullPage />;
   if (error) return <ErrorMessage message={error.message} />;
@@ -16,8 +18,8 @@ function DashboardPage() {
   return (
     <div>
       <PageHeader
-        title={`Bonjour, ${user?.name || 'Utilisateur'}`}
-        description="Voici un apercu de vos depenses."
+        title={`${t('dashboard.greeting')}, ${user?.name || t('dashboard.user')}`}
+        description={t('dashboard.description')}
       />
       <div style={{
         display: 'grid',
@@ -25,7 +27,7 @@ function DashboardPage() {
         gap: '16px',
       }}>
         <StatsCard
-          title="Total depenses"
+          title={t('dashboard.totalExpenses')}
           value={stats?.total || 0}
           color="#0F766E"
           icon={
@@ -36,7 +38,7 @@ function DashboardPage() {
           }
         />
         <StatsCard
-          title="Approuvees"
+          title={t('dashboard.approved')}
           value={stats?.approved || 0}
           color="#059669"
           icon={
@@ -46,7 +48,7 @@ function DashboardPage() {
           }
         />
         <StatsCard
-          title="En attente"
+          title={t('dashboard.pending')}
           value={stats?.pending || 0}
           color="#D97706"
           icon={
@@ -57,7 +59,7 @@ function DashboardPage() {
           }
         />
         <StatsCard
-          title="Montant total"
+          title={t('dashboard.totalAmount')}
           value={formatCurrency(stats?.totalAmount || 0)}
           color="#0284C7"
           icon={

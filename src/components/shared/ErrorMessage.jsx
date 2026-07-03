@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import Button from '../ui/Button/Button';
 
-function ErrorMessage({ message = 'Une erreur est survenue.', onRetry }) {
+function ErrorMessage({ message, onRetry }) {
+  const { t } = useTranslation();
+  const displayMessage = message || t('common.errorOccurred');
+
   return (
     <div style={{
       display: 'flex',
@@ -17,11 +21,11 @@ function ErrorMessage({ message = 'Une erreur est survenue.', onRetry }) {
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
       <p style={{ margin: '0 0 16px', fontSize: '14px', color: '#DC2626', fontWeight: 500 }}>
-        {message}
+        {displayMessage}
       </p>
       {onRetry && (
         <Button variant="secondary" size="sm" onClick={onRetry}>
-          Reessayer
+          {t('common.retry')}
         </Button>
       )}
     </div>

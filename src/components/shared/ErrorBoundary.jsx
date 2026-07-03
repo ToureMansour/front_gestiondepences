@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import i18n from '../../i18n';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -17,6 +18,15 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.hasError) {
+      const t = (key) => {
+        const keys = key.split('.');
+        let val = i18n.getResourceBundle(i18n.language, 'translation');
+        for (const k of keys) {
+          if (val) val = val[k];
+        }
+        return val || key;
+      };
+
       return (
         <div style={{
           display: 'flex',
@@ -28,10 +38,10 @@ class ErrorBoundary extends Component {
           textAlign: 'center',
         }}>
           <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#1E293B', marginBottom: '8px' }}>
-            Une erreur est survenue
+            {t('common.errorOccurred')}
           </h2>
           <p style={{ color: '#64748B', marginBottom: '16px' }}>
-            Quelque chose s&apos;est mal passe. Reessayez ou contactez le support.
+            {t('common.errorMessage')}
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
@@ -45,7 +55,7 @@ class ErrorBoundary extends Component {
               fontWeight: 600,
             }}
           >
-            Reessayer
+            {t('common.retry')}
           </button>
         </div>
       );

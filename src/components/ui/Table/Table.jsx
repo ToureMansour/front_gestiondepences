@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import styles from './Table.module.css';
 
-function Table({ columns, data, onRowClick, emptyMessage = 'Aucune donnée' }) {
+function Table({ columns, data, onRowClick, emptyMessage }) {
+  const { t } = useTranslation();
+  const displayEmpty = emptyMessage || t('expenses.tableEmpty');
   if (!data || data.length === 0) {
     return (
       <div className={styles.container}>
@@ -18,7 +21,7 @@ function Table({ columns, data, onRowClick, emptyMessage = 'Aucune donnée' }) {
           <tbody>
             <tr>
               <td colSpan={columns.length} className={styles.empty}>
-                {emptyMessage}
+                {displayEmpty}
               </td>
             </tr>
           </tbody>

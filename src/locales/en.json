@@ -1,0 +1,229 @@
+{
+  "nav": {
+    "features": "Features",
+    "how": "How it works",
+    "reviews": "Reviews",
+    "faq": "FAQ",
+    "login": "Login",
+    "dashboard": "Dashboard",
+    "expenses": "Expenses",
+    "newExpense": "New expense",
+    "users": "Users",
+    "profile": "Profile"
+  },
+  "hero": {
+    "tagline": "Complete expense management solution",
+    "title": "Simplify your",
+    "titleGradient": "expense reports",
+    "desc": "Centralize, track and control all your team expenses in a blink. No more paper, hello peace of mind.",
+    "cta": "Get started",
+    "more": "Learn more",
+    "badges": ["No commitment", "14-day free trial", "Priority support"]
+  },
+  "trusted": {
+    "label": "Trusted by"
+  },
+  "features": {
+    "tag": "Features",
+    "title": "Everything you need",
+    "desc": "A complete tool designed for modern teams.",
+    "rapidSubmission": "Rapid submission",
+    "rapidSubmissionDesc": "Capture your expenses in seconds. Photo, amount, category: everything is simplified.",
+    "smoothValidation": "Smooth validation",
+    "smoothValidationDesc": "Administrators approve or reject in one gesture. Clear and instant process.",
+    "multiRoles": "Multi-roles",
+    "multiRolesDesc": "Employees and admins, each with their own space and permissions. Manageable in one click.",
+    "paymentsTracked": "Payments tracked",
+    "paymentsTrackedDesc": "Mark expenses as paid. Multiple methods, complete history, exportable."
+  },
+  "how": {
+    "tag": "How it works",
+    "title": "3 simple steps",
+    "desc": "From submission to payment, everything is smooth.",
+    "step1Title": "Employee submits",
+    "step1Desc": "Receipt photo + amount. 30 seconds, watch in hand.",
+    "step2Title": "Admin validates",
+    "step2Desc": "Approval or motivated rejection from the dashboard.",
+    "step3Title": "Payment made",
+    "step3Desc": "Expense marked as paid. Recorded and exportable."
+  },
+  "testimonials": {
+    "tag": "Testimonials",
+    "title": "What our clients say",
+    "desc": "Real feedback from real users.",
+    "quote1": "Depensys transformed our expense management. We went from 3 days of processing to 30 minutes.",
+    "author1": "Sophie Martin",
+    "role1": "CFO, TechCorp",
+    "quote2": "The interface is so intuitive that our employees adopted it from day one. A huge time saver.",
+    "author2": "Amadou Diallo",
+    "role2": "CEO, InnovGroup",
+    "quote3": "The multi-level validation module gave us more control without losing flexibility. I recommend it.",
+    "author3": "Claire Dubois",
+    "role3": "Admin Manager, WebAgency"
+  },
+  "stats": {
+    "tag": "Why Depensys",
+    "title": "Numbers that speak",
+    "desc": "Adopted by companies of all sizes.",
+    "items": [
+      { "end": 100, "suffix": "%", "label": "Digitized", "desc": "No more paper" },
+      { "end": 5, "suffix": "x", "label": "Faster", "desc": "Accelerated processing" },
+      { "end": 99, "suffix": "%", "label": "Uptime", "desc": "Guaranteed uptime" },
+      { "end": 256, "suffix": "", "label": "Bits", "desc": "AES encryption" }
+    ]
+  },
+  "security": {
+    "tag": "Security",
+    "title": "Your data, safe and sound",
+    "desc": "High security standards for your peace of mind.",
+    "encryption": "AES-256 Encryption",
+    "encryptionDesc": "All data is encrypted at rest and in transit.",
+    "iso": "ISO 27001 Certified",
+    "isoDesc": "Hosted in France on certified servers.",
+    "support": "24/7 Support",
+    "supportDesc": "A dedicated team to support you.",
+    "rgpd": "GDPR Compliant",
+    "rgpdDesc": "Your data belongs to you. Export it anytime."
+  },
+  "faq": {
+    "tag": "FAQ",
+    "title": "Frequently asked questions",
+    "desc": "Everything you need to know.",
+    "q1": "How is my data protected?",
+    "a1": "All data is encrypted in transit and at rest using AES-256. Our servers are hosted in France and ISO 27001 certified.",
+    "q2": "Can I customize expense categories?",
+    "a2": "Yes, administrators can create, modify and reorganize expense categories from the dashboard.",
+    "q3": "How long does setup take?",
+    "a3": "Less than 5 minutes. Create your account, invite your employees and start submitting expenses.",
+    "q4": "Is there a free version?",
+    "a4": "Yes, we offer a 14-day free trial with no commitment and no credit card required."
+  },
+  "cta": {
+    "title": "Ready to transform your management?",
+    "desc": "Join the companies that trust Depensys. 14-day free trial.",
+    "btn": "Access the app"
+  },
+  "footer": {
+    "desc": "The smart solution for managing your company expense reports.",
+    "product": "Product",
+    "company": "Company",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "auth": {
+    "title": "Login",
+    "welcome": "Welcome",
+    "subtitle": "Log in to access your workspace",
+    "backToHome": "Back to home",
+    "email": "Email address",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email",
+    "password": "Password",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Minimum 6 characters",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "forgotPassword": "Forgot password?",
+    "loggingIn": "Logging in...",
+    "login": "Log in",
+    "orContinueWith": "Or continue with",
+    "google": "Google",
+    "github": "Github",
+    "demoHint": "Demo space:",
+    "tagline": "The smart solution for managing\nyour company expense reports"
+  },
+  "dashboard": {
+    "greeting": "Hello",
+    "user": "User",
+    "description": "Here is an overview of your expenses.",
+    "totalExpenses": "Total expenses",
+    "approved": "Approved",
+    "pending": "Pending",
+    "totalAmount": "Total amount"
+  },
+  "expenses": {
+    "title": "Expenses",
+    "description": "My expenses",
+    "adminDescription": "Manage employee expenses",
+    "reference": "Reference",
+    "titleCol": "Title",
+    "amount": "Amount",
+    "status": "Status",
+    "date": "Date",
+    "employee": "Employee",
+    "actions": "Actions",
+    "approve": "Approve",
+    "reject": "Reject",
+    "statusPending": "Pending",
+    "statusApproved": "Approved",
+    "statusRejected": "Rejected",
+    "emptyTitle": "No expenses",
+    "emptyMessage": "You don't have any expenses yet.",
+    "detailTitle": "Expense details",
+    "descriptionLabel": "Description",
+    "noDescription": "No description",
+    "tableEmpty": "No data"
+  },
+  "users": {
+    "title": "Users",
+    "description": "List of platform users",
+    "reference": "Reference",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "dateRegistered": "Registration date",
+    "admin": "Administrator",
+    "employee": "Employee",
+    "emptyTitle": "No users",
+    "emptyMessage": "No users found."
+  },
+  "profile": {
+    "title": "My profile",
+    "description": "Manage your personal information",
+    "name": "Name",
+    "email": "Email",
+    "saving": "Saving...",
+    "save": "Save",
+    "success": "Profile updated successfully."
+  },
+  "sidebar": {
+    "appName": "Depensys",
+    "appDesc": "Expense management",
+    "admin": "Administrator",
+    "employee": "Employee",
+    "logout": "Logout"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for does not exist."
+  },
+  "wallet": {
+    "cardholder": "CARDHOLDER",
+    "expiration": "EXPIRATION"
+  },
+  "mockup": {
+    "trip": "Client trip",
+    "tripMeta": "2h ago | Transport",
+    "officeSupplies": "Office supplies",
+    "officeSuppliesMeta": "5h ago | Purchases",
+    "teamMeal": "Team meal",
+    "teamMealMeta": "Yesterday | Catering"
+  },
+  "common": {
+    "loading": "Loading...",
+    "errorOccurred": "An error occurred.",
+    "errorMessage": "Something went wrong. Please try again or contact support.",
+    "retry": "Retry",
+    "noData": "No data",
+    "noInfo": "No information to display.",
+    "serverConnectionError": "Unable to reach the server. Please check your connection.",
+    "unexpectedError": "An unexpected error occurred.",
+    "invalidRequest": "Invalid request.",
+    "sessionExpired": "Session expired. Please log in again.",
+    "accessDenied": "Access denied.",
+    "resourceNotFound": "Resource not found.",
+    "invalidData": "Invalid data. Please check the fields.",
+    "tooManyRequests": "Too many requests. Please try again later.",
+    "serverError": "Server error. Please try again."
+  }
+}

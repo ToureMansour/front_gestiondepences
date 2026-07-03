@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import Spinner from '../ui/Spinner/Spinner';
 
 function LoadingScreen() {
+  const { t } = useTranslation();
   return (
     <div style={{
       display: 'flex',
@@ -12,7 +14,7 @@ function LoadingScreen() {
     }}>
       <Spinner size="lg" />
       <p style={{ color: '#94A3B8', fontSize: '14px', margin: 0 }}>
-        Chargement...
+        {t('common.loading')}
       </p>
     </div>
   );

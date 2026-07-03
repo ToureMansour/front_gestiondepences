@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 function NotFoundPage() {
+  const { t } = useTranslation();
   return (
     <div style={{
       display: 'flex',
@@ -12,10 +15,10 @@ function NotFoundPage() {
         404
       </h1>
       <p style={{ fontSize: '18px', color: '#64748B', margin: '0 0 4px' }}>
-        Page introuvable
+        {t('notFound.title')}
       </p>
       <p style={{ fontSize: '14px', color: '#94A3B8', margin: 0 }}>
-        La page que vous cherchez n&apos;existe pas.
+        {t('notFound.message')}
       </p>
     </div>
   );

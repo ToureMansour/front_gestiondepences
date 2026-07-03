@@ -1,8 +1,16 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import styles from './AuthLayout.module.css';
 
 function AuthLayout({ children, title }) {
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('lang', lng);
+  };
+
   return (
     <div className={styles.split}>
       {/* ── Left panel: brand + illustration ── */}
@@ -24,8 +32,7 @@ function AuthLayout({ children, title }) {
           </Link>
 
           <p className={styles.tagline}>
-            La solution intelligente pour gerer<br />
-            les notes de frais de votre entreprise
+            {t('auth.tagline')}
           </p>
 
           <div className={styles.illustration}>
@@ -37,19 +44,36 @@ function AuthLayout({ children, title }) {
       {/* ── Right panel: form ── */}
       <div className={styles.right}>
         <div className={styles.rightInner}>
-          <Link to="/" className={styles.homeLink}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12" />
-              <polyline points="12 19 5 12 12 5" />
-            </svg>
-            Retour a l accueil
-          </Link>
+          <div className={styles.topBar}>
+            <Link to="/" className={styles.homeLink}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12" />
+                <polyline points="12 19 5 12 12 5" />
+              </svg>
+              {t('auth.backToHome')}
+            </Link>
+            <div className={styles.langToggle}>
+              <button
+                className={`${styles.langBtn} ${i18n.language === 'fr' ? styles.langActive : ''}`}
+                onClick={() => changeLanguage('fr')}
+              >
+                FR
+              </button>
+              <span className={styles.langSep}>|</span>
+              <button
+                className={`${styles.langBtn} ${i18n.language === 'en' ? styles.langActive : ''}`}
+                onClick={() => changeLanguage('en')}
+              >
+                EN
+              </button>
+            </div>
+          </div>
 
           <h2 className={styles.authTitle}>
-            {title || 'Bienvenue'}
+            {title || t('auth.welcome')}
           </h2>
           <p className={styles.authSubtitle}>
-            Connectez-vous pour acceder a votre espace
+            {t('auth.subtitle')}
           </p>
 
           {children}
@@ -60,6 +84,7 @@ function AuthLayout({ children, title }) {
 }
 
 function WalletIllustration() {
+  const { t } = useTranslation();
   return (
     <svg viewBox="0 0 400 280" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -111,7 +136,7 @@ function WalletIllustration() {
 
       {/* Card holder */}
       <text x="110" y="186" fill="rgba(255,255,255,0.35)" fontSize="8" fontFamily="sans-serif" letterSpacing="1">
-        TITULAIRE
+        {t('wallet.cardholder')}
       </text>
       <text x="110" y="202" fill="rgba(255,255,255,0.75)" fontSize="13" fontFamily="sans-serif" fontWeight="600">
         DEPENSYS PRO
@@ -119,7 +144,7 @@ function WalletIllustration() {
 
       {/* Card expiry */}
       <text x="270" y="186" fill="rgba(255,255,255,0.35)" fontSize="8" fontFamily="sans-serif" letterSpacing="1">
-        EXPIRATION
+        {t('wallet.expiration')}
       </text>
       <text x="270" y="202" fill="rgba(255,255,255,0.75)" fontSize="13" fontFamily="sans-serif" fontWeight="600">
         12/28

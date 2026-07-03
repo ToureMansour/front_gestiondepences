@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import styles from './LandingPage.module.css';
 
 function useInView(threshold = 0.15) {
@@ -83,6 +84,7 @@ function IllustValidation() {
 }
 
 function IllustRoles() {
+  const { t } = useTranslation();
   return (
     <svg viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureIllus}>
       <g transform="translate(30, 20)">
@@ -101,16 +103,17 @@ function IllustRoles() {
         <path d="M30 0l30 12v36c0 28-30 52-30 52s-30-24-30-52V12L30 0z" fill="#0284C7" opacity="0.1" />
         <circle cx="30" cy="40" r="12" fill="#0284C7" opacity="0.15" />
         <path d="M24 40l4 4 8-8" stroke="#0284C7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <text x="30" y="88" fill="#0284C7" fontSize="9" fontWeight="700" textAnchor="middle">Employe</text>
+        <text x="30" y="88" fill="#0284C7" fontSize="9" fontWeight="700" textAnchor="middle">{t('sidebar.employee')}</text>
       </g>
       <line x1="60" y1="100" x2="100" y2="100" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="4 3" />
       <line x1="130" y1="100" x2="170" y2="100" stroke="#E2E8F0" strokeWidth="1.5" strokeDasharray="4 3" />
-      <text x="130" y="130" fill="#94A3B8" fontSize="10" textAnchor="middle">Permissions personnalisables</text>
+      <text x="130" y="130" fill="#94A3B8" fontSize="10" textAnchor="middle">{t('features.multiRoles')}</text>
     </svg>
   );
 }
 
 function IllustPaiements() {
+  const { t } = useTranslation();
   return (
     <svg viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureIllus}>
       <defs>
@@ -124,7 +127,7 @@ function IllustPaiements() {
       <circle cx="210" cy="60" r="8" fill="rgba(255,255,255,0.15)" />
       <circle cx="202" cy="60" r="8" fill="rgba(255,255,255,0.1)" />
       <text x="46" y="100" fill="rgba(255,255,255,0.5)" fontFamily="monospace" fontSize="12" letterSpacing="3">4242  ••••  4242</text>
-      <text x="46" y="120" fill="rgba(255,255,255,0.6)" fontSize="9" fontWeight="600" letterSpacing="1">TITULAIRE</text>
+      <text x="46" y="120" fill="rgba(255,255,255,0.6)" fontSize="9" fontWeight="600" letterSpacing="1">{t('wallet.cardholder')}</text>
       <text x="46" y="134" fill="#fff" fontSize="11" fontWeight="600">DEPENSYS PRO</text>
       <g transform="translate(190, 100)">
         <circle cx="10" cy="10" r="10" fill="#059669" />
@@ -138,6 +141,7 @@ function IllustPaiements() {
 }
 
 function DashboardMockup() {
+  const { t } = useTranslation();
   return (
     <div className={styles.mockup}>
       <div className={styles.mockupHeader}>
@@ -153,41 +157,41 @@ function DashboardMockup() {
         <div className={styles.mockupStatRow}>
           <div className={styles.mockupStat}>
             <span className={styles.mockupStatValue}>24 500 CFA</span>
-            <span className={styles.mockupStatLabel}>Total depenses</span>
+            <span className={styles.mockupStatLabel}>{t('dashboard.totalExpenses')}</span>
           </div>
           <div className={styles.mockupStatDivider} />
           <div className={styles.mockupStat}>
             <span className={styles.mockupStatValue}>12</span>
-            <span className={styles.mockupStatLabel}>En attente</span>
+            <span className={styles.mockupStatLabel}>{t('dashboard.pending')}</span>
           </div>
           <div className={styles.mockupStatDivider} />
           <div className={styles.mockupStat}>
             <span className={styles.mockupStatValue}>8</span>
-            <span className={styles.mockupStatLabel}>Approuvees</span>
+            <span className={styles.mockupStatLabel}>{t('dashboard.approved')}</span>
           </div>
         </div>
         <div className={styles.mockupDivider} />
         <div className={styles.mockupRow}>
           <div className={styles.mockupRowDot} style={{ background: '#F59E0B' }} />
           <div className={styles.mockupRowContent}>
-            <span className={styles.mockupRowTitle}>Deplacement client</span>
-            <span className={styles.mockupRowMeta}>Il y a 2h | Transport</span>
+            <span className={styles.mockupRowTitle}>{t('mockup.trip')}</span>
+            <span className={styles.mockupRowMeta}>{t('mockup.tripMeta')}</span>
           </div>
           <span className={styles.mockupRowAmount}>45 000 CFA</span>
         </div>
         <div className={styles.mockupRow}>
           <div className={styles.mockupRowDot} style={{ background: '#10B981' }} />
           <div className={styles.mockupRowContent}>
-            <span className={styles.mockupRowTitle}>Fournitures bureau</span>
-            <span className={styles.mockupRowMeta}>Il y a 5h | Achats</span>
+            <span className={styles.mockupRowTitle}>{t('mockup.officeSupplies')}</span>
+            <span className={styles.mockupRowMeta}>{t('mockup.officeSuppliesMeta')}</span>
           </div>
           <span className={styles.mockupRowAmount}>12 000 CFA</span>
         </div>
         <div className={styles.mockupRow}>
           <div className={styles.mockupRowDot} style={{ background: '#EF4444' }} />
           <div className={styles.mockupRowContent}>
-            <span className={styles.mockupRowTitle}>Repas equipe</span>
-            <span className={styles.mockupRowMeta}>Hier | Restauration</span>
+            <span className={styles.mockupRowTitle}>{t('mockup.teamMeal')}</span>
+            <span className={styles.mockupRowMeta}>{t('mockup.teamMealMeta')}</span>
           </div>
           <span className={styles.mockupRowAmount}>28 500 CFA</span>
         </div>
@@ -222,69 +226,7 @@ function FeatureCard({ feature: f, index }) {
   );
 }
 
-/* ── Data ── */
-
-const FEATURES = [
-  {
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M12 6v12" /><path d="M6 10v4" /><path d="M18 10v4" /></svg>,
-    title: 'Soumission rapide',
-    desc: 'Capturez vos depenses en quelques secondes. Photo, montant, categorie : tout est simplifie.',
-    gradient: 'linear-gradient(135deg, #0F766E, #2DD4BF)',
-    Illustration: IllustSoumission,
-  },
-  {
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>,
-    title: 'Validation fluide',
-    desc: 'Les administrateurs approuvent ou rejettent en un geste. Processus clair et instantane.',
-    gradient: 'linear-gradient(135deg, #059669, #34D399)',
-    Illustration: IllustValidation,
-  },
-  {
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
-    title: 'Multi-roles',
-    desc: 'Employes et admins, chacun son espace avec ses permissions. Gerable en un clic.',
-    gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
-    Illustration: IllustRoles,
-  },
-  {
-    icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M12 6v12" /><path d="M6 10v4" /><path d="M18 10v4" /></svg>,
-    title: 'Paiements suivis',
-    desc: 'Marquez les depenses comme payees. Methodes multiples, historique complet et exportable.',
-    gradient: 'linear-gradient(135deg, #0284C7, #38BDF8)',
-    Illustration: IllustPaiements,
-  },
-];
-
-const STEPS = [
-  { num: '01', title: 'L employe soumet', desc: 'Photo du justificatif + montant. 30 secondes montre en main.' },
-  { num: '02', title: 'L admin valide', desc: 'Approbation ou rejet motive depuis le tableau de bord.' },
-  { num: '03', title: 'Paiement effectue', desc: 'La depense est markee payee. Historisee et exportable.' },
-];
-
-const TESTIMONIALS = [
-  {
-    quote: "Depensys a transforme notre gestion des notes de frais. On est passe de 3 jours de traitement a 30 minutes.",
-    author: 'Sophie Martin',
-    role: 'Directrice Financiere, TechCorp',
-  },
-  {
-    quote: "L interface est tellement intuitive que nos employs l ont adoptee des le premier jour. Un gain de temps enorme.",
-    author: 'Amadou Diallo',
-    role: 'CEO, InnovGroup',
-  },
-  {
-    quote: "Le module de validation multi-niveaux nous a fait gagner en controle sans perdre en flexibilite. Je recommande.",
-    author: 'Claire Dubois',
-    role: 'Responsable Admin, WebAgency',
-  },
-];
-
-const FAQS = [
-  { q: 'Comment sont protegees mes donnees ?', a: 'Toutes les donnees sont chiffrees en transit et au repos via AES-256. Nos serveurs sont heberges en France et certifies ISO 27001.' },
-  { q: 'Puis-je personnaliser les categories de depenses ?', a: 'Oui, les administrateurs peuvent creer, modifier et reorganiser les categories de depenses depuis le tableau de bord.' },
-  { q: 'Combien de temps prend la mise en place ?', a: 'Moins de 5 minutes. Creez votre compte, invitez vos employs et commencez a soumettre des depenses.' },
-  { q: 'Y a-t-il une version gratuite ?', a: 'Oui, nous proposons un essai gratuit de 14 jours sans engagement ni carte bancaire.' },
-];
+/* ── Data (moved inside component for i18n) ── */
 
 /* ── Flags ── */
 
@@ -311,60 +253,7 @@ function FlagEN() {
   );
 }
 
-/* ── Translations ── */
-
-const LANG = {
-  fr: {
-    nav: { features: 'Fonctionnalites', how: 'Comment ca marche', reviews: 'Avis', faq: 'FAQ', login: 'Connexion' },
-    hero: {
-      tagline: 'Solution complete de gestion des depenses',
-      title: 'Simplifiez vos',
-      titleGradient: 'notes de frais',
-      desc: 'Centralisez, suivez et controlez toutes les depenses de votre equipe en un clin d oeil. Fini le papier, bonjour la tranquillite.',
-      cta: 'Commencer', more: 'En savoir plus',
-      badges: ['Sans engagement', 'Essai gratuit 14 jours', 'Support prioritaire'],
-    },
-    trusted: { label: 'Ils nous font confiance' },
-    features: { tag: 'Fonctionnalites', title: 'Tout ce qu il vous faut', desc: 'Un outil complet pense pour les equipes modernes.' },
-    how: { tag: 'Comment ca marche', title: '3 etapes simples', desc: 'De la soumission au paiement, tout est fluide.' },
-    testimonials: { tag: 'Ils parlent de nous', title: 'Ce que nos clients disent', desc: 'Des retours d experience concrets.' },
-    stats: { tag: 'Pourquoi Depensys', title: 'Des chiffres qui parlent', desc: 'Adopte par des entreprises de toutes tailles.', items: [
-      { end: 100, suffix: '%', label: 'Numerise', desc: 'Fini le papier' },
-      { end: 5, suffix: 'x', label: 'Plus rapide', desc: 'Traitement accelere' },
-      { end: 99, suffix: '%', label: 'Disponible', desc: 'Uptime garanti' },
-      { end: 256, suffix: '', label: 'Bits', desc: 'Chiffrement AES' },
-    ] },
-    security: { tag: 'Securite', title: 'Vos donnees en toute confiance', desc: 'Des standards de securite eleves pour votre tranquilite.' },
-    faq: { tag: 'FAQ', title: 'Questions frequentes', desc: 'Tout ce que vous devez savoir.' },
-    cta: { title: 'Pret a transformer votre gestion ?', desc: 'Rejoignez les entreprises qui font confiance a Depensys. Essai gratuit 14 jours.', btn: 'Acceder a l application' },
-    footer: { desc: 'La solution intelligente pour gerer les notes de frais de votre entreprise.', product: 'Produit', company: 'Entreprise', contact: 'Contact' },
-  },
-  en: {
-    nav: { features: 'Features', how: 'How it works', reviews: 'Reviews', faq: 'FAQ', login: 'Login' },
-    hero: {
-      tagline: 'Complete expense management solution',
-      title: 'Simplify your',
-      titleGradient: 'expense reports',
-      desc: 'Centralize, track and control all your team expenses in a blink. No more paper, hello peace of mind.',
-      cta: 'Get started', more: 'Learn more',
-      badges: ['No commitment', '14-day free trial', 'Priority support'],
-    },
-    trusted: { label: 'Trusted by' },
-    features: { tag: 'Features', title: 'Everything you need', desc: 'A complete tool designed for modern teams.' },
-    how: { tag: 'How it works', title: '3 simple steps', desc: 'From submission to payment, everything is smooth.' },
-    testimonials: { tag: 'Testimonials', title: 'What our clients say', desc: 'Real feedback from real users.' },
-    stats: { tag: 'Why Depensys', title: 'Numbers that speak', desc: 'Adopted by companies of all sizes.', items: [
-      { end: 100, suffix: '%', label: 'Digitized', desc: 'No more paper' },
-      { end: 5, suffix: 'x', label: 'Faster', desc: 'Accelerated processing' },
-      { end: 99, suffix: '%', label: 'Uptime', desc: 'Guaranteed uptime' },
-      { end: 256, suffix: '', label: 'Bits', desc: 'AES encryption' },
-    ] },
-    security: { tag: 'Security', title: 'Your data, safe and sound', desc: 'High security standards for your peace of mind.' },
-    faq: { tag: 'FAQ', title: 'Frequently asked questions', desc: 'Everything you need to know.' },
-    cta: { title: 'Ready to transform your management?', desc: 'Join the companies that trust Depensys. 14-day free trial.', btn: 'Access the app' },
-    footer: { desc: 'The smart solution for managing your company expense reports.', product: 'Product', company: 'Company', contact: 'Contact' },
-  },
-};
+/* ── Translations removed - using i18n ── */
 
 /* ── Nav Dropdown ── */
 
@@ -417,11 +306,67 @@ function SectionDivider({ type, fill, prevBg }) {
 /* ── Page ── */
 
 function LandingPage() {
+  const { t, i18n } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
-  const [lang, setLang] = useState('fr');
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [openFaq, setOpenFaq] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const FEATURES = [
+    {
+      icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M12 6v12" /><path d="M6 10v4" /><path d="M18 10v4" /></svg>,
+      title: t('features.rapidSubmission'),
+      desc: t('features.rapidSubmissionDesc'),
+      gradient: 'linear-gradient(135deg, #0F766E, #2DD4BF)',
+      Illustration: IllustSoumission,
+    },
+    {
+      icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>,
+      title: t('features.smoothValidation'),
+      desc: t('features.smoothValidationDesc'),
+      gradient: 'linear-gradient(135deg, #059669, #34D399)',
+      Illustration: IllustValidation,
+    },
+    {
+      icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>,
+      title: t('features.multiRoles'),
+      desc: t('features.multiRolesDesc'),
+      gradient: 'linear-gradient(135deg, #7C3AED, #A78BFA)',
+      Illustration: IllustRoles,
+    },
+    {
+      icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M12 6v12" /><path d="M6 10v4" /><path d="M18 10v4" /></svg>,
+      title: t('features.paymentsTracked'),
+      desc: t('features.paymentsTrackedDesc'),
+      gradient: 'linear-gradient(135deg, #0284C7, #38BDF8)',
+      Illustration: IllustPaiements,
+    },
+  ];
+
+  const STEPS = [
+    { num: '01', title: t('how.step1Title'), desc: t('how.step1Desc') },
+    { num: '02', title: t('how.step2Title'), desc: t('how.step2Desc') },
+    { num: '03', title: t('how.step3Title'), desc: t('how.step3Desc') },
+  ];
+
+  const TESTIMONIALS = [
+    { quote: t('testimonials.quote1'), author: t('testimonials.author1'), role: t('testimonials.role1') },
+    { quote: t('testimonials.quote2'), author: t('testimonials.author2'), role: t('testimonials.role2') },
+    { quote: t('testimonials.quote3'), author: t('testimonials.author3'), role: t('testimonials.role3') },
+  ];
+
+  const FAQS = [
+    { q: t('faq.q1'), a: t('faq.a1') },
+    { q: t('faq.q2'), a: t('faq.a2') },
+    { q: t('faq.q3'), a: t('faq.a3') },
+    { q: t('faq.q4'), a: t('faq.a4') },
+  ];
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    localStorage.setItem('lang', lng);
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -430,11 +375,11 @@ function LandingPage() {
   }, []);
 
   useEffect(() => {
-    const t = setInterval(() => {
+    const interval = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % TESTIMONIALS.length);
     }, 5000);
-    return () => clearInterval(t);
-  }, []);
+    return () => clearInterval(interval);
+  }, [TESTIMONIALS.length]);
 
   const scrollTo = useCallback((id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -446,13 +391,6 @@ function LandingPage() {
     id: 'features',
     shortDesc: f.desc.split('.')[0] + '.',
   }));
-
-  const t = (path) => {
-    const keys = path.split('.');
-    let val = LANG[lang];
-    for (const k of keys) { if (val) val = val[k]; }
-    return val || path;
-  };
 
   return (
     <div className={styles.page}>
@@ -479,14 +417,34 @@ function LandingPage() {
             <button onClick={() => scrollTo('testimonials')} className={styles.navLink}>{t('nav.reviews')}</button>
             <button onClick={() => scrollTo('faq')} className={styles.navLink}>{t('nav.faq')}</button>
             <div className={styles.langToggle}>
-              <button className={`${styles.langBtn} ${lang === 'fr' ? styles.langActive : ''}`} onClick={() => setLang('fr')}><FlagFR /> FR</button>
+              <button className={`${styles.langBtn} ${i18n.language === 'fr' ? styles.langActive : ''}`} onClick={() => changeLanguage('fr')}><FlagFR /> FR</button>
               <span className={styles.langSep}>|</span>
-              <button className={`${styles.langBtn} ${lang === 'en' ? styles.langActive : ''}`} onClick={() => setLang('en')}><FlagEN /> EN</button>
+              <button className={`${styles.langBtn} ${i18n.language === 'en' ? styles.langActive : ''}`} onClick={() => changeLanguage('en')}><FlagEN /> EN</button>
             </div>
             <Link to="/login" className={styles.navCta}>{t('nav.login')}</Link>
           </div>
+          <button className={styles.mobileToggle} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Menu">
+            <span className={`${styles.mobileToggleBar} ${mobileMenuOpen ? styles.mobileToggleOpen : ''}`} />
+            <span className={`${styles.mobileToggleBar} ${mobileMenuOpen ? styles.mobileToggleOpen : ''}`} />
+            <span className={`${styles.mobileToggleBar} ${mobileMenuOpen ? styles.mobileToggleOpen : ''}`} />
+          </button>
         </div>
       </nav>
+      {mobileMenuOpen && (
+        <div className={styles.mobileMenu}>
+          <button onClick={() => { scrollTo('features'); setMobileMenuOpen(false); }} className={styles.mobileMenuLink}>{t('nav.features')}</button>
+          <button onClick={() => { scrollTo('how'); setMobileMenuOpen(false); }} className={styles.mobileMenuLink}>{t('nav.how')}</button>
+          <button onClick={() => { scrollTo('testimonials'); setMobileMenuOpen(false); }} className={styles.mobileMenuLink}>{t('nav.reviews')}</button>
+          <button onClick={() => { scrollTo('faq'); setMobileMenuOpen(false); }} className={styles.mobileMenuLink}>{t('nav.faq')}</button>
+          <div className={styles.mobileMenuLang}>
+            <button className={`${styles.langBtn} ${i18n.language === 'fr' ? styles.langActive : ''}`} onClick={() => changeLanguage('fr')}><FlagFR /> FR</button>
+            <span className={styles.langSep}>|</span>
+            <button className={`${styles.langBtn} ${i18n.language === 'en' ? styles.langActive : ''}`} onClick={() => changeLanguage('en')}><FlagEN /> EN</button>
+          </div>
+          <Link to="/login" className={styles.mobileMenuCta} onClick={() => setMobileMenuOpen(false)}>{t('nav.login')}</Link>
+        </div>
+      )}
+      {mobileMenuOpen && <div className={styles.mobileOverlay} onClick={() => setMobileMenuOpen(false)} />}
 
       {/* ── HERO ── */}
       <section className={styles.hero}>
@@ -512,7 +470,7 @@ function LandingPage() {
               <button onClick={() => scrollTo('features')} className={styles.btnGhost}>{t('hero.more')}</button>
             </div>
             <div className={styles.heroBadges}>
-              {LANG[lang].hero.badges.map((b, i) => (
+              {t('hero.badges', { returnObjects: true }).map((b, i) => (
                 <span key={i}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> {b}</span>
               ))}
             </div>
@@ -607,7 +565,7 @@ function LandingPage() {
           <p className={styles.statsDesc}>{t('stats.desc')}</p>
         </div>
         <div className={styles.statsGrid}>
-          {LANG[lang].stats.items.map((s, i) => (
+          {t('stats.items', { returnObjects: true }).map((s, i) => (
             <div key={i} className={styles.statCard}>
               <span className={styles.statNum}><AnimatedCounter end={s.end} suffix={s.suffix} /></span>
               <span className={styles.statLabel}>{s.label}</span>
@@ -629,23 +587,23 @@ function LandingPage() {
         <div className={styles.securityGrid}>
           <div className={styles.securityCard}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-            <h4>Chiffrement AES-256</h4>
-            <p>Toutes les donnees sont chiffrees au repos et en transit.</p>
+            <h4>{t('security.encryption')}</h4>
+            <p>{t('security.encryptionDesc')}</p>
           </div>
           <div className={styles.securityCard}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-            <h4>Certifie ISO 27001</h4>
-            <p>Heberge en France sur des serveurs certifies.</p>
+            <h4>{t('security.iso')}</h4>
+            <p>{t('security.isoDesc')}</p>
           </div>
           <div className={styles.securityCard}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
-            <h4>Support 24h/24</h4>
-            <p>Une equipe dediee pour vous accompagner.</p>
+            <h4>{t('security.support')}</h4>
+            <p>{t('security.supportDesc')}</p>
           </div>
           <div className={styles.securityCard}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M4.93 4.93l14.14 14.14" /></svg>
-            <h4>RGPD Conforme</h4>
-            <p>Vos donnees vous appartiennent. Exportez-les a tout moment.</p>
+            <h4>{t('security.rgpd')}</h4>
+            <p>{t('security.rgpdDesc')}</p>
           </div>
         </div>
       </section>
@@ -720,7 +678,7 @@ function LandingPage() {
             </div>
           </div>
           <div className={styles.footerBottom}>
-            <p>&copy; {new Date().getFullYear()} Depensys. Tous droits reserves.</p>
+            <p>&copy; {new Date().getFullYear()} Depensys. {t('footer.rights')}</p>
           </div>
         </div>
       </footer>

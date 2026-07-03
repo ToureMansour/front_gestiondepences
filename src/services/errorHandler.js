@@ -1,3 +1,5 @@
+import i18n from '../i18n';
+
 export class AppError extends Error {
   constructor(message, status, code = null) {
     super(message);
@@ -8,27 +10,36 @@ export class AppError extends Error {
 }
 
 export function handleApiError(error) {
+  const t = (key) => {
+    const keys = key.split('.');
+    let val = i18n.getResourceBundle(i18n.language, 'translation');
+    for (const k of keys) {
+      if (val) val = val[k];
+    }
+    return val || key;
+  };
+
   if (error.response) {
     const { status, data } = error.response;
-    const message = data?.message || getDefaultMessage(status);
+    const message = data?.message || getDefaultMessage(status, t);
     const code = data?.code || null;
     return new AppError(message, status, code);
   }
   if (error.request) {
-    return new AppError('Impossible de contacter le serveur. Vérifiez votre connexion.', 0);
+    return new AppError(t('common.serverConnectionError'), 0);
   }
-  return new AppError('Une erreur inattendue est survenue.', 0);
+  return new AppError(t('common.unexpectedError'), 0);
 }
 
-function getDefaultMessage(status) {
+function getDefaultMessage(status, t) {
   const messages = {
-    400: 'Requête invalide.',
-    401: 'Session expirée. Veuillez vous reconnecter.',
-    403: 'Accès refusé.',
-    404: 'Ressource introuvable.',
-    422: 'Données invalides. Vérifiez les champs.',
-    429: 'Trop de requêtes. Veuillez réessayer plus tard.',
-    500: 'Erreur serveur. Veuillez réessayer.',
+    400: t('common.invalidRequest'),
+    401: t('common.sessionExpired'),
+    403: t('common.accessDenied'),
+    404: t('common.resourceNotFound'),
+    422: t('common.invalidData'),
+    429: t('common.tooManyRequests'),
+    500: t('common.serverError'),
   };
-  return messages[status] || 'Une erreur est survenue.';
+  return messages[status] || t('common.errorOccurred');
 }

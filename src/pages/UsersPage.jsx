@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useUsers } from '../features/users/hooks/useUsers';
 import PageHeader from '../components/shared/PageHeader';
 import { Table } from '../components/ui/Table';
@@ -9,21 +10,22 @@ import { formatDate } from '../utils/formatDate';
 
 function UsersPage() {
   const { users, loading, error } = useUsers();
+  const { t } = useTranslation();
 
   const columns = [
-    { key: 'reference', label: 'Reference', width: '140px' },
-    { key: 'name', label: 'Nom', render: (row) => <span style={{ fontWeight: 500 }}>{row.name}</span> },
-    { key: 'email', label: 'Email' },
+    { key: 'reference', label: t('users.reference'), width: '140px' },
+    { key: 'name', label: t('users.name'), render: (row) => <span style={{ fontWeight: 500 }}>{row.name}</span> },
+    { key: 'email', label: t('users.email') },
     {
       key: 'role',
-      label: 'Role',
+      label: t('users.role'),
       render: (row) => (
         <Badge variant={row.role === 'admin' ? 'active' : 'default'}>
-          {row.role === 'admin' ? 'Administrateur' : 'Employe'}
+          {row.role === 'admin' ? t('users.admin') : t('users.employee')}
         </Badge>
       ),
     },
-    { key: 'created_at', label: 'Date inscription', render: (row) => formatDate(row.created_at) },
+    { key: 'created_at', label: t('users.dateRegistered'), render: (row) => formatDate(row.created_at) },
   ];
 
   if (loading) return <Spinner fullPage />;
@@ -32,11 +34,11 @@ function UsersPage() {
   return (
     <div>
       <PageHeader
-        title="Utilisateurs"
-        description="Liste des utilisateurs de la plateforme"
+        title={t('users.title')}
+        description={t('users.description')}
       />
       {users.length === 0 ? (
-        <EmptyState title="Aucun utilisateur" message="Aucun utilisateur trouve." />
+        <EmptyState title={t('users.emptyTitle')} message={t('users.emptyMessage')} />
       ) : (
         <Table columns={columns} data={users} />
       )}

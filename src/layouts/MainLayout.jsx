@@ -1,20 +1,23 @@
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Sidebar from './Sidebar';
 import styles from './MainLayout.module.css';
-
-const PAGE_TITLES = {
-  '/': 'Tableau de bord',
-  '/expenses': 'Depenses',
-  '/expenses/new': 'Nouvelle depense',
-  '/users': 'Utilisateurs',
-  '/profile': 'Mon profil',
-};
 
 function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-  const title = PAGE_TITLES[location.pathname] || 'Depensys';
+  const { t } = useTranslation();
+
+  const PAGE_TITLES = {
+    '/': t('nav.dashboard'),
+    '/expenses': t('nav.expenses'),
+    '/expenses/new': t('nav.newExpense'),
+    '/users': t('nav.users'),
+    '/profile': t('nav.profile'),
+  };
+
+  const title = PAGE_TITLES[location.pathname] || t('sidebar.appName');
 
   return (
     <div className={styles.layout}>
