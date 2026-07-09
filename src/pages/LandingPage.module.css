@@ -608,20 +608,21 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .mobileToggleOpen:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
 .mobileMenu {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: 280px; max-width: 80vw;
+  position: fixed; top: 60px; left: 12px; right: 12px;
   background: #0D3D3A;
-  padding: 80px 24px 32px;
-  display: flex; flex-direction: column; gap: 4px;
+  padding: 16px 16px 12px;
+  display: flex; flex-direction: column; gap: 2px;
   z-index: 105;
-  box-shadow: -8px 0 30px rgba(0,0,0,0.3);
-  animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 20px 60px -12px rgba(0,0,0,0.4);
+  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 16px;
+  max-height: 40vh;
   overflow-y: auto;
 }
 
-@keyframes slideInRight {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .mobileMenuLink {

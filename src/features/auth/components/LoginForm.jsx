@@ -34,13 +34,7 @@ function LoginForm({ onSubmit, loading, error }) {
     if (validate()) onSubmit(form);
   };
 
-  const labelClass = (name) => {
-    const base = styles.label;
-    const floating = form[name] || focused[name] ? styles.labelFloating : '';
-    const err = errors[name] ? styles.labelError : '';
-    return `${base} ${floating} ${err}`.trim();
-  };
-
+  const labelClass = () => '';
   const inputClass = (name) => {
     const base = styles.input;
     const err = errors[name] ? styles.inputError : '';
@@ -51,17 +45,23 @@ function LoginForm({ onSubmit, loading, error }) {
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       {/* Email */}
       <div className={styles.field}>
-        <label className={labelClass('email')}>{t('auth.email')}</label>
-        <input
-          name="email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          onFocus={() => handleFocus('email')}
-          onBlur={() => handleBlur('email')}
-          className={inputClass('email')}
-          autoComplete="email"
-        />
+        <div className={styles.inputWrapper}>
+          <svg className={styles.inputIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <polyline points="22,4 12,13 2,4" />
+          </svg>
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            onFocus={() => handleFocus('email')}
+            onBlur={() => handleBlur('email')}
+            className={inputClass('email')}
+            autoComplete="email"
+            placeholder={t('auth.email')}
+          />
+        </div>
         {errors.email && (
           <p className={styles.errorText}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -76,37 +76,43 @@ function LoginForm({ onSubmit, loading, error }) {
 
       {/* Password */}
       <div className={styles.field}>
-        <label className={labelClass('password')}>{t('auth.password')}</label>
-        <input
-          name="password"
-          type={showPassword ? 'text' : 'password'}
-          value={form.password}
-          onChange={handleChange}
-          onFocus={() => handleFocus('password')}
-          onBlur={() => handleBlur('password')}
-          className={inputClass('password')}
-          autoComplete="current-password"
-        />
-        <button
-          type="button"
-          className={styles.passwordToggle}
-          onClick={() => setShowPassword((prev) => !prev)}
-          tabIndex={-1}
-          aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
-        >
-          {showPassword ? (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-              <line x1="1" y1="1" x2="23" y2="23" />
-            </svg>
-          ) : (
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          )}
-        </button>
+        <div className={styles.inputWrapper}>
+          <svg className={styles.inputIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          <input
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            value={form.password}
+            onChange={handleChange}
+            onFocus={() => handleFocus('password')}
+            onBlur={() => handleBlur('password')}
+            className={inputClass('password')}
+            autoComplete="current-password"
+            placeholder={t('auth.password')}
+          />
+          <button
+            type="button"
+            className={styles.passwordToggle}
+            onClick={() => setShowPassword((prev) => !prev)}
+            tabIndex={-1}
+            aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+          >
+            {showPassword ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                <line x1="1" y1="1" x2="23" y2="23" />
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            )}
+          </button>
+        </div>
         {errors.password && (
           <p className={styles.errorText}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -151,8 +157,8 @@ function LoginForm({ onSubmit, loading, error }) {
           </>
         ) : (
           <>
-            {t('auth.login')}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <span>{t('auth.login')}</span>
+            <svg className={styles.arrowIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
               <polyline points="12 5 19 12 12 19" />
             </svg>

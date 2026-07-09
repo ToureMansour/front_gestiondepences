@@ -19,28 +19,45 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
 }
 
 .field {
   position: relative;
 }
 
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 18px;
+  color: #94A3B8;
+  pointer-events: none;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.inputWrapper:focus-within .inputIcon {
+  color: #0F766E;
+}
+
 .input {
   width: 100%;
-  padding: 18px 0 6px 0;
-  border: none;
-  border-bottom: 1.5px solid #E2E8F0;
-  border-radius: 0;
+  height: 56px;
+  padding: 0 18px 0 48px;
+  border: 1.5px solid #E2E8F0;
+  border-radius: 14px;
   font-size: 15px;
   font-family: 'Inter', -apple-system, sans-serif;
   color: #1E293B;
-  background: transparent;
+  background: #fff;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.25s;
   box-sizing: border-box;
-  height: 54px;
-  appearance: none;
 }
 
 .input:hover {
@@ -49,7 +66,11 @@
 
 .input:focus {
   border-color: #0F766E;
-  border-bottom-width: 2px;
+  box-shadow: 0 0 0 4px rgba(15,118,110,0.08);
+}
+
+.input::placeholder {
+  color: #94A3B8;
 }
 
 .inputError {
@@ -58,40 +79,12 @@
 }
 
 .inputError:focus {
-  box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
-}
-
-.label {
-  position: absolute;
-  left: 0;
-  top: 17px;
-  font-size: 15px;
-  font-weight: 400;
-  color: #94A3B8;
-  pointer-events: none;
-  transition: all 0.2s ease;
-  background: transparent;
-  line-height: 1;
-}
-
-.labelFloating {
-  top: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #0F766E;
-}
-
-.labelError {
-  color: #DC2626;
-}
-
-.labelFloating.labelError {
-  color: #DC2626;
+  box-shadow: 0 0 0 4px rgba(220,38,38,0.1) !important;
 }
 
 .passwordToggle {
   position: absolute;
-  right: 10px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -166,11 +159,12 @@
 
 .submitBtn {
   width: 100%;
-  padding: 14px 24px;
-  background: #0F766E;
+  height: 56px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #0F766E, #14B8A6);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 14px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -179,9 +173,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 14px rgba(15,118,110,0.3);
-  margin-top: 4px;
-  height: 50px;
+  box-shadow: 0 4px 16px rgba(15,118,110,0.3);
   position: relative;
   overflow: hidden;
 }
@@ -190,7 +182,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;
   opacity: 0;
@@ -203,7 +195,7 @@
 
 .submitBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15,118,110,0.4);
+  box-shadow: 0 8px 24px rgba(15,118,110,0.4);
 }
 
 .submitBtn:active:not(:disabled) {
@@ -215,6 +207,14 @@
   background: #94A3B8;
   cursor: not-allowed;
   box-shadow: none;
+}
+
+.arrowIcon {
+  transition: transform 0.25s;
+}
+
+.submitBtn:hover .arrowIcon {
+  transform: translateX(4px);
 }
 
 /* ── Spinner ── */
@@ -249,7 +249,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin: 8px 0 0;
+  margin: 4px 0 0;
 }
 
 .dividerLine {
@@ -276,118 +276,39 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 11px;
+  height: 48px;
+  padding: 0 16px;
   background: #fff;
   border: 1.5px solid #E2E8F0;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   color: #475569;
-  transition: all 0.2s;
+  transition: all 0.25s;
 }
 
 .socialBtn:hover {
-  border-color: #94A3B8;
-  background: #F8FAFC;
+  border-color: #0F766E;
+  background: #F0FDFA;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(15,118,110,0.1);
 }
 
-@media (max-width: 1000px) {
+.socialBtn svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
   .input {
-    background: transparent;
-    border-bottom-color: rgba(255,255,255,0.15);
-    color: #fff;
-  }
-
-  .input::placeholder {
-    color: rgba(255,255,255,0.4);
-  }
-
-  .input:hover {
-    border-bottom-color: rgba(255,255,255,0.3);
-  }
-
-  .input:focus {
-    border-bottom-color: #2DD4BF;
-  }
-
-  .label {
-    color: rgba(255,255,255,0.5);
-  }
-
-  .labelFloating {
-    color: #2DD4BF;
-  }
-
-  .passwordToggle {
-    color: rgba(255,255,255,0.6);
-    background: rgba(255,255,255,0.08);
-    border-radius: 8px;
-    padding: 8px;
-    right: 8px;
-  }
-
-  .passwordToggle:hover {
-    color: #fff;
-    background: rgba(255,255,255,0.15);
-  }
-
-  .forgotBtn {
-    color: #2DD4BF;
-  }
-
-  .forgotBtn:hover {
-    color: #CCFBF1;
-  }
-
-  .apiError {
-    background: rgba(254,242,242,0.15);
-    border-color: rgba(254,202,202,0.3);
-  }
-
-  .apiErrorText {
-    color: #FECACA;
-  }
-
-  .submitBtn {
+    height: 52px;
+    padding: 0 14px 0 44px;
+    font-size: 14px;
     background: #fff;
-    color: #0F766E;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
   }
-
-  .submitBtn:disabled {
-    background: rgba(255,255,255,0.3);
-    color: rgba(255,255,255,0.5);
-    box-shadow: none;
-  }
-
-  .dividerLine {
-    background: rgba(255,255,255,0.15);
-  }
-
-  .dividerText {
-    color: rgba(255,255,255,0.4);
-  }
-
-  .socialBtn {
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(255,255,255,0.15);
-    color: rgba(255,255,255,0.8);
-  }
-
-  .socialBtn:hover {
-    background: rgba(255,255,255,0.12);
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-
-  .demoHint {
-    color: rgba(255,255,255,0.4);
-  }
-
-  .demoHint strong {
-    color: rgba(255,255,255,0.6);
-  }
+  .inputIcon { left: 14px; }
+  .submitBtn { height: 52px; }
+  .socialBtn { height: 44px; font-size: 12px; }
+  .input::placeholder { color: #94A3B8; }
 }
