@@ -1,11 +1,65 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../store/authStore';
+import { useAuth } from '../features/auth/hooks/useAuth';
 import styles from './Sidebar.module.css';
+
+const Icons = {
+  dashboard: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1.5" />
+      <rect x="14" y="3" width="7" height="7" rx="1.5" />
+      <rect x="3" y="14" width="7" height="7" rx="1.5" />
+      <rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+  ),
+  expenses: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" y1="1" x2="12" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+    </svg>
+  ),
+  users: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  ),
+  categories: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+    </svg>
+  ),
+  reports: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="8" y1="13" x2="16" y2="13" />
+      <line x1="8" y1="17" x2="16" y2="17" />
+      <line x1="8" y1="9" x2="10" y2="9" />
+    </svg>
+  ),
+  settings: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </svg>
+  ),
+  profile: (
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  ),
+};
 
 function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuthStore();
+  const { logout: apiLogout } = useAuth();
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
   const getInitials = (name) => {
@@ -19,63 +73,41 @@ function Sidebar({ isOpen, onClose }) {
   };
 
   const NAV_ITEMS = [
-    {
-      to: '/dashboard',
-      label: t('nav.dashboard'),
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="7" />
-          <rect x="14" y="3" width="7" height="7" />
-          <rect x="3" y="14" width="7" height="7" />
-          <rect x="14" y="14" width="7" height="7" />
-        </svg>
-      ),
-      roles: ['admin', 'employee'],
-    },
-    {
-      to: '/expenses',
-      label: t('nav.expenses'),
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="12" y1="1" x2="12" y2="23" />
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-        </svg>
-      ),
-      roles: ['admin', 'employee'],
-    },
-    {
-      to: '/users',
-      label: t('nav.users'),
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      ),
-      roles: ['admin'],
-    },
-    {
-      to: '/profile',
-      label: t('nav.profile'),
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-          <circle cx="12" cy="7" r="4" />
-        </svg>
-      ),
-      roles: ['admin', 'employee'],
-    },
+    { to: '/dashboard', label: t('sidebar.dashboard'), icon: Icons.dashboard, roles: ['admin', 'employee'] },
+    { to: '/expenses', label: t('sidebar.expenses'), icon: Icons.expenses, roles: ['admin', 'employee'] },
+    { to: '/users', label: t('sidebar.users'), icon: Icons.users, roles: ['admin'] },
+    { to: '/categories', label: t('sidebar.categories'), icon: Icons.categories, roles: ['admin', 'employee'] },
+    { to: '/reports', label: t('sidebar.reports'), icon: Icons.reports, roles: ['admin'] },
+    { to: '/settings', label: t('sidebar.settings'), icon: Icons.settings, roles: ['admin'] },
+    { to: '/profile', label: t('sidebar.profile'), icon: Icons.profile, roles: ['admin', 'employee'] },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await apiLogout();
+    } catch (e) {
+      logout();
+    }
+    navigate('/login');
+  };
 
   return (
     <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
       <div className={styles.logo}>
-        <h1>{t('sidebar.appName')}</h1>
-        <p>{t('sidebar.appDesc')}</p>
+        <div className={styles.logoIcon}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CCFBF1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23" />
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+          </svg>
+        </div>
+        <div>
+          <h1 className={styles.logoName}>{t('sidebar.appName')}</h1>
+          <p className={styles.logoDesc}>{t('sidebar.appDesc')}</p>
+        </div>
       </div>
+
       <nav className={styles.nav}>
+        <p className={styles.navLabel}>{t('sidebar.menu')}</p>
         {NAV_ITEMS
           .filter((item) => item.roles.includes(user?.role))
           .map((item) => (
@@ -89,38 +121,41 @@ function Sidebar({ isOpen, onClose }) {
               onClick={onClose}
             >
               {item.icon}
-              {item.label}
+              <span>{item.label}</span>
             </NavLink>
           ))}
       </nav>
-      <div className={styles.langToggle}>
-        <button
-          className={`${styles.langBtn} ${i18n.language === 'fr' ? styles.langActive : ''}`}
-          onClick={() => changeLanguage('fr')}
-        >
-          FR
-        </button>
-        <span className={styles.langSep}>|</span>
-        <button
-          className={`${styles.langBtn} ${i18n.language === 'en' ? styles.langActive : ''}`}
-          onClick={() => changeLanguage('en')}
-        >
-          EN
-        </button>
-      </div>
-      <div className={styles.footer}>
-        <div className={styles.userInfo}>
-          <div className={styles.avatar}>
-            {getInitials(user?.name)}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p className={styles.userName}>{user?.name}</p>
-            <p className={styles.userRole}>{user?.role === 'admin' ? t('sidebar.admin') : t('sidebar.employee')}</p>
-          </div>
+
+      <div className={styles.bottom}>
+        <div className={styles.langToggle}>
+          <button
+            className={`${styles.langBtn} ${i18n.language === 'fr' ? styles.langActive : ''}`}
+            onClick={() => changeLanguage('fr')}
+          >
+            FR
+          </button>
+          <span className={styles.langSep}>|</span>
+          <button
+            className={`${styles.langBtn} ${i18n.language === 'en' ? styles.langActive : ''}`}
+            onClick={() => changeLanguage('en')}
+          >
+            EN
+          </button>
         </div>
-        <button className={styles.logoutBtn} onClick={logout}>
-          {t('sidebar.logout')}
-        </button>
+        <div className={styles.profile}>
+          <div className={styles.avatar}>{getInitials(user?.name)}</div>
+          <div className={styles.profileInfo}>
+            <p className={styles.userName}>{user?.name}</p>
+            <p className={styles.userEmail}>{user?.email}</p>
+          </div>
+          <button className={styles.logoutIconBtn} onClick={handleLogout} title={t('sidebar.logout')} aria-label={t('sidebar.logout')}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+          </button>
+        </div>
       </div>
     </aside>
   );

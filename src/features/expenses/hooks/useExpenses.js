@@ -39,7 +39,7 @@ export function useExpenses(params = {}) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [JSON.stringify(params)]);
 
   useEffect(() => { fetchExpenses(); }, [fetchExpenses]);
 
@@ -48,7 +48,7 @@ export function useExpenses(params = {}) {
       const response = await expenseService.create(data);
       const item = extractItem(response);
       setExpenses((prev) => [item, ...prev]);
-      return { success: true };
+      return { success: true, data: item };
     } catch (err) {
       return { success: false, error: handleApiError(err) };
     }
@@ -106,7 +106,7 @@ export function useAdminExpenses(params = {}) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [JSON.stringify(params)]);
 
   useEffect(() => { fetchExpenses(); }, [fetchExpenses]);
 
@@ -115,18 +115,18 @@ export function useAdminExpenses(params = {}) {
       const response = await expenseService.approve(ref);
       const updated = extractItem(response);
       setExpenses((prev) => prev.map((e) => (e.reference === ref ? updated : e)));
-      return { success: true };
+      return { success: true, data: updated };
     } catch (err) {
       return { success: false, error: handleApiError(err) };
     }
   };
 
-  const rejectExpense = async (ref) => {
+  const rejectExpense = async (ref, reason = 'Rejected by administrator') => {
     try {
-      const response = await expenseService.reject(ref);
+      const response = await expenseService.reject(ref, reason);
       const updated = extractItem(response);
       setExpenses((prev) => prev.map((e) => (e.reference === ref ? updated : e)));
-      return { success: true };
+      return { success: true, data: updated };
     } catch (err) {
       return { success: false, error: handleApiError(err) };
     }

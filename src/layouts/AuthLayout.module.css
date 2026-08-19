@@ -6,64 +6,41 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.06); opacity: 0.65; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
 
 .wrapper {
   position: relative;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #062C2A;
-}
-
-/* ── Background Image ── */
-
-.bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.bgImage {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(
-    135deg,
-    rgba(6,44,42,0.65) 0%,
-    rgba(15,118,110,0.35) 50%,
-    rgba(20,184,166,0.25) 100%
-  );
-}
-
-/* ── Top Bar ── */
-
-.topBar {
-  position: absolute;
-  top: 28px;
-  left: 36px;
-  right: 36px;
-  z-index: 10;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  overflow-x: hidden;
+  background: linear-gradient(165deg, #062C2A 0%, #064E4A 35%, #0F766E 70%, #14B8A6 100%);
+}
+
+/* ── Left zone: visual universe ── */
+
+.left {
+  flex: 0 0 56%;
+  position: relative;
+  min-height: 100vh;
+  padding: 76px 48px 0;
+  overflow: hidden;
 }
 
 .homeLink {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.45);
   text-decoration: none;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   transition: color 0.2s;
 }
@@ -72,10 +49,224 @@
   color: #2DD4BF;
 }
 
+.brand {
+  margin-top: 48px;
+  position: relative;
+  z-index: 3;
+}
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.brandIcon {
+  width: 34px;
+  height: 34px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.tagline {
+  margin-top: 40px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.55);
+  max-width: 380px;
+  position: relative;
+  z-index: 3;
+}
+
+.glow {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 560px;
+  height: 560px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,212,191,0.16) 0%, rgba(45,212,191,0.05) 45%, transparent 70%);
+  filter: blur(70px);
+  animation: pulseGlow 6s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.illustrationWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  width: 72%;
+  max-width: 480px;
+  z-index: 2;
+  padding: 0;
+}
+
+/* ── Glassmorphism panel ── */
+
+.panel {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 30px 80px -20px rgba(0,0,0,0.45);
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: -0.2px;
+}
+
+.panelBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.panelBadgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2DD4BF;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.panelStats {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.panelStat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.panelStatValue {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.panelStatLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.4);
+}
+
+.panelStatMini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2DD4BF;
+  background: rgba(45,212,191,0.1);
+  border: 1px solid rgba(45,212,191,0.2);
+  padding: 4px 8px;
+  border-radius: 20px;
+  margin-bottom: 4px;
+}
+
+.panelChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 90px;
+  margin-bottom: 20px;
+}
+
+.panelBar {
+  flex: 1;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, rgba(45,212,191,0.5), rgba(45,212,191,0.12));
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panelRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.panelRowDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.panelRowText {
+  flex: 1;
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+.panelRowAmount {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ── Right zone: form ── */
+
+.right {
+  flex: 0 0 44%;
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .langToggle {
+  position: absolute;
+  top: 24px;
+  right: 32px;
   display: flex;
   align-items: center;
   gap: 4px;
+  z-index: 5;
 }
 
 .langBtn {
@@ -87,7 +278,7 @@
   font-weight: 600;
   color: rgba(255,255,255,0.5);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.2s;
 }
 
 .langBtn:hover {
@@ -112,128 +303,70 @@
   font-size: 13px;
 }
 
-/* ── Content ── */
-
-.content {
-  position: relative;
-  z-index: 5;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 80px 120px 80px 48px;
-  gap: 80px;
+.formContainer {
+  width: min(100% - 64px, 520px);
+  margin: auto;
+  padding: 64px 0 48px;
 }
-
-.leftContent {
-  position: absolute;
-  left: 48px;
-  top: 50%;
-  transform: translateY(-50%);
-  max-width: 360px;
-  animation: fadeIn 0.6s ease;
-}
-
-.brandLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  margin-bottom: 16px;
-}
-
-.brandIcon {
-  width: 36px;
-  height: 36px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brandName {
-  font-size: 22px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-
-.tagline {
-  font-size: 14px;
-  color: rgba(255,255,255,0.55);
-  margin: 0;
-  line-height: 1.6;
-}
-
-/* ── Form Card ── */
 
 .card {
-  width: 100%;
-  max-width: 440px;
   background: #fff;
-  border-radius: 28px;
-  padding: 48px 48px 40px;
+  border-radius: 24px;
+  padding: 48px 52px;
   box-shadow:
-    0 4px 6px -1px rgba(0,0,0,0.03),
-    0 12px 24px -6px rgba(0,0,0,0.06),
-    0 24px 48px -12px rgba(0,0,0,0.08);
+    0 24px 60px rgba(0,0,0,0.12),
+    0 4px 12px rgba(0,0,0,0.05);
   animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 28px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%);
-  pointer-events: none;
 }
 
 .authTitle {
-  font-size: 26px;
-  font-weight: 700;
-  color: #0F172A;
-  margin: 0 0 4px;
+  font-size: 30px;
+  font-weight: 750;
+  color: #0B1F33;
+  margin: 0;
   letter-spacing: -0.5px;
+  line-height: 1.15;
 }
 
 .authSubtitle {
-  font-size: 14px;
+  font-size: 15px;
   color: #64748B;
-  margin: 0 0 32px;
+  margin: 8px 0 0;
+  line-height: 1.5;
 }
 
 /* ── Responsive ── */
 
-@media (max-width: 900px) {
-  .content {
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 24px;
-    gap: 32px;
-  }
-  .leftContent {
-    position: static;
-    transform: none;
-    max-width: 440px;
-    width: 100%;
-    text-align: center;
-  }
-  .brandLink { justify-content: center; }
-  .tagline { text-align: center; }
-  .card { max-width: 440px; }
+@media (max-width: 1024px) {
+  .left { flex-basis: 52%; padding: 64px 36px 0; }
+  .right { flex-basis: 48%; }
+  .illustrationWrapper { width: 84%; max-width: 420px; }
+  .formContainer { width: min(100% - 48px, 480px); }
+  .card { padding: 40px 36px; }
 }
 
-@media (max-width: 600px) {
-  .topBar { top: 16px; left: 16px; right: 16px; }
-  .topBar .homeLink { display: none; }
-  .content { padding: 48px 16px 24px; gap: 24px; }
-  .brandIcon { width: 28px; height: 28px; }
-  .brandName { font-size: 18px; }
-  .tagline { font-size: 13px; }
-  .card { padding: 32px 24px 28px; border-radius: 20px; }
-  .authTitle { font-size: 22px; }
-  .authSubtitle { font-size: 13px; margin-bottom: 24px; }
+@media (max-width: 768px) {
+  .wrapper { flex-direction: column; background: linear-gradient(180deg, #062C2A 0%, #064E4A 40%, #0F766E 100%); }
+  .left { flex: none; min-height: auto; padding: 24px 24px 0; }
+  .homeLink { position: absolute; top: 20px; left: 24px; }
+  .brand { margin-top: 48px; text-align: center; }
+  .brandLink { justify-content: center; }
+  .tagline { margin: 24px auto 0; text-align: center; max-width: 320px; font-size: 14px; }
+  .glow { width: 320px; height: 320px; bottom: 30%; }
+  .illustrationWrapper { position: relative; transform: none; left: auto; bottom: auto; margin: 24px auto 0; width: 82%; max-width: 360px; padding: 0; }
+  .panel { padding: 20px; }
+  .right { flex: 1; min-height: auto; padding: 16px 16px 32px; }
+  .langToggle { top: 16px; right: 16px; }
+  .formContainer { width: 100%; padding: 0; }
+  .card { padding: 32px 24px; border-radius: 20px; }
+  .authTitle { font-size: 26px; }
+}
+
+@media (max-width: 480px) {
+  .left { padding: 20px 16px 0; }
+  .illustrationWrapper { width: 90%; max-width: 300px; }
+  .panel { padding: 16px; }
+  .panelStatValue { font-size: 22px; }
+  .card { padding: 24px 20px; }
+  .formContainer { padding: 0 0 8px; }
 }

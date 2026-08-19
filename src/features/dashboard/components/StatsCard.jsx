@@ -1,35 +1,25 @@
 import PropTypes from 'prop-types';
+import Sparkline from '../../../components/shared/charts/Sparkline';
+import styles from './StatsCard.module.css';
 
-function StatsCard({ title, value, icon, color = '#0F766E' }) {
+function StatsCard({ title, value, icon, color = 'var(--color-primary)', softColor = '#E8F7F5', trend, sub, sparkline }) {
   return (
-    <div style={{
-      background: '#fff',
-      border: '1px solid #E2E8F0',
-      borderRadius: '12px',
-      padding: '20px 24px',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-    }}>
-      <div style={{
-        width: '48px',
-        height: '48px',
-        borderRadius: '12px',
-        background: `${color}15`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexShrink: 0,
-      }}>
-        {icon}
+    <div className={styles.card}>
+      <div className={styles.top}>
+        <div className={styles.icon} style={{ background: softColor, color }}>
+          {icon}
+        </div>
+        {sparkline && <Sparkline data={sparkline} color={color} />}
       </div>
-      <div>
-        <p style={{ margin: '0 0 4px', fontSize: '13px', color: '#64748B', fontWeight: 500 }}>
-          {title}
-        </p>
-        <p style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#1E293B' }}>
-          {value}
-        </p>
+      <p className={styles.title}>{title}</p>
+      <p className={styles.value}>{value}</p>
+      <div className={styles.bottom}>
+        {trend !== undefined && (
+          <span className={trend >= 0 ? styles.trendUp : styles.trendDown}>
+            {trend >= 0 ? '▲' : '▼'} {Math.abs(trend)}%
+          </span>
+        )}
+        {sub && <span className={styles.sub}>{sub}</span>}
       </div>
     </div>
   );
@@ -40,6 +30,10 @@ StatsCard.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   icon: PropTypes.node,
   color: PropTypes.string,
+  softColor: PropTypes.string,
+  trend: PropTypes.number,
+  sub: PropTypes.string,
+  sparkline: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default StatsCard;

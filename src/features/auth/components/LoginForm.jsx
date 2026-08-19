@@ -45,12 +45,14 @@ function LoginForm({ onSubmit, loading, error }) {
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       {/* Email */}
       <div className={styles.field}>
+        <label className={styles.label} htmlFor="email">{t('auth.email')}</label>
         <div className={styles.inputWrapper}>
           <svg className={styles.inputIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <polyline points="22,4 12,13 2,4" />
           </svg>
           <input
+            id="email"
             name="email"
             type="email"
             value={form.email}
@@ -59,7 +61,7 @@ function LoginForm({ onSubmit, loading, error }) {
             onBlur={() => handleBlur('email')}
             className={inputClass('email')}
             autoComplete="email"
-            placeholder={t('auth.email')}
+            placeholder={t('auth.emailPlaceholder')}
           />
         </div>
         {errors.email && (
@@ -76,12 +78,14 @@ function LoginForm({ onSubmit, loading, error }) {
 
       {/* Password */}
       <div className={styles.field}>
+        <label className={styles.label} htmlFor="password">{t('auth.password')}</label>
         <div className={styles.inputWrapper}>
           <svg className={styles.inputIcon} width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
           <input
+            id="password"
             name="password"
             type={showPassword ? 'text' : 'password'}
             value={form.password}
@@ -90,7 +94,7 @@ function LoginForm({ onSubmit, loading, error }) {
             onBlur={() => handleBlur('password')}
             className={inputClass('password')}
             autoComplete="current-password"
-            placeholder={t('auth.password')}
+            placeholder={t('auth.passwordPlaceholder')}
           />
           <button
             type="button"
