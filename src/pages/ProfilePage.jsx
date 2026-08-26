@@ -9,7 +9,7 @@ import styles from './ProfilePage.module.css';
 function ProfilePage() {
   const { user } = useAuthStore();
   const { updateProfile, changePassword, loading, error } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { showToast } = useToast();
   const [form, setForm] = useState({
     name: user?.name || '',
@@ -42,11 +42,6 @@ function ProfilePage() {
     } else if (error) {
       showToast(error, 'error');
     }
-  };
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-    localStorage.setItem('lang', lng);
   };
 
   const handlePasswordChange = (e) => {
@@ -138,27 +133,6 @@ function ProfilePage() {
         </div>
 
         <div className={styles.side}>
-          <div className={styles.card}>
-            <h3 className={styles.cardTitle}>{t('profile.preferences')}</h3>
-            <div className={styles.settingRow}>
-              <span className={styles.settingLabel}>{t('profile.language')}</span>
-              <div className={styles.langGroup}>
-                <button
-                  className={`${styles.langBtn} ${i18n.language === 'fr' ? styles.langActive : ''}`}
-                  onClick={() => changeLanguage('fr')}
-                >
-                  FR
-                </button>
-                <button
-                  className={`${styles.langBtn} ${i18n.language === 'en' ? styles.langActive : ''}`}
-                  onClick={() => changeLanguage('en')}
-                >
-                  EN
-                </button>
-              </div>
-            </div>
-          </div>
-
           <div className={styles.card}>
             <h3 className={styles.cardTitle}>{t('profile.security')}</h3>
             <div className={styles.settingRow}>

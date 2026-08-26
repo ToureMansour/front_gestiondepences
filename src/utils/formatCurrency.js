@@ -5,9 +5,9 @@ function getLocale() {
 }
 
 export function formatCurrency(amount) {
-  if (amount === null || amount === undefined) return '0,00 €';
+  if (amount === null || amount === undefined) return '0 FCFA';
   return new Intl.NumberFormat(getLocale(), {
-    style: 'currency',
-    currency: 'EUR',
-  }).format(amount);
+    style: 'decimal',
+    maximumFractionDigits: 0,
+  }).format(amount) + ' FCFA';
 }

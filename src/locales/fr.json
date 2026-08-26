@@ -310,6 +310,7 @@
     "delete": "Supprimer",
     "emptyTitle": "Aucune catégorie",
     "emptyMessage": "Vous n'avez aucune catégorie enregistrée.",
+    "selectCategory": "Sélectionner une catégorie",
     "addTitle": "Ajouter une catégorie",
     "editTitle": "Modifier la catégorie",
     "deleteConfirmTitle": "Supprimer cette catégorie ?",

@@ -62,6 +62,14 @@ function AppRouter() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/settings/users"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <UsersPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>
             <Route path="/404" element={<NotFoundPage />} />

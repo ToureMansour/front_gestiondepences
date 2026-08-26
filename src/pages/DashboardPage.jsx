@@ -36,11 +36,6 @@ export default function DashboardPage() {
 
   const recent = useMemo(() => expenses.slice(0, 6), [expenses]);
 
-  const donutSegments = statusData.map((s) => ({
-    value: s.value,
-    color: STATUS_COLORS[s.status] || 'var(--color-text-muted)',
-  }));
-
   const statusLabels = {
     pending: t('expenses.statusPending'),
     approved: t('expenses.statusApproved'),
@@ -48,6 +43,12 @@ export default function DashboardPage() {
     paid: t('expenses.statusPaid'),
     cancelled: t('expenses.statusCancelled'),
   };
+
+  const donutSegments = statusData.map((s) => ({
+    value: s.value,
+    color: STATUS_COLORS[s.status] || 'var(--color-text-muted)',
+    label: statusLabels[s.status] || s.status,
+  }));
 
   if (loading) {
     return (

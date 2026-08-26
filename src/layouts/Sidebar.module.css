@@ -9,7 +9,11 @@
   left: 0;
   top: 0;
   z-index: 100;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collapsed {
+  width: 68px;
 }
 
 .logo {
@@ -18,6 +22,12 @@
   gap: 10px;
   padding: 18px 20px;
   border-bottom: 1px solid var(--color-border-light);
+  min-height: 64px;
+}
+
+.collapsed .logo {
+  justify-content: center;
+  padding: 18px 0;
 }
 
 .logoIcon {
@@ -54,6 +64,7 @@
   flex-direction: column;
   gap: 2px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .navLabel {
@@ -77,6 +88,12 @@
   font-size: 14px;
   font-weight: 500;
   transition: all 0.15s;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .navItem svg {
@@ -99,6 +116,65 @@
   color: var(--color-primary);
 }
 
+.navItemBtn {
+  justify-content: flex-start;
+}
+
+.navItemLabel {
+  flex: 1;
+}
+
+.chevron {
+  display: flex;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.subNav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 4px 0 4px 16px;
+  animation: slideDown 0.15s ease;
+}
+
+.subNavItem {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.15s;
+}
+
+.subNavItem:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.subNavItemActive {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .bottom {
   border-top: 1px solid var(--color-border-light);
   padding: 12px;
@@ -113,6 +189,10 @@
   justify-content: center;
   gap: 4px;
   padding: 4px;
+}
+
+.collapsed .langToggle {
+  display: none;
 }
 
 .langBtn {
@@ -149,76 +229,33 @@
   font-size: 13px;
 }
 
-.profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: var(--radius-md);
-  background: var(--color-bg);
-  transition: background 0.15s;
-}
-
-.profile:hover {
-  background: #EEF3F7;
-}
-
-.avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  color: #fff;
+.collapseBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.profileInfo {
-  flex: 1;
-  min-width: 0;
-}
-
-.userName {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.userEmail {
-  font-size: 11px;
-  color: var(--color-text-muted);
-  margin: 1px 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.logoutIconBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
   color: var(--color-text-muted);
   cursor: pointer;
-  flex-shrink: 0;
   transition: all 0.15s;
+  margin: 0 auto;
 }
 
-.logoutIconBtn:hover {
-  background: var(--color-danger-soft);
-  color: var(--color-danger);
+.collapseBtn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.collapseIcon {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.collapseIconRotated {
+  transform: rotate(180deg);
 }
 
 @media (max-width: 768px) {
@@ -229,5 +266,9 @@
 
   .sidebarOpen {
     transform: translateX(0);
+  }
+
+  .collapseBtn {
+    display: none;
   }
 }

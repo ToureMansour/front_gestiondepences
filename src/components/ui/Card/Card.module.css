@@ -1,13 +1,13 @@
 .card {
-  background: #fff;
-  border: 1px solid #E2E8F0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
   border-radius: 12px;
   padding: 24px;
-  transition: box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
 }
 
 .header {
@@ -20,12 +20,12 @@
 .title {
   font-size: 16px;
   font-weight: 700;
-  color: #1E293B;
+  color: var(--color-text);
   margin: 0;
 }
 
 .subtitle {
   font-size: 13px;
-  color: #64748B;
+  color: var(--color-text-secondary);
   margin-top: 4px;
 }

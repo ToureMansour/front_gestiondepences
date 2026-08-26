@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 
 function buildPath(points) {
@@ -25,6 +26,7 @@ export default function LineChart({
   color = 'var(--color-primary)',
   fill = true,
 }) {
+  const [hovered, setHovered] = useState(null);
   const innerW = width - padding.left - padding.right;
   const innerH = height - padding.top - padding.bottom;
 
@@ -56,8 +58,19 @@ export default function LineChart({
     return { y, val };
   });
 
+  const tooltipW = 100;
+  const tooltipH = 38;
+
   return (
-    <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="Line chart">
+    <svg
+      width="100%"
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label="Line chart"
+      onMouseLeave={() => setHovered(null)}
+      style={{ overflow: 'visible' }}
+    >
       {yTicks.map(({ y, val }) => (
         <g key={y}>
           <line x1={padding.left} x2={width - padding.right} y1={y} y2={y} stroke="var(--color-border-light)" strokeWidth="1" />
@@ -87,14 +100,65 @@ export default function LineChart({
 
       {points.map(([x, y], i) => (
         <g key={i}>
-          <circle cx={x} cy={y} r="4" fill="var(--color-surface)" stroke={color} strokeWidth="2" />
+          <circle
+            cx={x}
+            cy={y}
+            r={hovered === i ? 6 : 4}
+            fill={hovered === i ? color : 'var(--color-surface)'}
+            stroke={color}
+            strokeWidth={hovered === i ? 0 : 2}
+            style={{ transition: 'all 0.15s ease', cursor: 'pointer' }}
+          />
           {labels.length <= 12 && (
             <text x={x} y={height - 8} textAnchor="middle" fill="var(--color-text-muted)" fontSize="11">
               {labels[i]}
             </text>
           )}
+          {labels.length > 12 && (
+            <text
+              x={x}
+              y={height - 8}
+              textAnchor="middle"
+              fill={hovered === i ? 'var(--color-text)' : 'var(--color-text-muted)'}
+              fontSize="10"
+              fontWeight={hovered === i ? '600' : '400'}
+            >
+              {labels[i]}
+            </text>
+          )}
         </g>
       ))}
+
+      {points.map(([x, y], i) => {
+        const isLast = x + tooltipW / 2 > width - padding.right;
+        const tx = isLast ? x - tooltipW - 10 : x + 10;
+        const ty = y - tooltipH / 2;
+        return (
+          <g key={`hit-${i}`} style={{ cursor: 'pointer' }} onMouseEnter={() => setHovered(i)}>
+            <rect x={x - stepX / 2} y={padding.top} width={stepX} height={innerH} fill="transparent" />
+            {hovered === i && (
+              <g>
+                <rect
+                  x={tx}
+                  y={ty}
+                  width={tooltipW}
+                  height={tooltipH}
+                  rx="6"
+                  fill="var(--color-text)"
+                  opacity="0.92"
+                />
+                <text x={tx + 10} y={ty + 15} fill="var(--color-text-muted)" fontSize="10">
+                  {labels[i]}
+                </text>
+                <text x={tx + 10} y={ty + 28} fill="#fff" fontSize="12" fontWeight="700">
+                  {Number(values[i]).toLocaleString()} FCFA
+                </text>
+                <line x1={x} y1={y + 6} x2={x} y2={ty + tooltipH} stroke={color} strokeWidth="1" strokeDasharray="3,2" opacity="0.4" />
+              </g>
+            )}
+          </g>
+        );
+      })}
     </svg>
   );
 }

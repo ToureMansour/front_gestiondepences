@@ -123,7 +123,7 @@ function CategoriesPage() {
                       </div>
                     </td>
                     <td className={styles.countCell}>{c.expenses_count ?? 0}</td>
-                    <td className={styles.amountCell}>{c.total_amount != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(c.total_amount) : '0,00 €'}</td>
+                    <td className={styles.amountCell}>{c.total_amount != null ? new Intl.NumberFormat('fr-FR', { style: 'decimal', maximumFractionDigits: 0 }).format(c.total_amount) + ' FCFA' : '0 FCFA'}</td>
                     <td className={styles.actionsCol}>
                       <div className={styles.rowActions}>
                         <button className={`${styles.actionBtn} ${styles.edit}`} onClick={() => openEdit(c)}>

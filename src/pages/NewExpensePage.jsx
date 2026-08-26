@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import expenseService from '../features/expenses/services/expenseService';
+import { useCategories } from '../features/categories/hooks/useCategories';
 import { handleApiError } from '../services/errorHandler';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../components/shared/Toast';
@@ -16,7 +17,9 @@ function NewExpensePage() {
     amount: '',
     description: '',
     expense_date: new Date().toISOString().slice(0, 10),
+    category_id: '',
   });
+  const { categories } = useCategories();
   const [proof, setProof] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -48,6 +51,7 @@ function NewExpensePage() {
       payload.append('amount', form.amount);
       payload.append('description', form.description || '');
       payload.append('expense_date', form.expense_date);
+      if (form.category_id) payload.append('category_id', form.category_id);
       if (proof) payload.append('proof', proof);
       await expenseService.create(payload);
       showToast(t('toast.expenseCreated'));
@@ -90,7 +94,7 @@ function NewExpensePage() {
             <div className={styles.field}>
               <label className={styles.label}>{t('expenses.amount')} *</label>
               <div className={styles.inputWithPrefix}>
-                <span className={styles.prefix}>€</span>
+                <span className={styles.prefix}>FCFA</span>
                 <input
                   type="number"
                   name="amount"
@@ -115,6 +119,21 @@ function NewExpensePage() {
                 required
               />
             </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>{t('categories.name')}</label>
+            <select
+              name="category_id"
+              className={styles.input}
+              value={form.category_id}
+              onChange={handleChange}
+            >
+              <option value="">{t('categories.selectCategory')}</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>{cat.name}</option>
+              ))}
+            </select>
           </div>
 
           <div className={styles.field}>
