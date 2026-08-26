@@ -17,12 +17,9 @@ export function useSettings() {
         organization_name: data.organization_name || '',
         notifications_enabled: data.notifications_enabled !== false,
       });
-    } catch {
-      // fallback to localStorage
-      const saved = localStorage.getItem('depensys_settings');
-      if (saved) {
-        try { setSettings(JSON.parse(saved)); } catch { /* ignore */ }
-      }
+    } catch (err) {
+      const appError = handleApiError(err);
+      setError(appError.message);
     } finally {
       setLoading(false);
     }
@@ -32,17 +29,16 @@ export function useSettings() {
     setSaving(true);
     setError(null);
     try {
-      await settingsService.updateOrg({ organization_name: newSettings.organization_name });
-      await settingsService.updateNotifications({ notifications_enabled: newSettings.notifications_enabled });
-      setSettings(newSettings);
-      localStorage.setItem('depensys_settings', JSON.stringify(newSettings));
+      const response = await settingsService.update(newSettings);
+      const data = response.data.data || response.data;
+      setSettings({
+        organization_name: data.organization_name || newSettings.organization_name,
+        notifications_enabled: data.notifications_enabled ?? newSettings.notifications_enabled,
+      });
       return true;
     } catch (err) {
       const appError = handleApiError(err);
       setError(appError.message);
-      // still save locally as fallback
-      setSettings(newSettings);
-      localStorage.setItem('depensys_settings', JSON.stringify(newSettings));
       return false;
     } finally {
       setSaving(false);

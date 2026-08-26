@@ -34,8 +34,6 @@ export const ENDPOINTS = {
   },
   SETTINGS: {
     BASE: '/settings',
-    ORG: '/settings/organization',
-    NOTIFICATIONS: '/settings/notifications',
   },
   STATS: '/stats',
 };
