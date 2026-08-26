@@ -126,6 +126,14 @@
     "showPassword": "Show password",
     "hidePassword": "Hide password",
     "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset password",
+    "forgotPasswordDesc": "Enter your email address and we will send you a link to reset your password.",
+    "forgotPasswordSuccess": "A reset email has been sent. Check your inbox.",
+    "resetPasswordTitle": "New password",
+    "resetPasswordDesc": "Choose a new password for your account.",
+    "resetPasswordSuccess": "Your password has been reset successfully.",
+    "resetPassword": "Reset",
+    "backToLogin": "Back to login",
     "loggingIn": "Logging in...",
     "login": "Log in",
     "orContinueWith": "Or continue with",
@@ -260,6 +268,13 @@
     "security": "Security",
     "password": "Password",
     "changePassword": "Change password",
+    "changePasswordTitle": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordMismatch": "Passwords do not match",
+    "passwordMin6": "Minimum 6 characters",
+    "passwordChanged": "Password changed successfully.",
     "preferences": "Preferences",
     "language": "Language",
     "french": "French",
@@ -312,6 +327,7 @@
     "title": "Reports",
     "description": "Analyze your organization's expenses.",
     "totalExpenses": "Total expenses",
+    "totalAmount": "Total amount",
     "evolution": "Expense evolution",
     "distribution": "Breakdown by category",
     "topCategories": "Top categories",
@@ -351,7 +367,8 @@
     "newUserJoined": "New user",
     "newUserDesc": "{{name}} joined the organization.",
     "expenseApproved": "Expense approved",
-    "expenseApprovedDesc": "Expense {{ref}} has been approved."
+    "expenseApprovedDesc": "Expense {{ref}} has been approved.",
+    "noNotifications": "No notifications"
   },
   "toast": {
     "expenseCreated": "Expense created successfully.",
@@ -370,11 +387,28 @@
     "cancel": "Cancel",
     "delete": "Delete"
   },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for does not exist."
+  },
+  "wallet": {
+    "cardholder": "CARDHOLDER",
+    "expiration": "EXPIRATION"
+  },
+  "mockup": {
+    "trip": "Client trip",
+    "tripMeta": "2 hours ago | Transport",
+    "officeSupplies": "Office supplies",
+    "officeSuppliesMeta": "5 hours ago | Shopping",
+    "teamMeal": "Team meal",
+    "teamMealMeta": "Yesterday | Food"
+  },
   "common": {
     "loading": "Loading...",
     "errorOccurred": "An error occurred.",
     "errorMessage": "Something went wrong. Please try again or contact support.",
     "retry": "Retry",
+    "cancel": "Cancel",
     "noData": "No data",
     "noInfo": "No information to display.",
     "serverConnectionError": "Unable to reach the server. Please check your connection.",

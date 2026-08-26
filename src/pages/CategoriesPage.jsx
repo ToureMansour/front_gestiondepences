@@ -3,20 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
 import ConfirmModal from '../components/shared/ConfirmModal';
+import { SkeletonCard } from '../components/shared/Skeleton';
+import ErrorMessage from '../components/shared/ErrorMessage';
 import { useToast } from '../components/shared/Toast';
-import { getCategories, saveCategories, generateId } from '../utils/categoryStore';
+import { useCategories } from '../features/categories/hooks/useCategories';
 import styles from './CategoriesPage.module.css';
 
 function CategoriesPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [categories, setCategories] = useState(() => getCategories());
+  const { categories, loading, error, createCategory, updateCategory, deleteCategory } = useCategories();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(null);
   const [name, setName] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
-
-  const displayName = (c) => (c.isDefault ? t(c.name) : c.name);
+  const [saving, setSaving] = useState(false);
 
   const openAdd = () => {
     setEditing(null);
@@ -26,35 +27,57 @@ function CategoriesPage() {
 
   const openEdit = (c) => {
     setEditing(c);
-    setName(c.isDefault ? t(c.name) : c.name);
+    setName(c.name);
     setModalOpen(true);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const trimmed = name.trim();
     if (!trimmed) return;
-    let next;
+    setSaving(true);
+
+    let result;
     if (editing) {
-      next = categories.map((c) =>
-        c.id === editing.id ? { ...c, name: trimmed, isDefault: false } : c
-      );
+      result = await updateCategory(editing.id, { name: trimmed });
     } else {
-      next = [...categories, { id: generateId(), name: trimmed, isDefault: false }];
+      result = await createCategory({ name: trimmed });
     }
-    saveCategories(next);
-    setCategories(next);
-    setModalOpen(false);
-    showToast(editing ? t('toast.categoryUpdated') : t('toast.categoryAdded'));
+
+    setSaving(false);
+    if (result.success) {
+      showToast(editing ? t('toast.categoryUpdated') : t('toast.categoryAdded'));
+      setModalOpen(false);
+    } else {
+      showToast(result.error || t('common.errorOccurred'), 'error');
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!deleteTarget) return;
-    const next = categories.filter((c) => c.id !== deleteTarget.id);
-    saveCategories(next);
-    setCategories(next);
+    const result = await deleteCategory(deleteTarget.id);
     setDeleteTarget(null);
-    showToast(t('toast.categoryDeleted'));
+    if (result.success) {
+      showToast(t('toast.categoryDeleted'));
+    } else {
+      showToast(result.error || t('common.errorOccurred'), 'error');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <SkeletonCard />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <ErrorMessage message={error} />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>
@@ -96,11 +119,11 @@ function CategoriesPage() {
                         <div className={styles.catIcon}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" /></svg>
                         </div>
-                        <span className={styles.nameText}>{displayName(c)}</span>
+                        <span className={styles.nameText}>{c.name}</span>
                       </div>
                     </td>
-                    <td className={styles.countCell}>0</td>
-                    <td className={styles.amountCell}>0,00 €</td>
+                    <td className={styles.countCell}>{c.expenses_count ?? 0}</td>
+                    <td className={styles.amountCell}>{c.total_amount != null ? new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(c.total_amount) : '0,00 €'}</td>
                     <td className={styles.actionsCol}>
                       <div className={styles.rowActions}>
                         <button className={`${styles.actionBtn} ${styles.edit}`} onClick={() => openEdit(c)}>
@@ -139,7 +162,7 @@ function CategoriesPage() {
           </div>
           <div className={styles.actions}>
             <Button variant="ghost" onClick={() => setModalOpen(false)}>{t('categories.cancel')}</Button>
-            <Button onClick={handleSave} disabled={!name.trim()}>{t('categories.save')}</Button>
+            <Button onClick={handleSave} disabled={!name.trim() || saving}>{saving ? t('common.loading') : t('categories.save')}</Button>
           </div>
         </div>
       </Modal>

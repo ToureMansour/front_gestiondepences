@@ -1,40 +1,50 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../components/ui/Button';
 import { useToast } from '../components/shared/Toast';
+import { useSettings } from '../features/settings/hooks/useSettings';
 import styles from './SettingsPage.module.css';
 
-const SETTINGS_KEY = 'depensys_settings';
-
-function loadSettings() {
-  try {
-    return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {};
-  } catch {
-    return {};
-  }
-}
-
 function SettingsPage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { showToast } = useToast();
-  const initial = loadSettings();
-  const [orgName, setOrgName] = useState(initial.orgName || '');
-  const [notifEmail, setNotifEmail] = useState(initial.notifEmail ?? true);
-  const [notifApp, setNotifApp] = useState(initial.notifApp ?? true);
-  const [saving, setSaving] = useState(false);
+  const { settings, loading, saving, updateSettings } = useSettings();
+  const [orgName, setOrgName] = useState('');
+  const [notifEmail, setNotifEmail] = useState(true);
+  const [notifApp, setNotifApp] = useState(true);
 
-  const handleSave = (e) => {
+  useEffect(() => {
+    if (settings) {
+      setOrgName(settings.organization_name || '');
+      setNotifEmail(settings.notifications_email ?? true);
+      setNotifApp(settings.notifications_app ?? true);
+    }
+  }, [settings]);
+
+  const handleSave = async (e) => {
     e.preventDefault();
-    setSaving(true);
-    localStorage.setItem(
-      SETTINGS_KEY,
-      JSON.stringify({ orgName, notifEmail, notifApp })
-    );
-    setTimeout(() => {
-      setSaving(false);
+    const result = await updateSettings({
+      organization_name: orgName,
+      notifications_email: notifEmail,
+      notifications_app: notifApp,
+    });
+    if (result) {
       showToast(t('toast.settingsSaved'));
-    }, 300);
+    } else {
+      showToast(t('common.errorOccurred'), 'error');
+    }
   };
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.card} style={{ opacity: 0.5 }}>
+          <div style={{ height: '20px', background: 'var(--color-bg)', borderRadius: '4px', width: '120px' }} />
+          <div style={{ height: '14px', background: 'var(--color-bg)', borderRadius: '4px', width: '200px', marginTop: '8px' }} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>

@@ -7,6 +7,9 @@ export const ENDPOINTS = {
     LOGOUT: '/logout',
     PROFILE: '/profile',
     UPDATE_PROFILE: '/profile',
+    CHANGE_PASSWORD: '/change-password',
+    FORGOT_PASSWORD: '/forgot-password',
+    RESET_PASSWORD: '/reset-password',
   },
   USERS: {
     BASE: '/users',
@@ -19,6 +22,20 @@ export const ENDPOINTS = {
     APPROVE: (ref) => `/expenses/${ref}/approve`,
     REJECT: (ref) => `/expenses/${ref}/reject`,
     PAY: (ref) => `/expenses/${ref}/pay`,
+  },
+  CATEGORIES: {
+    BASE: '/categories',
+    BY_ID: (id) => `/categories/${id}`,
+  },
+  NOTIFICATIONS: {
+    BASE: '/notifications',
+    MARK_READ: (id) => `/notifications/${id}/read`,
+    MARK_ALL_READ: '/notifications/read-all',
+  },
+  SETTINGS: {
+    BASE: '/settings',
+    ORG: '/settings/organization',
+    NOTIFICATIONS: '/settings/notifications',
   },
   STATS: '/stats',
 };

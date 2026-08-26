@@ -111,6 +111,17 @@
   border: 2px solid #fff;
 }
 
+.notifDotHidden {
+  display: none;
+}
+
+.notifEmpty {
+  padding: 24px;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
 .notifDropdown {
   position: absolute;
   right: 0;

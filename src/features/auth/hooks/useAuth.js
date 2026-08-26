@@ -84,6 +84,51 @@ export function useAuth() {
     }
   }, [setUser]);
 
+  const changePassword = useCallback(async (data) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await authService.changePassword(data);
+      return true;
+    } catch (err) {
+      const appError = handleApiError(err);
+      setError(appError.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const forgotPassword = useCallback(async (data) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await authService.forgotPassword(data);
+      return true;
+    } catch (err) {
+      const appError = handleApiError(err);
+      setError(appError.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const resetPassword = useCallback(async (data) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await authService.resetPassword(data);
+      return true;
+    } catch (err) {
+      const appError = handleApiError(err);
+      setError(appError.message);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     user,
     isAuthenticated,
@@ -94,6 +139,9 @@ export function useAuth() {
     logout,
     fetchProfile,
     updateProfile,
+    changePassword,
+    forgotPassword,
+    resetPassword,
     setError,
   };
 }

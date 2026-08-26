@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../store/authStore';
 import { useAuth } from '../features/auth/hooks/useAuth';
+import { useNotifications } from '../features/notifications/hooks/useNotifications';
 import styles from './Topbar.module.css';
 
 function useClickOutside(onClick) {
@@ -17,12 +18,6 @@ function useClickOutside(onClick) {
   return ref;
 }
 
-const NOTIFICATIONS = [
-  { id: 1, type: 'expense', titleKey: 'topbar.newExpenseSubmitted', descKey: 'topbar.newExpenseDesc', amount: '120 €', unread: true },
-  { id: 2, type: 'user', titleKey: 'topbar.newUserJoined', descKey: 'topbar.newUserDesc', name: 'Marie Martin', unread: true },
-  { id: 3, type: 'approved', titleKey: 'topbar.expenseApproved', descKey: 'topbar.expenseApprovedDesc', ref: '#DEP-1056', unread: false },
-];
-
 function Topbar({ onMenuClick }) {
   const { user, logout } = useAuthStore();
   const { logout: apiLogout } = useAuth();
@@ -30,6 +25,7 @@ function Topbar({ onMenuClick }) {
   const { t } = useTranslation();
   const [openDropdown, setOpenDropdown] = useState(null);
   const [query, setQuery] = useState('');
+  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
 
   const profileRef = useClickOutside(() => setOpenDropdown(null));
 
@@ -89,17 +85,19 @@ function Topbar({ onMenuClick }) {
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
               <path d="M13.73 21a2 2 0 0 1-3.46 0" />
             </svg>
-            <span className={styles.notifDot} />
+            <span className={`${styles.notifDot} ${unreadCount === 0 ? styles.notifDotHidden : ''}`} />
           </button>
           {openDropdown === 'notif' && (
             <div className={styles.notifDropdown}>
               <div className={styles.notifHeader}>
                 <span className={styles.notifTitle}>{t('topbar.notifications')}</span>
-                <button className={styles.markAll}>{t('topbar.markAllRead')}</button>
+                <button className={styles.markAll} onClick={markAllAsRead}>{t('topbar.markAllRead')}</button>
               </div>
               <div className={styles.notifList}>
-                {NOTIFICATIONS.map((n) => (
-                  <div key={n.id} className={`${styles.notifItem} ${n.unread ? styles.notifUnread : ''}`}>
+                {notifications.length === 0 ? (
+                  <div className={styles.notifEmpty}>{t('topbar.noNotifications')}</div>
+                ) : notifications.map((n) => (
+                  <div key={n.id} className={`${styles.notifItem} ${!n.read_at ? styles.notifUnread : ''}`} onClick={() => markAsRead(n.id)}>
                     <div className={styles.notifIcon}>
                       {n.type === 'expense' && (
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
@@ -112,18 +110,9 @@ function Topbar({ onMenuClick }) {
                       )}
                     </div>
                     <div className={styles.notifBody}>
-                      <p className={styles.notifMsgTitle}>
-                        {t(n.titleKey)}
-                        {n.amount && ` — ${n.amount}`}
-                        {n.name && ` — ${n.name}`}
-                        {n.ref && ` — ${n.ref}`}
-                      </p>
-                      <p className={styles.notifMsg}>
-                        {n.descKey === 'topbar.newExpenseDesc' && t(n.descKey, { amount: n.amount })}
-                        {n.descKey === 'topbar.newUserDesc' && t(n.descKey, { name: n.name })}
-                        {n.descKey === 'topbar.expenseApprovedDesc' && t(n.descKey, { ref: n.ref })}
-                      </p>
-                      <span className={styles.notifTime}>{n.id === 1 ? '5 min' : n.id === 2 ? '1 h' : '3 h'}</span>
+                      <p className={styles.notifMsgTitle}>{n.title}</p>
+                      <p className={styles.notifMsg}>{n.message}</p>
+                      <span className={styles.notifTime}>{n.created_at}</span>
                     </div>
                   </div>
                 ))}
@@ -140,7 +129,7 @@ function Topbar({ onMenuClick }) {
             <div className={styles.avatar}>{getInitials(user?.name)}</div>
             <div className={styles.profileMeta}>
               <span className={styles.profileName}>{user?.name}</span>
-              <span className={styles.profileRole}>{user?.role === 'admin' ? t('sidebar.admin') : t('sidebar.employee')}</span>
+              <span className={styles.profileRole}>{user?.role === 'admin' ? t('sidebar.admin') : user?.role === 'manager' ? t('sidebar.manager') : t('sidebar.employee')}</span>
             </div>
             <svg className={`${styles.chevron} ${openDropdown === 'profile' ? styles.chevronOpen : ''}`} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="6 9 12 15 18 9" />

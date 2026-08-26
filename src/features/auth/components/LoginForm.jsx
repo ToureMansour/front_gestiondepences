@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import styles from './LoginForm.module.css';
 
 function LoginForm({ onSubmit, loading, error }) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [focused, setFocused] = useState({});
@@ -131,7 +133,7 @@ function LoginForm({ onSubmit, loading, error }) {
 
       {/* Forgot password */}
       <div className={styles.forgotRow}>
-        <button type="button" className={styles.forgotBtn}>
+        <button type="button" className={styles.forgotBtn} onClick={() => navigate('/forgot-password')}>
           {t('auth.forgotPassword')}
         </button>
       </div>

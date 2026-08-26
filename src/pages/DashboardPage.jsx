@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../store/authStore';
-import { useDashboard, useDashboardExpenses, getStatusColor } from '../features/dashboard/hooks/useDashboard';
+import { useDashboard, useDashboardExpenses } from '../features/dashboard/hooks/useDashboard';
 import StatsCard from '../features/dashboard/components/StatsCard';
 import { SkeletonCard, SkeletonTable } from '../components/shared/Skeleton';
 import StatusBadge from '../components/shared/StatusBadge';
