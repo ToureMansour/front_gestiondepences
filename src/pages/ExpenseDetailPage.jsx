@@ -93,6 +93,13 @@ function ExpenseDetailPage() {
 
   const status = normalizeStatus(expense?.status);
 
+  const paymentProofPath =
+    expense?.payment_proof_path ||
+    (typeof expense?.payment_proof === 'string'
+      ? expense.payment_proof
+      : expense?.payment_proof?.path) ||
+    expense?.payment_receipt_path;
+
   return (
     <div className={styles.page}>
       <button className={styles.backBtn} onClick={() => navigate('/expenses')}>
@@ -169,6 +176,25 @@ function ExpenseDetailPage() {
             )}
           </div>
 
+          {status === 'paid' && (
+            <div className={styles.card}>
+              <h3 className={styles.cardTitle}>{t('expenses.paymentProofLabel')}</h3>
+              {paymentProofPath ? (
+                <a
+                  className={styles.proofLink}
+                  href={`${STORAGE_ORIGIN}/storage/${paymentProofPath}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                  {t('expenses.download')}
+                </a>
+              ) : (
+                <p className={styles.noProof}>{t('expenses.noPaymentProof')}</p>
+              )}
+            </div>
+          )}
+
           {isAdmin && status === 'pending' && (
             <div className={styles.card}>
               <h3 className={styles.cardTitle}>{t('expenses.actions')}</h3>
@@ -192,7 +218,7 @@ function ExpenseDetailPage() {
         onClose={() => setRejectOpen(false)}
         onConfirm={handleReject}
         title={t('expenses.reject')}
-        message={t('expenses.rejectConfirm', { ref: expense.reference })}
+        message={t('expenses.rejectConfirm')}
         confirmLabel={t('expenses.reject')}
         loading={actionLoading}
       />

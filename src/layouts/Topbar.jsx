@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import useAuthStore from '../store/authStore';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { useNotifications } from '../features/notifications/hooks/useNotifications';
+import { useToast } from '../components/shared/Toast';
 import styles from './Topbar.module.css';
 
 function useClickOutside(onClick) {
@@ -22,12 +23,45 @@ function Topbar({ onMenuClick }) {
   const { user, logout } = useAuthStore();
   const { logout: apiLogout } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { showToast } = useToast();
   const [openDropdown, setOpenDropdown] = useState(null);
   const [query, setQuery] = useState('');
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
 
-  const profileRef = useClickOutside(() => setOpenDropdown(null));
+  const notifRef = useClickOutside(() => {
+    if (openDropdown === 'notif') setOpenDropdown(null);
+  });
+
+  const profileRef = useClickOutside(() => {
+    if (openDropdown === 'profile') setOpenDropdown(null);
+  });
+
+  const mountedRef = useRef(false);
+  const prevUnreadRef = useRef(0);
+
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      prevUnreadRef.current = unreadCount;
+      return;
+    }
+    if (unreadCount > prevUnreadRef.current) {
+      const latest = [...notifications].find((n) => !n.read_at);
+      if (latest) {
+        showToast(`${latest.title}${latest.message ? ` — ${latest.message}` : ''}`, 'info');
+      }
+    }
+    prevUnreadRef.current = unreadCount;
+  }, [unreadCount, notifications, showToast]);
+
+  const formatTime = (value) => {
+    if (!value) return '';
+    const d = new Date(value);
+    return Number.isNaN(d.getTime())
+      ? value
+      : d.toLocaleString(i18n.language === 'en' ? 'en-US' : 'fr-FR');
+  };
 
   const getInitials = (name) => {
     if (!name) return '?';
@@ -75,7 +109,7 @@ function Topbar({ onMenuClick }) {
       </div>
 
       <div className={styles.right}>
-        <div className={styles.notifWrap}>
+        <div className={styles.notifWrap} ref={notifRef}>
           <button
             className={styles.iconBtn}
             onClick={() => setOpenDropdown(openDropdown === 'notif' ? null : 'notif')}
@@ -91,14 +125,16 @@ function Topbar({ onMenuClick }) {
             <div className={styles.notifDropdown}>
               <div className={styles.notifHeader}>
                 <span className={styles.notifTitle}>{t('topbar.notifications')}</span>
-                <button className={styles.markAll} onClick={markAllAsRead}>{t('topbar.markAllRead')}</button>
+                {unreadCount > 0 && (
+                  <button className={styles.markAll} onClick={markAllAsRead}>{t('topbar.markAllRead')}</button>
+                )}
               </div>
               <div className={styles.notifList}>
                 {notifications.length === 0 ? (
                   <div className={styles.notifEmpty}>{t('topbar.noNotifications')}</div>
                 ) : notifications.map((n) => (
-                  <div key={n.id} className={`${styles.notifItem} ${!n.read_at ? styles.notifUnread : ''}`} onClick={() => markAsRead(n.id)}>
-                    <div className={styles.notifIcon}>
+                  <div key={n.id} className={`${styles.notifItem} ${!n.read_at ? styles.notifUnread : ''}`} onClick={() => { if (!n.read_at) markAsRead(n.id); }}>
+                    <div className={`${styles.notifIcon} ${styles[`notif_${n.type}`] || ''}`}>
                       {n.type === 'expense' && (
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                       )}
@@ -108,12 +144,31 @@ function Topbar({ onMenuClick }) {
                       {n.type === 'approved' && (
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                       )}
+                      {n.type === 'rejected' && (
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+                      )}
+                      {n.type === 'paid' && (
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                      )}
+                      {!['expense', 'user', 'approved', 'rejected', 'paid'].includes(n.type) && (
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+                      )}
                     </div>
                     <div className={styles.notifBody}>
                       <p className={styles.notifMsgTitle}>{n.title}</p>
                       <p className={styles.notifMsg}>{n.message}</p>
-                      <span className={styles.notifTime}>{n.created_at}</span>
+                      <span className={styles.notifTime}>{formatTime(n.created_at)}</span>
                     </div>
+                    {!n.read_at && (
+                      <button
+                        className={styles.notifMarkBtn}
+                        onClick={(ev) => { ev.stopPropagation(); markAsRead(n.id); }}
+                        aria-label={t('topbar.markRead')}
+                        title={t('topbar.markRead')}
+                      >
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

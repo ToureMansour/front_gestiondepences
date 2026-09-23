@@ -132,6 +132,17 @@ export function useAdminExpenses(params = {}) {
     }
   };
 
+  const payExpense = async (ref, data = {}) => {
+    try {
+      const response = await expenseService.pay(ref, data);
+      const updated = extractItem(response);
+      setExpenses((prev) => prev.map((e) => (e.reference === ref ? updated : e)));
+      return { success: true, data: updated };
+    } catch (err) {
+      return { success: false, error: handleApiError(err) };
+    }
+  };
+
   return {
     expenses,
     loading,
@@ -140,5 +151,6 @@ export function useAdminExpenses(params = {}) {
     fetchExpenses,
     approveExpense,
     rejectExpense,
+    payExpense,
   };
 }

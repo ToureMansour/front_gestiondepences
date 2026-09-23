@@ -43,7 +43,34 @@ export function useUsers(params = {}) {
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
-  return { users, loading, error, pagination, fetchUsers };
+  const createUser = useCallback(async (data) => {
+    try {
+      const response = await userService.create(data);
+      return { success: true, data: extractItem(response) };
+    } catch (err) {
+      return { success: false, error: handleApiError(err).message };
+    }
+  }, []);
+
+  const updateUser = useCallback(async (ref, data) => {
+    try {
+      const response = await userService.update(ref, data);
+      return { success: true, data: extractItem(response) };
+    } catch (err) {
+      return { success: false, error: handleApiError(err).message };
+    }
+  }, []);
+
+  const deleteUser = useCallback(async (ref) => {
+    try {
+      await userService.remove(ref);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: handleApiError(err).message };
+    }
+  }, []);
+
+  return { users, loading, error, pagination, fetchUsers, createUser, updateUser, deleteUser };
 }
 
 export function useUser(ref) {

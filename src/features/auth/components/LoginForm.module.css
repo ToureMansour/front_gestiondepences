@@ -22,20 +22,21 @@
 }
 
 .field:first-child {
-  margin-top: 32px;
+  margin-top: 34px;
 }
 
 .field + .field {
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .label {
   display: block;
   font-size: 13px;
   font-weight: 600;
-  color: #0B1F33;
-  margin-bottom: 8px;
+  color: rgba(255,255,255,0.95);
+  margin-bottom: 10px;
   font-family: 'Inter', -apple-system, sans-serif;
+  letter-spacing: 0.2px;
 }
 
 .inputWrapper {
@@ -47,65 +48,68 @@
 .inputIcon {
   position: absolute;
   left: 16px;
-  color: #94A3B8;
+  color: #C9FBE1;
   pointer-events: none;
   flex-shrink: 0;
   transition: color 0.2s;
 }
 
 .inputWrapper:focus-within .inputIcon {
-  color: #0F766E;
+  color: #FFFFFF;
 }
 
 .input {
   width: 100%;
   height: 56px;
-  padding: 0 46px 0 44px;
-  border: 1px solid #D7E1E8;
-  border-radius: 12px;
+  padding: 0 48px 0 48px;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 14px;
   font-size: 15px;
   font-family: 'Inter', -apple-system, sans-serif;
-  color: #0B1F33;
-  background: #F8FAFC;
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   outline: none;
   transition: all 0.25s;
   box-sizing: border-box;
 }
 
 .input:hover {
-  border-color: #94A3B8;
-  background: #fff;
+  border-color: rgba(255,255,255,0.38);
+  background: rgba(255,255,255,0.14);
 }
 
 .input:focus {
-  border-color: #0F766E;
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(15,118,110,0.12);
+  border-color: #8AF0BB;
+  background: rgba(255,255,255,0.16);
+  box-shadow: 0 0 0 3px rgba(138,240,187,0.16);
 }
 
 .input::placeholder {
-  color: #94A3B8;
+  color: rgba(255,255,255,0.55);
 }
 
 .inputError {
-  border-color: #DC2626 !important;
+  border-color: #FCA5A5 !important;
+  background: rgba(254,202,202,0.12);
   animation: shake 0.3s ease;
 }
 
 .inputError:focus {
-  box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important;
+  box-shadow: 0 0 0 3px rgba(252,165,165,0.18);
 }
 
 .passwordToggle {
   position: absolute;
-  right: 12px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
   padding: 8px;
   cursor: pointer;
-  color: #94A3B8;
+  color: rgba(255,255,255,0.65);
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -114,14 +118,14 @@
 }
 
 .passwordToggle:hover {
-  color: #0F766E;
-  background: rgba(15,118,110,0.06);
+  color: #C9FBE1;
+  background: rgba(255,255,255,0.12);
 }
 
 .errorText {
   margin: 6px 0 0;
   font-size: 12px;
-  color: #DC2626;
+  color: #FCA5A5;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -131,32 +135,36 @@
 
 .forgotRow {
   text-align: right;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .forgotBtn {
   background: none;
   border: none;
-  color: #0F766E;
-  font-size: 13px;
+  color: rgba(255,255,255,0.92);
+  font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
   padding: 0;
-  transition: color 0.2s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255,255,255,0.35);
+  transition: all 0.2s;
 }
 
 .forgotBtn:hover {
-  color: #14B8A6;
+  color: #C9FBE1;
+  text-decoration-color: #C9FBE1;
 }
 
 /* ── API Error ── */
 
 .apiError {
-  margin-top: 16px;
+  margin-top: 18px;
   padding: 12px 16px;
-  background: #FEF2F2;
-  border: 1px solid #FECACA;
-  border-radius: 10px;
+  background: rgba(254,202,202,0.12);
+  border: 1px solid rgba(252,165,165,0.4);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -165,7 +173,7 @@
 .apiErrorText {
   margin: 0;
   font-size: 13px;
-  color: #991B1B;
+  color: #FECACA;
   font-weight: 500;
 }
 
@@ -174,12 +182,12 @@
 .submitBtn {
   width: 100%;
   height: 56px;
-  margin-top: 24px;
+  margin-top: 26px;
   padding: 0 24px;
-  background: linear-gradient(135deg, #0F766E, #14B8A6);
+  background: linear-gradient(135deg, #047A41, #12984E);
   color: #fff;
   border: none;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
@@ -188,24 +196,25 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 8px 20px rgba(15,118,110,0.25);
+  box-shadow: 0 10px 24px rgba(4,122,65,0.35);
   position: relative;
   overflow: hidden;
 }
 
 .submitBtn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(15,118,110,0.35);
-  filter: brightness(1.05);
+  box-shadow: 0 14px 30px rgba(4,122,65,0.45);
+  filter: brightness(1.06);
 }
 
 .submitBtn:active:not(:disabled) {
   transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(15,118,110,0.25);
+  box-shadow: 0 5px 14px rgba(4,122,65,0.3);
 }
 
 .submitBtn:disabled {
-  background: #94A3B8;
+  background: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.6);
   cursor: not-allowed;
   box-shadow: none;
 }
@@ -241,12 +250,12 @@
 .dividerLine {
   flex: 1;
   height: 1px;
-  background: #E2E8F0;
+  background: rgba(255,255,255,0.28);
 }
 
 .dividerText {
   font-size: 12px;
-  color: #94A3B8;
+  color: rgba(255,255,255,0.65);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -264,21 +273,23 @@
   gap: 8px;
   height: 52px;
   padding: 0 16px;
-  background: #fff;
-  border: 1px solid #D7E1E8;
-  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
-  color: #0B1F33;
+  color: #fff;
   transition: all 0.25s;
 }
 
 .socialBtn:hover {
-  border-color: #0F766E;
-  background: #F8FAFC;
+  border-color: #8AF0BB;
+  background: rgba(255,255,255,0.16);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(15,118,110,0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 
 .socialBtn svg {
@@ -291,20 +302,20 @@
 .demoHint {
   text-align: center;
   font-size: 12px;
-  color: #94A3B8;
+  color: rgba(255,255,255,0.6);
   margin: 20px 0 0;
   line-height: 1.5;
 }
 
 .demoHint strong {
-  color: #64748B;
+  color: #fff;
   font-weight: 600;
 }
 
 @media (max-width: 768px) {
   .input {
     height: 52px;
-    padding: 0 42px 0 40px;
+    padding: 0 42px 0 42px;
     font-size: 14px;
   }
   .inputIcon { left: 14px; }

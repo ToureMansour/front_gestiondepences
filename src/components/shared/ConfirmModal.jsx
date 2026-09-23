@@ -14,6 +14,7 @@ export default function ConfirmModal({
   cancelLabel,
   danger = true,
   loading = false,
+  children,
 }) {
   const { t } = useTranslation();
 
@@ -21,6 +22,7 @@ export default function ConfirmModal({
     <Modal isOpen={isOpen} onClose={onClose} title={title || t('confirm.title')}>
       <div className={styles.body}>
         {message && <p className={styles.message}>{message}</p>}
+        {children}
         <div className={styles.actions}>
           <Button variant="ghost" onClick={onClose} disabled={loading}>
             {cancelLabel || t('confirm.cancel')}
@@ -48,4 +50,5 @@ ConfirmModal.propTypes = {
   cancelLabel: PropTypes.string,
   danger: PropTypes.bool,
   loading: PropTypes.bool,
+  children: PropTypes.node,
 };

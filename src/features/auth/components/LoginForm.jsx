@@ -199,7 +199,7 @@ function LoginForm({ onSubmit, loading, error }) {
 
       {/* Demo hint */}
       <p className={styles.demoHint}>
-        {t('auth.demoHint')} <strong>admin@depensys.com</strong> / <strong>password</strong>
+        {t('auth.demoHint')} <strong>admin@dossy.com</strong> / <strong>password</strong>
       </p>
     </form>
   );

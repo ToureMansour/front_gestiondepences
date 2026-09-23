@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useAuthStore from '../store/authStore';
-import { useExpenses, useAdminExpenses } from '../features/expenses/hooks/useExpenses';
+import { useAdminExpenses } from '../features/expenses/hooks/useExpenses';
 import { Button } from '../components/ui/Button';
 import { Pagination } from '../components/ui/Pagination';
 import StatusBadge from '../components/shared/StatusBadge';
@@ -29,6 +29,9 @@ function ExpensesPage() {
   const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(1);
   const [rejectTarget, setRejectTarget] = useState(null);
+  const [payTarget, setPayTarget] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [proofFile, setProofFile] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   const params = useMemo(() => {
@@ -39,9 +42,7 @@ function ExpensesPage() {
     return p;
   }, [statusFilter, dateFrom, dateTo]);
 
-  const { expenses, loading, error, pagination, fetchExpenses, approveExpense, rejectExpense } = isAdmin
-    ? useAdminExpenses(params)
-    : useExpenses(params);
+  const { expenses, loading, error, pagination, fetchExpenses, approveExpense, rejectExpense, payExpense } = useAdminExpenses(params);
 
   useEffect(() => { setPage(1); }, [JSON.stringify(params)]);
 
@@ -51,9 +52,9 @@ function ExpensesPage() {
     const q = query.trim().toLowerCase();
     if (!q) return expenses;
     return expenses.filter((e) =>
-      (e.reference || '').toLowerCase().includes(q) ||
       (e.title || '').toLowerCase().includes(q) ||
-      (e.user?.name || e.user_name || '').toLowerCase().includes(q)
+      (e.user?.name || e.user_name || '').toLowerCase().includes(q) ||
+      (e.user?.email || e.user_email || '').toLowerCase().includes(q)
     );
   }, [expenses, query]);
 
@@ -76,6 +77,29 @@ function ExpensesPage() {
     setRejectTarget(null);
     if (result.success) {
       showToast(t('toast.expenseRejected'));
+    } else {
+      showToast(result.error?.message || t('common.errorOccurred'), 'error');
+    }
+  };
+
+  const handlePay = async (row) => {
+    setPaymentMethod('cash');
+    setProofFile(null);
+    setPayTarget(row);
+  };
+
+  const handlePayConfirm = async () => {
+    if (!payTarget) return;
+    setActionLoading(true);
+    const result = await payExpense(payTarget.reference, {
+      payment_method: paymentMethod,
+      payment_proof: proofFile || undefined,
+    });
+    setActionLoading(false);
+    setPayTarget(null);
+    if (result.success) {
+      showToast(t('toast.expensePaid'));
+      fetchExpenses(page);
     } else {
       showToast(result.error?.message || t('common.errorOccurred'), 'error');
     }
@@ -147,7 +171,7 @@ function ExpensesPage() {
 
       <div className={styles.tableCard}>
         {loading ? (
-          <SkeletonTable rows={7} cols={isAdmin ? 7 : 5} />
+          <SkeletonTable rows={7} cols={isAdmin ? 7 : 6} />
         ) : error ? (
           <ErrorMessage message={error.message} />
         ) : filtered.length === 0 ? (
@@ -166,35 +190,37 @@ function ExpensesPage() {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>{t('expenses.reference')}</th>
                   {isAdmin && <th>{t('expenses.employee')}</th>}
+                  <th>{t('expenses.category')}</th>
                   <th>{t('expenses.titleCol')}</th>
                   <th>{t('expenses.amount')}</th>
                   <th>{t('expenses.status')}</th>
                   <th>{t('expenses.date')}</th>
-                  {isAdmin && <th className={styles.actionsCol}>{t('expenses.actions')}</th>}
+                  <th className={styles.actionsCol}>{t('expenses.actions')}</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((e) => (
                   <tr key={e.reference || e.id} className={styles.row} onClick={() => navigate(`/expenses/${e.reference}`)}>
-                    <td className={styles.refCell}>{e.reference}</td>
                     {isAdmin && (
                       <td className={styles.userCell}>
                         <div className={styles.userCellInner}>
-                          <div className={styles.userAvatar}>
-                            {(e.user?.name || e.user_name || '?').split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)}
+                          <div>
+                            <p className={styles.userName}>{e.user?.name || e.user_name || '—'}</p>
+                            <p className={styles.userEmail}>{e.user?.email || e.user_email || '—'}</p>
                           </div>
-                          <span>{e.user?.name || e.user_name || '—'}</span>
                         </div>
                       </td>
                     )}
+                    <td className={styles.catCell}>
+                      <span className={styles.catBadge}>{e.category_name || e.category?.name || e.category || '—'}</span>
+                    </td>
                     <td className={styles.titleCell}>{e.title}</td>
                     <td className={styles.amountCell}>{formatCurrency(e.amount)}</td>
                     <td><StatusBadge status={normalizeStatus(e.status)} /></td>
                     <td className={styles.dateCell}>{formatDate(e.expense_date || e.created_at)}</td>
-                    {isAdmin && (
-                      <td onClick={(ev) => ev.stopPropagation()}>
+                    <td className={styles.actionsCol} onClick={(ev) => ev.stopPropagation()}>
+                      {isAdmin ? (
                         <div className={styles.rowActions}>
                           {normalizeStatus(e.status) === 'pending' ? (
                             <>
@@ -215,12 +241,35 @@ function ExpensesPage() {
                                 {t('expenses.reject')}
                               </button>
                             </>
+                          ) : normalizeStatus(e.status) === 'approved' ? (
+                            <button
+                              className={`${styles.actionBtn} ${styles.pay}`}
+                              onClick={() => handlePay(e)}
+                              disabled={actionLoading}
+                            >
+                              {t('expenses.pay')}
+                            </button>
                           ) : (
                             <span className={styles.statusNote}>{t(`expenses.status${normalizeStatus(e.status).charAt(0).toUpperCase()}${normalizeStatus(e.status).slice(1)}`)}</span>
                           )}
+                          <button
+                            className={`${styles.actionBtn} ${styles.details}`}
+                            onClick={() => navigate(`/expenses/${e.reference}`)}
+                          >
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                            {t('expenses.details')}
+                          </button>
                         </div>
-                      </td>
-                    )}
+                      ) : (
+                        <button
+                          className={`${styles.actionBtn} ${styles.details}`}
+                          onClick={() => navigate(`/expenses/${e.reference}`)}
+                        >
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+                          {t('expenses.details')}
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -247,10 +296,49 @@ function ExpensesPage() {
         onClose={() => setRejectTarget(null)}
         onConfirm={handleRejectConfirm}
         title={t('expenses.reject')}
-        message={t('expenses.rejectConfirm', { ref: rejectTarget?.reference })}
+        message={t('expenses.rejectConfirm')}
         confirmLabel={t('expenses.reject')}
         loading={actionLoading}
       />
+
+      <ConfirmModal
+        isOpen={!!payTarget}
+        onClose={() => setPayTarget(null)}
+        onConfirm={handlePayConfirm}
+        title={t('expenses.pay')}
+        confirmLabel={t('expenses.pay')}
+        danger={false}
+        loading={actionLoading}
+      >
+        <div className={styles.paymentField}>
+          <label className={styles.paymentLabel} htmlFor="payment-method">
+            {t('expenses.paymentMethod')}
+          </label>
+          <select
+            id="payment-method"
+            className={styles.paymentSelect}
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          >
+            <option value="cash">{t('expenses.paymentCash')}</option>
+            <option value="mobile_money">{t('expenses.paymentMobileMoney')}</option>
+            <option value="transfer">{t('expenses.paymentTransfer')}</option>
+          </select>
+        </div>
+        <div className={styles.paymentField}>
+          <label className={styles.paymentLabel} htmlFor="payment-proof">
+            {t('expenses.paymentProof')}
+          </label>
+          <input
+            id="payment-proof"
+            type="file"
+            className={styles.paymentFile}
+            accept="image/*,.pdf"
+            onChange={(e) => setProofFile(e.target.files?.[0] || null)}
+          />
+          {proofFile && <p className={styles.paymentFileName}>{proofFile.name}</p>}
+        </div>
+      </ConfirmModal>
     </div>
   );
 }

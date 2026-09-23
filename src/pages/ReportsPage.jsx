@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDashboardExpenses } from '../features/dashboard/hooks/useDashboard';
+import { useSettings } from '../features/settings/hooks/useSettings';
 import { Button } from '../components/ui/Button';
 import StatsCard from '../features/dashboard/components/StatsCard';
 import { SkeletonCard } from '../components/shared/Skeleton';
@@ -8,12 +9,12 @@ import ErrorMessage from '../components/shared/ErrorMessage';
 import LineChart from '../components/shared/charts/LineChart';
 import DonutChart from '../components/shared/charts/DonutChart';
 import { useToast } from '../components/shared/Toast';
+import { exportExpensesPdf, exportExpensesXlsx } from '../features/reports/reportsExport';
 import {
   aggregateByMonth,
   aggregateByStatus,
   aggregateByUser,
   totalAmountOf,
-  normalizeStatus,
   formatNumber,
 } from '../utils/expenseAnalytics';
 import { formatCurrency } from '../utils/formatCurrency';
@@ -27,22 +28,10 @@ const STATUS_COLORS = {
   cancelled: 'var(--color-text-muted)',
 };
 
-function downloadCsv(filename, rows) {
-  const content = rows
-    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-    .join('\n');
-  const blob = new Blob([`\uFEFF${content}`], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
 function ReportsPage() {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { settings } = useSettings();
   const { expenses, loading, error } = useDashboardExpenses(100);
 
   const monthData = useMemo(() => (expenses.length ? aggregateByMonth(expenses) : null), [expenses]);
@@ -58,19 +47,56 @@ function ReportsPage() {
     cancelled: t('expenses.statusCancelled'),
   };
 
-  const handleExport = () => {
-    const rows = [
-      ['Reference', 'Title', 'Amount', 'Status', 'Date'],
-      ...expenses.map((e) => [
-        e.reference,
-        e.title,
-        e.amount,
-        normalizeStatus(e.status),
-        e.expense_date || e.created_at || '',
-      ]),
-    ];
-    downloadCsv('depensys-expenses.csv', rows);
-    showToast(t('toast.reportDownloaded'));
+  const exportLabels = {
+    reportTitle: t('reports.reportTitle'),
+    generatedOn: t('reports.generatedOn'),
+    employee: t('expenses.employee'),
+    email: t('users.email'),
+    date: t('expenses.date'),
+    title: t('expenses.titleCol'),
+    category: t('expenses.category'),
+    amount: t('expenses.amount'),
+    status: t('expenses.status'),
+    total: t('reports.totalLabel'),
+    pending: t('expenses.statusPending'),
+    approved: t('expenses.statusApproved'),
+    rejected: t('expenses.statusRejected'),
+    paid: t('expenses.statusPaid'),
+    cancelled: t('expenses.statusCancelled'),
+  };
+
+  const handleExportPdf = async () => {
+    if (!expenses.length) return;
+    try {
+      await exportExpensesPdf({
+        expenses,
+        orgName: settings.organization_name || t('sidebar.appName'),
+        labels: exportLabels,
+      });
+      showToast(t('toast.reportDownloaded'));
+    } catch {
+      showToast(t('common.errorOccurred'), 'error');
+    }
+  };
+
+  const handleExportExcel = async () => {
+    if (!expenses.length) return;
+    try {
+      await exportExpensesXlsx({
+        expenses,
+        orgName: settings.organization_name || t('sidebar.appName'),
+        labels: {
+          ...exportLabels,
+          summary: t('reports.summaryTitle'),
+          byEmployee: t('reports.byEmployee'),
+          grandTotal: t('reports.grandTotal'),
+          expenseCount: t('reports.expenseCount'),
+        },
+      });
+      showToast(t('toast.reportDownloaded'));
+    } catch {
+      showToast(t('common.errorOccurred'), 'error');
+    }
   };
 
   const maxUserValue = topUsers.length ? topUsers[0].value : 1;
@@ -96,9 +122,13 @@ function ReportsPage() {
   return (
     <div className={styles.page}>
       <div className={styles.toolbar}>
-        <Button variant="secondary" onClick={handleExport} disabled={!expenses.length}>
+        <Button variant="secondary" onClick={handleExportPdf} disabled={!expenses.length}>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-          {t('reports.exportCsv')}
+          {t('reports.exportPdf')}
+        </Button>
+        <Button onClick={handleExportExcel} disabled={!expenses.length}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="8" y1="13" x2="16" y2="13" /></svg>
+          {t('reports.exportExcel')}
         </Button>
       </div>
 

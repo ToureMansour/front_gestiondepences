@@ -1,4 +1,4 @@
-const KEY = 'depensys_categories';
+const KEY = 'dossy_categories';
 
 export const DEFAULT_CATEGORIES = [
   { id: 'transport', nameKey: 'categories.transport' },

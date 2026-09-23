@@ -32,4 +32,14 @@ apiClient.interceptors.response.use(
   }
 );
 
+export const postMultipart = (url, formData) =>
+  apiClient.post(url, formData, {
+    transformRequest: [
+      (data, headers) => {
+        headers.delete('Content-Type');
+        return data;
+      },
+    ],
+  });
+
 export default apiClient;

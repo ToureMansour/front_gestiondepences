@@ -11,7 +11,7 @@ function NotFoundPage() {
       minHeight: '60vh',
       textAlign: 'center',
     }}>
-      <h1 style={{ fontSize: '72px', fontWeight: 800, color: '#0F766E', margin: '0 0 8px' }}>
+      <h1 style={{ fontSize: '72px', fontWeight: 800, color: '#05643F', margin: '0 0 8px' }}>
         404
       </h1>
       <p style={{ fontSize: '18px', color: '#64748B', margin: '0 0 4px' }}>

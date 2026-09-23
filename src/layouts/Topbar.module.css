@@ -202,9 +202,45 @@
   flex-shrink: 0;
 }
 
+.notif_approved {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.notif_rejected {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.notif_paid {
+  background: #eef6fe;
+  color: #2563eb;
+}
+
 .notifBody {
   flex: 1;
   min-width: 0;
+}
+
+.notifMarkBtn {
+  align-self: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s, background 0.12s;
+}
+
+.notifMarkBtn:hover {
+  background: var(--color-primary-light);
+  transform: scale(1.08);
 }
 
 .notifMsgTitle {

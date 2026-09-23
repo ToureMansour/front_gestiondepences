@@ -3,7 +3,7 @@ import settingsService from '../services/settingsService';
 import { handleApiError } from '../../../services/errorHandler';
 
 export function useSettings() {
-  const [settings, setSettings] = useState({ organization_name: '', notifications_enabled: true });
+  const [settings, setSettings] = useState({ organization_name: '', logo: null });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ export function useSettings() {
       const data = response.data.data || response.data;
       setSettings({
         organization_name: data.organization_name || '',
-        notifications_enabled: data.notifications_enabled !== false,
+        logo: data.logo || data.organization_logo || null,
       });
     } catch (err) {
       const appError = handleApiError(err);
@@ -25,16 +25,16 @@ export function useSettings() {
     }
   }, []);
 
-  const updateSettings = useCallback(async (newSettings) => {
+  const updateSettings = useCallback(async ({ organization_name, logo }) => {
     setSaving(true);
     setError(null);
     try {
-      const response = await settingsService.update(newSettings);
+      const response = await settingsService.update({ organization_name, logo });
       const data = response.data.data || response.data;
-      setSettings({
-        organization_name: data.organization_name || newSettings.organization_name,
-        notifications_enabled: data.notifications_enabled ?? newSettings.notifications_enabled,
-      });
+      setSettings((prev) => ({
+        organization_name: data.organization_name || organization_name,
+        logo: data.logo || data.organization_logo || prev.logo || null,
+      }));
       return true;
     } catch (err) {
       const appError = handleApiError(err);

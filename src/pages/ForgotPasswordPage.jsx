@@ -25,21 +25,21 @@ function ForgotPasswordPage() {
 
   return (
     <AuthLayout title={t('auth.forgotPasswordTitle')}>
-      <p style={{ fontSize: '14px', color: '#64748B', margin: '0 0 24px', lineHeight: '1.5' }}>
+      <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.75)', margin: '0 0 24px', lineHeight: '1.5' }}>
         {t('auth.forgotPasswordDesc')}
       </p>
 
       {submitted ? (
         <div style={{ textAlign: 'center' }}>
           <div style={{
-            width: '56px', height: '56px', borderRadius: '50%', background: '#E8F7F5',
+            width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(255,255,255,0.12)',
             display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px',
           }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9FBE1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <p style={{ color: '#0F766E', fontWeight: 600, marginBottom: '24px', fontSize: '14px' }}>
+          <p style={{ color: '#fff', fontWeight: 600, marginBottom: '24px', fontSize: '14px' }}>
             {t('auth.forgotPasswordSuccess')}
           </p>
           <Link to="/login" style={{ textDecoration: 'none' }}>
@@ -67,7 +67,7 @@ function ForgotPasswordPage() {
       )}
 
       <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '13px' }}>
-        <Link to="/login" style={{ color: '#0F766E', fontWeight: 500, textDecoration: 'none' }}>
+        <Link to="/login" style={{ color: 'rgba(255,255,255,0.9)', fontWeight: 500, textDecoration: 'underline', textUnderlineOffset: 3 }}>
           {t('auth.backToLogin')}
         </Link>
       </p>

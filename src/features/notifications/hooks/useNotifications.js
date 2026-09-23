@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
 import notificationService from '../services/notificationService';
-import { handleApiError } from '../../../services/errorHandler';
 
 export function useNotifications() {
   const [notifications, setNotifications] = useState([]);
@@ -46,6 +45,13 @@ export function useNotifications() {
 
   useEffect(() => {
     fetchNotifications();
+    const timer = setInterval(fetchNotifications, 30000);
+    const onFocus = () => fetchNotifications();
+    window.addEventListener('focus', onFocus);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('focus', onFocus);
+    };
   }, [fetchNotifications]);
 
   return {

@@ -83,10 +83,7 @@ function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }) {
     <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''} ${collapsed ? styles.collapsed : ''}`}>
       <div className={styles.logo}>
         <div className={styles.logoIcon}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#CCFBF1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="12" y1="1" x2="12" y2="23" />
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
+          <img src="/logo.png" alt="Dossy" className={styles.logoImg} />
         </div>
         {!collapsed && (
           <div>

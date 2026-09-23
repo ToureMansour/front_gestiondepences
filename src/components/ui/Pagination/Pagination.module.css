@@ -34,9 +34,9 @@
 }
 
 .active {
-  background: #0F766E;
+  background: #05643F;
   color: #fff;
-  border-color: #0F766E;
+  border-color: #05643F;
 }
 
 .active:hover {

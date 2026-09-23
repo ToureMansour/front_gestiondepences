@@ -42,20 +42,20 @@ function IllustSoumission() {
     <svg viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureIllus}>
       <rect x="20" y="30" width="100" height="130" rx="10" fill="#1E293B" />
       <rect x="26" y="36" width="88" height="118" rx="6" fill="#0F172A" />
-      <rect x="34" y="42" width="72" height="8" rx="3" fill="#2DD4BF" opacity="0.3" />
+      <rect x="34" y="42" width="72" height="8" rx="3" fill="#3CBE70" opacity="0.3" />
       <rect x="34" y="56" width="56" height="6" rx="2" fill="#fff" opacity="0.08" />
       <rect x="34" y="68" width="40" height="6" rx="2" fill="#fff" opacity="0.08" />
-      <rect x="70" y="88" width="36" height="36" rx="6" fill="#0F766E" opacity="0.2" />
-      <path d="M82 106l4 4 8-10" stroke="#2DD4BF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      <rect x="34" y="134" width="72" height="6" rx="3" fill="#0F766E" opacity="0.3" />
-      <rect x="34" y="144" width="48" height="4" rx="2" fill="#0F766E" opacity="0.15" />
-      <line x1="62" y1="100" x2="62" y2="118" stroke="#2DD4BF" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.3" />
-      <circle cx="62" cy="120" r="2" fill="#2DD4BF" opacity="0.4" />
-      <circle cx="88" cy="106" r="2" fill="#2DD4BF" opacity="0.4" />
-      <circle cx="76" cy="112" r="2" fill="#2DD4BF" opacity="0.4" />
-      <path d="M130 95l15-8-4 4 4 4-15-4z" fill="#0F766E" opacity="0.4" />
+      <rect x="70" y="88" width="36" height="36" rx="6" fill="#05643F" opacity="0.2" />
+      <path d="M82 106l4 4 8-10" stroke="#3CBE70" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="34" y="134" width="72" height="6" rx="3" fill="#05643F" opacity="0.3" />
+      <rect x="34" y="144" width="48" height="4" rx="2" fill="#05643F" opacity="0.15" />
+      <line x1="62" y1="100" x2="62" y2="118" stroke="#3CBE70" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.3" />
+      <circle cx="62" cy="120" r="2" fill="#3CBE70" opacity="0.4" />
+      <circle cx="88" cy="106" r="2" fill="#3CBE70" opacity="0.4" />
+      <circle cx="76" cy="112" r="2" fill="#3CBE70" opacity="0.4" />
+      <path d="M130 95l15-8-4 4 4 4-15-4z" fill="#05643F" opacity="0.4" />
       <rect x="148" y="50" width="88" height="100" rx="6" fill="#fff" stroke="#E2E8F0" strokeWidth="1" />
-      <rect x="158" y="64" width="68" height="6" rx="2" fill="#0F766E" opacity="0.15" />
+      <rect x="158" y="64" width="68" height="6" rx="2" fill="#05643F" opacity="0.15" />
     </svg>
   );
 }
@@ -66,7 +66,7 @@ function IllustValidation() {
       <rect x="20" y="40" width="220" height="120" rx="12" fill="#fff" stroke="#E2E8F0" strokeWidth="1" />
       <rect x="20" y="40" width="220" height="32" rx="12" fill="#F8FAFC" />
       <rect x="34" y="50" width="60" height="6" rx="2" fill="#1E293B" opacity="0.3" />
-      <rect x="178" y="48" width="44" height="12" rx="4" fill="#0F766E" opacity="0.1" />
+      <rect x="178" y="48" width="44" height="12" rx="4" fill="#05643F" opacity="0.1" />
       <rect x="34" y="86" width="80" height="6" rx="2" fill="#1E293B" opacity="0.2" />
       <circle cx="210" cy="89" r="8" fill="#059669" opacity="0.15" />
       <path d="M206 89l3 3 5-5" stroke="#059669" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -76,9 +76,9 @@ function IllustValidation() {
       <rect x="34" y="134" width="70" height="6" rx="2" fill="#1E293B" opacity="0.2" />
       <circle cx="210" cy="137" r="8" fill="#F59E0B" opacity="0.15" />
       <text x="207" y="141" fill="#D97706" fontSize="10" fontWeight="700">!</text>
-      <circle cx="120" cy="89" r="12" fill="#0F766E" opacity="0.08" />
-      <path d="M114 89c2-4 5-6 6-6s4 2 6 6c-2 4-5 6-6 6s-4-2-6-6z" stroke="#0F766E" strokeWidth="1.5" fill="none" />
-      <circle cx="120" cy="89" r="2" fill="#0F766E" />
+      <circle cx="120" cy="89" r="12" fill="#05643F" opacity="0.08" />
+      <path d="M114 89c2-4 5-6 6-6s4 2 6 6c-2 4-5 6-6 6s-4-2-6-6z" stroke="#05643F" strokeWidth="1.5" fill="none" />
+      <circle cx="120" cy="89" r="2" fill="#05643F" />
     </svg>
   );
 }
@@ -88,10 +88,10 @@ function IllustRoles() {
   return (
     <svg viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureIllus}>
       <g transform="translate(30, 20)">
-        <path d="M30 0l30 12v36c0 28-30 52-30 52s-30-24-30-52V12L30 0z" fill="#0F766E" opacity="0.1" />
-        <circle cx="30" cy="40" r="12" fill="#0F766E" opacity="0.15" />
-        <path d="M24 40l4 4 8-8" stroke="#0F766E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        <text x="30" y="88" fill="#0F766E" fontSize="9" fontWeight="700" textAnchor="middle">Admin</text>
+        <path d="M30 0l30 12v36c0 28-30 52-30 52s-30-24-30-52V12L30 0z" fill="#05643F" opacity="0.1" />
+        <circle cx="30" cy="40" r="12" fill="#05643F" opacity="0.15" />
+        <path d="M24 40l4 4 8-8" stroke="#05643F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <text x="30" y="88" fill="#05643F" fontSize="9" fontWeight="700" textAnchor="middle">Admin</text>
       </g>
       <g transform="translate(100, 20)">
         <path d="M30 0l30 12v36c0 28-30 52-30 52s-30-24-30-52V12L30 0z" fill="#7C3AED" opacity="0.1" />
@@ -118,8 +118,8 @@ function IllustPaiements() {
     <svg viewBox="0 0 260 180" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.featureIllus}>
       <defs>
         <linearGradient id="payGrad" x1="0" y1="0" x2="200" y2="120">
-          <stop offset="0%" stopColor="#0F766E" />
-          <stop offset="100%" stopColor="#134E4A" />
+          <stop offset="0%" stopColor="#05643F" />
+          <stop offset="100%" stopColor="#064023" />
         </linearGradient>
       </defs>
       <rect x="30" y="30" width="200" height="120" rx="14" fill="url(#payGrad)" />
@@ -146,11 +146,9 @@ function DashboardMockup() {
     <div className={styles.mockup}>
       <div className={styles.mockupHeader}>
         <span /><span /><span />
-        <div className={styles.mockupHeaderTitle}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: 6 }}>
-            <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
-          Depensys
+<div className={styles.mockupHeaderTitle}>
+          <img src="/logo.png" alt="Dossy" className={styles.mockupLogo} />
+          Dossy
         </div>
       </div>
       <div className={styles.mockupBody}>
@@ -318,7 +316,7 @@ function LandingPage() {
       icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2" /><path d="M12 6v12" /><path d="M6 10v4" /><path d="M18 10v4" /></svg>,
       title: t('features.rapidSubmission'),
       desc: t('features.rapidSubmissionDesc'),
-      gradient: 'linear-gradient(135deg, #0F766E, #2DD4BF)',
+      gradient: 'linear-gradient(135deg, #05643F, #3CBE70)',
       Illustration: IllustSoumission,
     },
     {
@@ -397,13 +395,9 @@ function LandingPage() {
       {/* ── NAV ── */}
       <nav className={`${styles.nav} ${scrolled ? styles.navScrolled : ''}`} onMouseLeave={() => setOpenDropdown(null)}>
         <div className={styles.navInner}>
-          <Link to="/" className={styles.logo}>
-            <div className={styles.logoIcon}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-              </svg>
-            </div>
-            <span>Depensys</span>
+<Link to="/" className={styles.logo}>
+            <img src="/logo.png" alt="Dossy" className={styles.logoImg} />
+            <span>Dossy</span>
           </Link>
           <div className={styles.navLinks}>
             <NavDropdown
@@ -471,7 +465,7 @@ function LandingPage() {
             </div>
             <div className={styles.heroBadges}>
               {t('hero.badges', { returnObjects: true }).map((b, i) => (
-                <span key={i}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> {b}</span>
+                <span key={i}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#05643F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg> {b}</span>
               ))}
             </div>
           </div>
@@ -507,7 +501,7 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="wave" fill="#0D3D3A" prevBg="#FFFFFF" />
+      <SectionDivider type="wave" fill="#043A26" prevBg="#FFFFFF" />
 
       {/* ── HOW IT WORKS ── */}
       <section id="how" className={styles.how}>
@@ -527,7 +521,7 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="curve" fill="#F8FAFC" prevBg="#0D3D3A" />
+      <SectionDivider type="curve" fill="#F8FAFC" prevBg="#043A26" />
 
       {/* ── TESTIMONIALS ── */}
       <section id="testimonials" className={styles.testimonials}>
@@ -540,7 +534,7 @@ function LandingPage() {
           <div className={styles.testimonialCards}>
             {TESTIMONIALS.map((t, i) => (
               <div key={i} className={`${styles.testimonialCard} ${i === activeTestimonial ? styles.testimonialActive : ''}`}>
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.testimonialQuote}><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" /><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" /></svg>
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#05643F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className={styles.testimonialQuote}><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" /><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" /></svg>
                 <p>"{t.quote}"</p>
                 <div>
                   <strong>{t.author}</strong>
@@ -586,22 +580,22 @@ function LandingPage() {
         </div>
         <div className={styles.securityGrid}>
           <div className={styles.securityCard}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#05643F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
             <h4>{t('security.encryption')}</h4>
             <p>{t('security.encryptionDesc')}</p>
           </div>
           <div className={styles.securityCard}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#05643F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
             <h4>{t('security.iso')}</h4>
             <p>{t('security.isoDesc')}</p>
           </div>
           <div className={styles.securityCard}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#05643F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
             <h4>{t('security.support')}</h4>
             <p>{t('security.supportDesc')}</p>
           </div>
           <div className={styles.securityCard}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M4.93 4.93l14.14 14.14" /></svg>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#05643F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /><path d="M4.93 4.93l14.14 14.14" /></svg>
             <h4>{t('security.rgpd')}</h4>
             <p>{t('security.rgpdDesc')}</p>
           </div>
@@ -632,7 +626,7 @@ function LandingPage() {
         </div>
       </section>
 
-      <SectionDivider type="organic" fill="#0F766E" prevBg="#0D3D3A" />
+      <SectionDivider type="organic" fill="#05643F" prevBg="#043A26" />
 
       {/* ── CTA ── */}
       <section className={styles.cta}>
@@ -652,9 +646,9 @@ function LandingPage() {
         <div className={styles.footerInner}>
           <div className={styles.footerTop}>
             <div className={styles.footerCol}>
-              <div className={styles.footerBrand}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0F766E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
-                Depensys
+<div className={styles.footerBrand}>
+                <img src="/logo.png" alt="Dossy" className={styles.footerLogo} />
+                Dossy
               </div>
               <p>{t('footer.desc')}</p>
             </div>
@@ -672,13 +666,13 @@ function LandingPage() {
             </div>
             <div className={styles.footerCol}>
               <h5>{t('footer.contact')}</h5>
-              <span>contact@depensys.com</span>
+              <span>contact@dossy.com</span>
               <span>+221 77 123 45 67</span>
               <span>Dakar, Senegal</span>
             </div>
           </div>
           <div className={styles.footerBottom}>
-            <p>&copy; {new Date().getFullYear()} Depensys. {t('footer.rights')}</p>
+            <p>&copy; {new Date().getFullYear()} Dossy. {t('footer.rights')}</p>
           </div>
         </div>
       </footer>
