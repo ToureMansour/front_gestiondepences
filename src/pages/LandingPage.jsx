@@ -255,24 +255,24 @@ function FlagEN() {
 
 /* ── Nav Dropdown ── */
 
-function NavDropdown({ label, items, isOpen, onMouseEnter, onMouseLeave }) {
+function NavDropdown({ label, items, isOpen, onMouseEnter, onMouseLeave, onNavigate }) {
   return (
     <div className={styles.navDropdownWrapper} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <button className={styles.navLink}>
+      <button className={styles.navLink} aria-expanded={isOpen}>
         {label}
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
       {isOpen && (
-        <div className={styles.megaMenu}>
-          <div className={styles.megaMenuInner}>
+        <div className={styles.dropdownMenu}>
+          <div className={styles.dropdownMenuInner}>
             {items.map((item, i) => (
-              <button key={i} className={styles.megaMenuItem} onClick={() => { document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' }); }}>
-                <div className={styles.megaMenuIcon} style={{ background: item.gradient }}>{item.icon}</div>
-                <div>
-                  <span className={styles.megaMenuTitle}>{item.title}</span>
-                  <span className={styles.megaMenuDesc}>{item.shortDesc}</span>
+              <button key={i} className={styles.dropdownMenuItem} onClick={() => onNavigate(item.id)}>
+                <div className={styles.dropdownMenuIcon} style={{ background: item.gradient }}>{item.icon}</div>
+                <div className={styles.dropdownMenuText}>
+                  <span className={styles.dropdownMenuTitle}>{item.title}</span>
+                  <span className={styles.dropdownMenuDesc}>{item.shortDesc}</span>
                 </div>
               </button>
             ))}
@@ -406,6 +406,7 @@ function LandingPage() {
               isOpen={openDropdown === 'features'}
               onMouseEnter={() => setOpenDropdown('features')}
               onMouseLeave={() => setOpenDropdown(null)}
+              onNavigate={scrollTo}
             />
             <button onClick={() => scrollTo('how')} className={styles.navLink}>{t('nav.how')}</button>
             <button onClick={() => scrollTo('testimonials')} className={styles.navLink}>{t('nav.reviews')}</button>
@@ -481,10 +482,19 @@ function LandingPage() {
       <section className={styles.trusted}>
         <div className={styles.trustedInner}>
           <p className={styles.trustedLabel}>{t('trusted.label')}</p>
-          <div className={styles.trustedLogos}>
-            {['TechCorp', 'InnovGroup', 'WebAgency', 'StartHub', 'CloudPlus', 'DataSoft'].map((name) => (
-              <div key={name} className={styles.trustedLogo}>{name}</div>
-            ))}
+          <div className={styles.trustedViewport}>
+            <div className={styles.trustedTrack}>
+              <div className={styles.trustedRow}>
+                {['TechCorp', 'InnovGroup', 'WebAgency', 'StartHub', 'CloudPlus', 'DataSoft'].map((name) => (
+                  <div key={name} className={styles.trustedLogo}>{name}</div>
+                ))}
+              </div>
+              <div className={styles.trustedRow} aria-hidden="true">
+                {['TechCorp', 'InnovGroup', 'WebAgency', 'StartHub', 'CloudPlus', 'DataSoft'].map((name) => (
+                  <div key={name} className={styles.trustedLogo}>{name}</div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -496,8 +506,15 @@ function LandingPage() {
           <h2 className={styles.sectionTitle}>{t('features.title')}</h2>
           <p className={styles.sectionDesc}>{t('features.desc')}</p>
         </div>
-        <div className={styles.featuresGrid}>
-          {FEATURES.map((f, i) => <FeatureCard key={i} feature={f} index={i} />)}
+        <div className={styles.featuresViewport}>
+          <div className={styles.featuresTrack}>
+            <div className={styles.featuresRow}>
+              {FEATURES.map((f, i) => <FeatureCard key={i} feature={f} index={i} />)}
+            </div>
+            <div className={styles.featuresRow} aria-hidden="true">
+              {FEATURES.map((f, i) => <FeatureCard key={`dup-${i}`} feature={f} index={i} />)}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -666,9 +683,9 @@ function LandingPage() {
             </div>
             <div className={styles.footerCol}>
               <h5>{t('footer.contact')}</h5>
-              <span>contact@dossy.com</span>
-              <span>+221 77 123 45 67</span>
-              <span>Dakar, Senegal</span>
+              <span>mansouroutoures@gmail.com</span>
+              <span>+229 01 41 98 11 99</span>
+              <span>Abomey-Calavi, Bénin</span>
             </div>
           </div>
           <div className={styles.footerBottom}>

@@ -52,13 +52,13 @@
     "title": "Ce que nos clients disent",
     "desc": "Des retours d'expérience concrets.",
     "quote1": "Dossy a transformé notre gestion des notes de frais. On est passé de 3 jours de traitement à 30 minutes.",
-    "author1": "Sophie Martin",
+    "author1": "Awa Ndiaye",
     "role1": "Directrice Financière, TechCorp",
     "quote2": "L'interface est tellement intuitive que nos employés l'ont adoptée dès le premier jour. Un gain de temps énorme.",
     "author2": "Amadou Diallo",
     "role2": "CEO, InnovGroup",
     "quote3": "Le module de validation multi-niveaux nous a fait gagner en contrôle sans perdre en flexibilité. Je recommande.",
-    "author3": "Claire Dubois",
+    "author3": "Khadidiatou Sow",
     "role3": "Responsable Admin, WebAgency"
   },
   "stats": {
@@ -139,6 +139,7 @@
     "orContinueWith": "Ou continuez avec",
     "google": "Google",
     "github": "Github",
+    "socialComingSoon": "Cette fonctionnalité est en cours de développement. Bientôt disponible !",
     "demoHint": "Espace démo :",
     "tagline": "La solution intelligente pour gérer\nles notes de frais de votre entreprise"
   },

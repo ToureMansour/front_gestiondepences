@@ -52,13 +52,13 @@
     "title": "What our clients say",
     "desc": "Real feedback from real users.",
     "quote1": "Dossy transformed our expense management. We went from 3 days of processing to 30 minutes.",
-    "author1": "Sophie Martin",
+    "author1": "Awa Ndiaye",
     "role1": "CFO, TechCorp",
     "quote2": "The interface is so intuitive that our employees adopted it from day one. A huge time saver.",
     "author2": "Amadou Diallo",
     "role2": "CEO, InnovGroup",
     "quote3": "The multi-level validation module gave us more control without losing flexibility. I recommend it.",
-    "author3": "Claire Dubois",
+    "author3": "Khadidiatou Sow",
     "role3": "Admin Manager, WebAgency"
   },
   "stats": {
@@ -139,6 +139,7 @@
     "orContinueWith": "Or continue with",
     "google": "Google",
     "github": "Github",
+    "socialComingSoon": "This feature is under development. Coming soon!",
     "demoHint": "Demo space:",
     "tagline": "The smart solution for managing\nyour company expense reports"
   },

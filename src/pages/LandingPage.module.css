@@ -91,52 +91,50 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .navScrolled .navCta { color: #05643F; border-color: #05643F; }
 .navCta:hover { background: #05643F; color: #fff; border-color: #05643F; }
 
-/* ── Mega Menu ── */
+/* ── Dropdown menu ── */
 
 .navDropdownWrapper { position: relative; }
 
-.megaMenu {
-  position: fixed; top: 60px; left: 0; right: 0;
-  display: flex; justify-content: center;
-  animation: slideDown 0.2s ease; z-index: 200;
-  pointer-events: none;
+.dropdownMenu {
+  position: absolute; top: calc(100% + 10px); left: 0;
+  min-width: 290px; background: #FFFFFF;
+  border: 1px solid #E2E8F0; border-radius: 12px;
+  box-shadow: 0 16px 40px -12px rgba(0,0,0,0.16);
+  padding: 8px; z-index: 200;
+  animation: fadeDown 0.18s ease;
 }
 
-.megaMenuInner {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
-  background: rgba(255,255,255,0.72);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0 20px 60px -12px rgba(0,0,0,0.12);
-  overflow: hidden; max-width: 700px; width: 100%;
-  pointer-events: auto;
-  border: none;
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.megaMenuItem {
-  display: flex; align-items: flex-start; gap: 12px;
-  padding: 20px 16px; background: none; border: none;
-  border-right: 1px solid rgba(226,232,240,0.5); cursor: pointer;
-  text-align: left; transition: all 0.2s;
+.dropdownMenuInner { display: flex; flex-direction: column; gap: 2px; }
+
+.dropdownMenuItem {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; background: none; border: none;
+  border-radius: 8px; cursor: pointer; text-align: left;
+  transition: background 0.15s; width: 100%;
 }
 
-.megaMenuItem:last-child { border-right: none; }
-.megaMenuItem:hover { background: rgba(5,100,63,0.06); }
+.dropdownMenuItem:hover { background: #F0FDFA; }
 
-.megaMenuIcon {
-  width: 40px; height: 40px; display: flex;
+.dropdownMenuIcon {
+  width: 36px; height: 36px; display: flex;
   align-items: center; justify-content: center;
-  border-radius: 10px; color: #fff; flex-shrink: 0;
+  border-radius: 9px; color: #fff; flex-shrink: 0;
 }
 
-.megaMenuTitle {
-  display: block; font-size: 13px; font-weight: 600;
-  color: #0F172A; margin-bottom: 3px; font-family: var(--font-display);
+.dropdownMenuText { display: flex; flex-direction: column; min-width: 0; }
+
+.dropdownMenuTitle {
+  font-size: 14px; font-weight: 600;
+  color: #0F172A; font-family: var(--font-display);
 }
 
-.megaMenuDesc {
-  display: block; font-size: 11px; color: #94A3B8;
+.dropdownMenuDesc {
+  font-size: 12px; color: #94A3B8;
   line-height: 1.4; font-family: var(--font-body);
 }
 
@@ -307,10 +305,30 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 
 .trustedLogos { display: flex; justify-content: center; flex-wrap: wrap; gap: 40px; }
 
+.trustedViewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.trustedTrack {
+  display: flex; width: max-content;
+  animation: trustedMarquee 20s linear infinite;
+}
+
+.trustedViewport:hover .trustedTrack { animation-play-state: paused; }
+
+.trustedRow { display: flex; align-items: center; }
+
+@keyframes trustedMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
 .trustedLogo {
   font-size: 18px; font-weight: 700; color: #CBD5E1;
   font-family: var(--font-display); letter-spacing: -0.3px;
-  transition: color 0.3s;
+  transition: color 0.3s; margin: 0 40px; white-space: nowrap;
 }
 .trustedLogo:hover { color: #05643F; }
 
@@ -338,15 +356,31 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
   margin: 0 auto; line-height: 1.6; font-family: var(--font-body);
 }
 
-.featuresGrid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 28px; max-width: 1100px; margin: 0 auto;
+.featuresViewport {
+  max-width: 1100px; margin: 0 auto; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+
+.featuresTrack {
+  display: flex; width: max-content;
+  animation: marquee 22s linear infinite;
+}
+
+.featuresViewport:hover .featuresTrack { animation-play-state: paused; }
+
+.featuresRow { display: flex; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .featureCard {
   background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
   overflow: hidden; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   opacity: 0; transform: translateY(24px);
+  flex: 0 0 300px; margin-right: 28px;
 }
 
 .featureCardVisible { opacity: 1; transform: translateY(0); }
@@ -587,9 +621,6 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
   .heroActions { justify-content: center; }
   .heroBadges { justify-content: center; }
   .heroTitle { font-size: 44px; }
-  .megaMenuInner { grid-template-columns: repeat(2, 1fr); min-width: 400px; }
-  .megaMenuItem:nth-child(2) { border-right: 1px solid #F1F5F9; }
-  .megaMenuItem:nth-child(3) { border-right: none; }
   .securityGrid { grid-template-columns: repeat(2, 1fr); }
   .footerTop { grid-template-columns: repeat(2, 1fr); }
 }
@@ -687,10 +718,9 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
   .heroActions { flex-direction: column; }
   .heroBadges { flex-direction: column; align-items: center; gap: 8px; }
   .trusted { padding: 40px 20px; }
-  .trustedLogos { gap: 24px; }
-  .trustedLogo { font-size: 15px; }
+  .trustedLogo { font-size: 15px; margin: 0 24px; }
   .features { padding: 60px 20px; }
-  .featuresGrid { grid-template-columns: 1fr; }
+  .featureCard { flex: 0 0 260px; }
   .sectionTitle { font-size: 30px; }
   .sectionHead { margin-bottom: 40px; }
   .howTag, .statsTag, .faqTag { font-size: 11px; }
